@@ -1,0 +1,612 @@
+{
+  "chairs": [
+    {
+      "id": "chair-001",
+      "title": "Modern Ergonomic Chair",
+      "category": "chair",
+      "description": "Sleek contemporary design with ergonomic support",
+      "price": 129.99,
+      "wood_material": "Oak",
+      "work_duration": "5 days",
+      "paint_code": "#8B4513",
+      "images": [
+        "https://www.priyankarafurniture.lk/wp-content/uploads/2025/06/3-64.png",
+        "https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=800&q=80",
+        "https://images.unsplash.com/photo-1503602642458-232111445657?w=800&q=80",
+        "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&q=80",
+        "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800&q=80"
+        
+      ]
+    },
+    {
+      "id": "chair-002",
+      "title": "Classic Dining Chair",
+      "category": "chair",
+      "description": "Timeless design for elegant dining spaces",
+      "price": 149.99,
+      "wood_material": "Walnut",
+      "work_duration": "6 days",
+      "paint_code": "#5C4033",
+      "images": [
+        "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=800&q=80",
+        "https://images.unsplash.com/photo-1519947486511-46149fa0a254?w=800&q=80",
+        "https://images.unsplash.com/photo-1611269154421-4e27233ac5c7?w=800&q=80",
+        "https://images.unsplash.com/photo-1617097900655-846c68f2e323?w=800&q=80",
+        "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&q=80"
+      ]
+    },
+    {
+      "id": "chair-003",
+      "title": "Rustic Farmhouse Chair",
+      "category": "chair",
+      "description": "Charming rustic appeal with sturdy construction",
+      "price": 99.99,
+      "wood_material": "Pine",
+      "work_duration": "4 days",
+      "paint_code": "#DEB887",
+      "images": [
+        "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=800&q=80",
+        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80",
+        "https://images.unsplash.com/photo-1581428982868-e410dd047a90?w=800&q=80",
+        "https://images.unsplash.com/photo-1565191999001-551c187427bb?w=800&q=80",
+        "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800&q=80"
+      ]
+    },
+    {
+      "id": "chair-004",
+      "title": "Executive Office Chair",
+      "category": "chair",
+      "description": "Premium comfort for professional workspaces",
+      "price": 299.99,
+      "wood_material": "Mahogany",
+      "work_duration": "8 days",
+      "paint_code": "#420C09",
+      "images": [
+        "https://images.unsplash.com/photo-1592078615290-033ee584e267?w=800&q=80",
+        "https://images.unsplash.com/photo-1589584200871-ebd44b8f5f50?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
+        "https://images.unsplash.com/photo-1611269154421-4e27233ac5c7?w=800&q=80",
+        "https://images.unsplash.com/photo-1498409505433-aff66f7ba9e6?w=800&q=80"
+      ]
+    },
+    {
+      "id": "chair-005",
+      "title": "Minimalist Lounge Chair",
+      "category": "chair",
+      "description": "Clean lines and modern aesthetics",
+      "price": 179.99,
+      "wood_material": "Teak",
+      "work_duration": "7 days",
+      "paint_code": "#B8860B",
+      "images": [
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
+        "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&q=80",
+        "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80",
+        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
+        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80"
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "id": "table-001",
+      "title": "Rectangular Dining Table",
+      "category": "table",
+      "description": "Spacious table perfect for family gatherings",
+      "price": 449.99,
+      "wood_material": "Oak",
+      "work_duration": "10 days",
+      "paint_code": "#8B4513",
+      "images": [
+        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+        "https://images.unsplash.com/photo-1551298370-9d3d53740c72?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104678098-de229db51175?w=800&q=80",
+        "https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=800&q=80"
+      ]
+    },
+    {
+      "id": "table-002",
+      "title": "Round Coffee Table",
+      "category": "table",
+      "description": "Compact design for cozy living rooms",
+      "price": 199.99,
+      "wood_material": "Maple",
+      "work_duration": "5 days",
+      "paint_code": "#D2B48C",
+      "images": [
+        "https://images.unsplash.com/photo-1551298370-9d3d53740c72?w=800&q=80",
+        "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=800&q=80",
+        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
+        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80"
+      ]
+    },
+    {
+      "id": "table-003",
+      "title": "Industrial Workbench Table",
+      "category": "table",
+      "description": "Robust table with metal accents",
+      "price": 329.99,
+      "wood_material": "Reclaimed Wood",
+      "work_duration": "7 days",
+      "paint_code": "#696969",
+      "images": [
+        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80"
+      ]
+    },
+    {
+      "id": "table-004",
+      "title": "Extendable Console Table",
+      "category": "table",
+      "description": "Versatile design that expands when needed",
+      "price": 379.99,
+      "wood_material": "Walnut",
+      "work_duration": "12 days",
+      "paint_code": "#5C4033",
+      "images": [
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
+        "https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=800&q=80",
+        "https://images.unsplash.com/photo-1601366184025-1170c8d00b82?w=800&q=80",
+        "https://images.unsplash.com/photo-1551298370-9d3d53740c72?w=800&q=80"
+      ]
+    },
+    {
+      "id": "table-005",
+      "title": "Glass Top Side Table",
+      "category": "table",
+      "description": "Elegant modern accent piece",
+      "price": 159.99,
+      "wood_material": "Teak",
+      "work_duration": "6 days",
+      "paint_code": "#B8860B",
+      "images": [
+        "https://images.unsplash.com/photo-1565191999001-551c187427bb?w=800&q=80",
+        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
+        "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104678098-de229db51175?w=800&q=80",
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80"
+      ]
+    }
+  ],
+  "sofas": [
+    {
+      "id": "sofa-001",
+      "title": "Contemporary 3-Seater Sofa",
+      "category": "sofa",
+      "description": "Luxurious comfort with modern styling",
+      "price": 899.99,
+      "wood_material": "Beech",
+      "work_duration": "15 days",
+      "paint_code": "#F5DEB3",
+      "images": [
+        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
+        "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80",
+        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80",
+        "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=800&q=80",
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80"
+      ]
+    },
+    {
+      "id": "sofa-002",
+      "title": "L-Shaped Sectional Sofa",
+      "category": "sofa",
+      "description": "Spacious seating for large living areas",
+      "price": 1299.99,
+      "wood_material": "Oak",
+      "work_duration": "20 days",
+      "paint_code": "#8B4513",
+      "images": [
+        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80",
+        "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=800&q=80",
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
+        "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&q=80",
+        "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80"
+      ]
+    },
+    {
+      "id": "sofa-003",
+      "title": "Vintage Chesterfield Sofa",
+      "category": "sofa",
+      "description": "Classic British design with tufted details",
+      "price": 1499.99,
+      "wood_material": "Mahogany",
+      "work_duration": "18 days",
+      "paint_code": "#420C09",
+      "images": [
+        "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80",
+        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
+        "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=800&q=80",
+        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80",
+        "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=800&q=80"
+      ]
+    },
+    {
+      "id": "sofa-004",
+      "title": "Minimalist Loveseat",
+      "category": "sofa",
+      "description": "Compact 2-seater for small spaces",
+      "price": 599.99,
+      "wood_material": "Ash",
+      "work_duration": "10 days",
+      "paint_code": "#F0E68C",
+      "images": [
+        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80",
+        "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=800&q=80",
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
+        "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=800&q=80",
+        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80"
+      ]
+    },
+    {
+      "id": "sofa-005",
+      "title": "Scandinavian Style Sofa",
+      "category": "sofa",
+      "description": "Clean lines with Nordic simplicity",
+      "price": 749.99,
+      "wood_material": "Birch",
+      "work_duration": "12 days",
+      "paint_code": "#FFF8DC",
+      "images": [
+        "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&q=80",
+        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
+        "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80",
+        "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=800&q=80",
+        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80"
+      ]
+    }
+  ],
+  "beds": [
+    {
+      "id": "bed-001",
+      "title": "King Size Platform Bed",
+      "category": "bed",
+      "description": "Low-profile design with ample support",
+      "price": 799.99,
+      "wood_material": "Oak",
+      "work_duration": "14 days",
+      "paint_code": "#8B4513",
+      "images": [
+        "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80",
+        "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80",
+        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80",
+        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+      ]
+    },
+    {
+      "id": "bed-002",
+      "title": "Queen Upholstered Bed",
+      "category": "bed",
+      "description": "Elegant padded headboard for comfort",
+      "price": 649.99,
+      "wood_material": "Pine",
+      "work_duration": "12 days",
+      "paint_code": "#DEB887",
+      "images": [
+        "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80",
+        "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80",
+        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
+        "https://images.unsplash.com/photo-1615800098779-1be32e60cca3?w=800&q=80",
+        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80"
+      ]
+    },
+    {
+      "id": "bed-003",
+      "title": "Four Poster Bed",
+      "category": "bed",
+      "description": "Grand traditional style with tall posts",
+      "price": 1199.99,
+      "wood_material": "Mahogany",
+      "work_duration": "20 days",
+      "paint_code": "#420C09",
+      "images": [
+        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
+        "https://images.unsplash.com/photo-1615800098779-1be32e60cca3?w=800&q=80",
+        "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80",
+        "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+      ]
+    },
+    {
+      "id": "bed-004",
+      "title": "Storage Bed with Drawers",
+      "category": "bed",
+      "description": "Practical solution with built-in storage",
+      "price": 899.99,
+      "wood_material": "Walnut",
+      "work_duration": "16 days",
+      "paint_code": "#5C4033",
+      "images": [
+        "https://images.unsplash.com/photo-1615800098779-1be32e60cca3?w=800&q=80",
+        "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80",
+        "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80",
+        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
+        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80"
+      ]
+    },
+    {
+      "id": "bed-005",
+      "title": "Minimalist Japanese Bed",
+      "category": "bed",
+      "description": "Low-to-ground design with Zen aesthetics",
+      "price": 549.99,
+      "wood_material": "Bamboo",
+      "work_duration": "10 days",
+      "paint_code": "#E3DAC9",
+      "images": [
+        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80",
+        "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80",
+        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
+        "https://images.unsplash.com/photo-1615800098779-1be32e60cca3?w=800&q=80",
+        "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80"
+      ]
+    }
+  ],
+  "cabinets": [
+    {
+      "id": "cabinet-001",
+      "title": "Modern Display Cabinet",
+      "category": "cabinet",
+      "description": "Glass doors showcase your collectibles",
+      "price": 549.99,
+      "wood_material": "Oak",
+      "work_duration": "11 days",
+      "paint_code": "#8B4513",
+      "images": [
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+      ]
+    },
+    {
+      "id": "cabinet-002",
+      "title": "Rustic Storage Cabinet",
+      "category": "cabinet",
+      "description": "Farmhouse charm with ample storage",
+      "price": 429.99,
+      "wood_material": "Reclaimed Wood",
+      "work_duration": "9 days",
+      "paint_code": "#A0826D",
+      "images": [
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80"
+      ]
+    },
+    {
+      "id": "cabinet-003",
+      "title": "Mid-Century Sideboard",
+      "category": "cabinet",
+      "description": "Retro design with sliding doors",
+      "price": 679.99,
+      "wood_material": "Teak",
+      "work_duration": "13 days",
+      "paint_code": "#B8860B",
+      "images": [
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+      ]
+    },
+    {
+      "id": "cabinet-004",
+      "title": "Industrial Metal Cabinet",
+      "category": "cabinet",
+      "description": "Urban style with metal framework",
+      "price": 399.99,
+      "wood_material": "Pine",
+      "work_duration": "8 days",
+      "paint_code": "#DEB887",
+      "images": [
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+      ]
+    },
+    {
+      "id": "cabinet-005",
+      "title": "Corner China Cabinet",
+      "category": "cabinet",
+      "description": "Space-saving corner design",
+      "price": 499.99,
+      "wood_material": "Cherry",
+      "work_duration": "10 days",
+      "paint_code": "#9C4A3A",
+      "images": [
+        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+      ]
+    }
+  ],
+  "desks": [
+    {
+      "id": "desk-001",
+      "title": "Executive Writing Desk",
+      "category": "desk",
+      "description": "Professional workspace with drawers",
+      "price": 599.99,
+      "wood_material": "Mahogany",
+      "work_duration": "12 days",
+      "paint_code": "#420C09",
+      "images": [
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
+        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
+        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+      ]
+    },
+    {
+      "id": "desk-002",
+      "title": "Standing Desk Converter",
+      "category": "desk",
+      "description": "Adjustable height for ergonomic work",
+      "price": 349.99,
+      "wood_material": "Bamboo",
+      "work_duration": "7 days",
+      "paint_code": "#E3DAC9",
+      "images": [
+        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
+        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+      ]
+    },
+    {
+      "id": "desk-003",
+      "title": "L-Shaped Corner Desk",
+      "category": "desk",
+      "description": "Maximum workspace for home offices",
+      "price": 729.99,
+      "wood_material": "Oak",
+      "work_duration": "14 days",
+      "paint_code": "#8B4513",
+      "images": [
+        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
+        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+      ]
+    },
+    {
+      "id": "desk-004",
+      "title": "Minimalist Floating Desk",
+      "category": "desk",
+      "description": "Wall-mounted space saver",
+      "price": 249.99,
+      "wood_material": "Walnut",
+      "work_duration": "5 days",
+      "paint_code": "#5C4033",
+      "images": [
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
+        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+      ]
+    },
+    {
+      "id": "desk-005",
+      "title": "Secretary Drop-Front Desk",
+      "category": "desk",
+      "description": "Compact vintage-inspired design",
+      "price": 479.99,
+      "wood_material": "Cherry",
+      "work_duration": "10 days",
+      "paint_code": "#9C4A3A",
+      "images": [
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
+        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+      ]
+    }
+  ],
+  "shelves": [
+    {
+      "id": "shelf-001",
+      "title": "Floating Wall Shelves Set",
+      "category": "shelf",
+      "description": "Modern minimalist display solution",
+      "price": 129.99,
+      "wood_material": "Oak",
+      "work_duration": "3 days",
+      "paint_code": "#8B4513",
+      "images": [
+        "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80"
+      ]
+    },
+    {
+      "id": "shelf-002",
+      "title": "Ladder Bookshelf",
+      "category": "shelf",
+      "description": "Leaning design with five tiers",
+      "price": 279.99,
+      "wood_material": "Bamboo",
+      "work_duration": "6 days",
+      "paint_code": "#E3DAC9",
+      "images": [
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
+        "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+      ]
+    },
+    {
+      "id": "shelf-003",
+      "title": "Industrial Pipe Shelf",
+      "category": "shelf",
+      "description": "Urban style with metal pipes",
+      "price": 349.99,
+      "wood_material": "Reclaimed Wood",
+      "work_duration": "7 days",
+      "paint_code": "#A0826D",
+      "images": [
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+        "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80"
+      ]
+    },
+    {
+      "id": "shelf-004",
+      "title": "Corner Display Shelf",
+      "category": "shelf",
+      "description": "Space-efficient corner unit",
+      "price": 199.99,
+      "wood_material": "Pine",
+      "work_duration": "5 days",
+      "paint_code": "#DEB887",
+      "images": [
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+        "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
+        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+      ]
+    },
+    {
+      "id": "shelf-005",
+      "title": "Modular Cube Storage",
+      "category": "shelf",
+      "description": "Customizable configuration options",
+      "price": 399.99,
+      "wood_material": "Birch",
+      "work_duration": "8 days",
+      "paint_code": "#FFF8DC",
+      "images": [
+        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
+        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
+        "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80"
+      ]
+    }
+  ]
+}

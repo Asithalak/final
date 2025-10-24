@@ -19,6 +19,17 @@ import Dashboard from './pages/Dashboard';
 import OrderTracking from './pages/OrderTracking';
 import Cart from './pages/Cart';
 
+// Furniture Category Pages
+import CategoryPage from './pages/CategoryPage';
+import Chairs from './pages/Chairs';
+import Tables from './pages/Tables';
+import Sofas from './pages/Sofas';
+import Beds from './pages/Beds';
+import Cabinets from './pages/Cabinets';
+import Desks from './pages/Desks';
+import Shelves from './pages/Shelves';
+import MyFurnitureDesigns from './pages/MyFurnitureDesigns';
+
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -41,6 +52,17 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/cart" element={<Cart />} />
+                
+                {/* Furniture Category Routes */}
+                <Route path="/my-furniture-designs" element={<MyFurnitureDesigns />} />
+                <Route path="/category/chair" element={<Chairs />} />
+                <Route path="/category/table" element={<Tables />} />
+                <Route path="/category/sofa" element={<Sofas />} />
+                <Route path="/category/bed" element={<Beds />} />
+                <Route path="/category/cabinet" element={<Cabinets />} />
+                <Route path="/category/desk" element={<Desks />} />
+                <Route path="/category/shelf" element={<Shelves />} />
+                <Route path="/category/:category" element={<CategoryPage />} />
                 
                 {/* Protected Routes */}
                 <Route 
