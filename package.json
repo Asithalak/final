@@ -1,0 +1,24 @@
+{
+  "name": "furniture-showroom-system",
+  "version": "1.0.0",
+  "description": "Online Furniture Showroom System - Full Stack Application",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd Backend && npm start",
+    "client": "cd frontend && npm start",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client\"",
+    "server:dev": "cd Backend && npm run dev",
+    "install:all": "npm install && cd Backend && npm install && cd ../frontend && npm install"
+  },
+  "keywords": [
+    "furniture",
+    "showroom",
+    "ecommerce",
+    "react",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "Furniture Showroom Team",
+  "license": "ISC"
+}

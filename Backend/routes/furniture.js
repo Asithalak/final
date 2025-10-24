@@ -87,14 +87,14 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 5), async (re
       furniture
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: 'error', error: error.message });
   }
 });
 
 // @route   PUT /api/furniture/:id
 // @desc    Update furniture
 // @access  Private (Carpenter - own items)
-router.put('/:id', authenticate, isCarpenter, upload.array('images', 5), async (req, res) => {
+/*router.put('/:id', authenticate, isCarpenter, upload.array('images', 5), async (req, res) => {
   try {
     const furniture = await Furniture.findById(req.params.id);
 
@@ -202,6 +202,6 @@ router.post('/:id/review', authenticate, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
-});
+});*/
 
 module.exports = router;
