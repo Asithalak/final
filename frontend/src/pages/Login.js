@@ -13,8 +13,18 @@ const Login = () => {
     setLoading(true);
     
     try {
-      await login(credentials);
-      navigate('/dashboard');
+      const result = await login(credentials);
+      
+      // Redirect based on role
+      if (result.role === 'carpenter') {
+        navigate('/carpenter/dashboard');
+      } else if (result.role === 'admin') {
+        navigate('/admin/users');
+      } else if (result.role === 'customer') {
+        navigate('/');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       // Error is handled in AuthContext
     } finally {

@@ -3,6 +3,29 @@ const router = express.Router();
 const User = require('../models/User');
 const { authenticate, isAdmin } = require('../middleware/auth');
 
+// @route   GET /api/users/stats
+// @desc    Get user statistics (Admin only)
+// @access  Private (Admin)
+router.get('/stats', authenticate, isAdmin, async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const customers = await User.countDocuments({ role: 'customer' });
+    const carpenters = await User.countDocuments({ role: 'carpenter' });
+    const admins = await User.countDocuments({ role: 'admin' });
+    const pendingCarpenters = await User.countDocuments({ role: 'carpenter', isApproved: false });
+    
+    res.json({
+      totalUsers,
+      customers,
+      carpenters,
+      admins,
+      pendingCarpenters
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // @route   GET /api/users
 // @desc    Get all users (Admin only)
 // @access  Private (Admin)

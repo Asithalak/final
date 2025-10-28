@@ -15,7 +15,6 @@ import Brands from './pages/Brands';
 import Offers from './pages/Offers';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
 import OrderTracking from './pages/OrderTracking';
 import Cart from './pages/Cart';
 
@@ -28,13 +27,18 @@ import Beds from './pages/Beds';
 import Cabinets from './pages/Cabinets';
 import Desks from './pages/Desks';
 import Shelves from './pages/Shelves';
-import MyFurnitureDesigns from './pages/MyFurnitureDesigns';
+
+// Admin Pages
+import AdminLogin from './pages/AdminLogin';
+import AdminUserManagement from './pages/AdminUserManagement';
+
+//carpenter dashboard
+import CarpenterDashboard from './Carpenter/CarpenterDashboard';
 
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import PrivateRoute from './components/PrivateRoute';
-
+import PrivateRoute from './components/PrivateRoute'; 
 function App() {
   return (
     <Router>
@@ -51,10 +55,10 @@ function App() {
                 <Route path="/offers" element={<Offers />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/CarpenterDashboard" element={<CarpenterDashboard />} />
                 <Route path="/cart" element={<Cart />} />
                 
                 {/* Furniture Category Routes */}
-                <Route path="/my-furniture-designs" element={<MyFurnitureDesigns />} />
                 <Route path="/category/chair" element={<Chairs />} />
                 <Route path="/category/table" element={<Tables />} />
                 <Route path="/category/sofa" element={<Sofas />} />
@@ -64,12 +68,23 @@ function App() {
                 <Route path="/category/shelf" element={<Shelves />} />
                 <Route path="/category/:category" element={<CategoryPage />} />
                 
-                {/* Protected Routes */}
+                {/* Admin Routes */}
+                <Route path="/admin-login" element={<AdminLogin />} />
                 <Route 
-                  path="/dashboard/*" 
+                  path="/admin/users" 
                   element={
                     <PrivateRoute>
-                      <Dashboard />
+                      <AdminUserManagement />
+                    </PrivateRoute>
+                  } 
+                />
+                
+                {/* Protected Routes */}
+                <Route 
+                  path="/carpenter/carpenterdashboard/*" 
+                  element={
+                    <PrivateRoute>
+                      <CarpenterDashboard />
                     </PrivateRoute>
                   } 
                 />

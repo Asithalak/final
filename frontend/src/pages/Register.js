@@ -10,6 +10,7 @@ const Register = () => {
     confirmPassword: '',
     role: 'customer',
     phone: '',
+    address: '',
     specialization: '',
     experience: ''
   });
@@ -20,8 +21,22 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match');
+      return;
+    }
+
+    // Validate password length
+    if (formData.password.length < 6) {
+      alert('Password must be at least 6 characters long');
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert('Please enter a valid email address');
       return;
     }
 
@@ -29,22 +44,33 @@ const Register = () => {
     
     try {
       const userData = {
-        name: formData.name,
-        email: formData.email,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
         password: formData.password,
         role: formData.role,
-        phone: formData.phone,
+        phone: formData.phone.trim() || '',
+        address: formData.address.trim() || ''
       };
 
       if (formData.role === 'carpenter') {
-        userData.specialization = formData.specialization;
-        userData.experience = Number(formData.experience);
+        userData.specialization = formData.specialization.trim() || '';
+        userData.experience = formData.experience ? Number(formData.experience) : 0;
       }
 
-      await register(userData);
-      navigate('/dashboard');
+      console.log('Submitting registration:', { ...userData, password: '***' });
+      const result = await register(userData);
+      
+      // Redirect based on role
+      if (result.role === 'carpenter') {
+        navigate('/carpenterdashboard');
+      } else if (result.role === 'customer') {
+        navigate('/');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
-      // Error is handled in AuthContext
+      console.error('Registration failed:', error);
+      // Error is handled in AuthContext with toast
     } finally {
       setLoading(false);
     }
@@ -106,6 +132,20 @@ const Register = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 className="input-field mt-1"
+                placeholder="e.g., +1234567890"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address (Optional)</label>
+              <input
+                id="address"
+                name="address"
+                type="text"
+                value={formData.address}
+                onChange={handleChange}
+                className="input-field mt-1"
+                placeholder="Your address"
               />
             </div>
 
@@ -188,6 +228,7 @@ const Register = () => {
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
             >
               {loading ? 'Creating account...' : 'Create Account'}
+            
             </button>
           </div>
 

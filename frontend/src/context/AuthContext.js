@@ -35,13 +35,16 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
+      console.log('Attempting to register with data:', { ...userData, password: '***' });
       const response = await authAPI.register(userData);
       localStorage.setItem('token', response.data.token);
       setUser(response.data);
       toast.success('Registration successful!');
       return response.data;
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      console.error('Registration error:', error.response?.data || error.message);
+      const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
+      toast.error(errorMessage);
       throw error;
     }
   };
