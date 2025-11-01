@@ -53,7 +53,7 @@ const Navbar = () => {
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 <Link 
-                  to="/dashboard" 
+                  to="/carpenterdashboard" 
                   className="text-gray-700 hover:text-primary-600 transition flex items-center space-x-2"
                 >
                   <FaUser size={20} />
