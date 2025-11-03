@@ -35,6 +35,8 @@ import AdminUserManagement from './pages/AdminUserManagement';
 //carpenter dashboard
 import CarpenterDashboard from './Carpenter/CarpenterDashboard';
 import Dashboard from './Carpenter/Dashboard';
+import MyResources from './Carpenter/MyResources';
+import AssignedOrders from './Carpenter/AssignedOrders';
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -58,6 +60,8 @@ function App() {
                 <Route path="/CarpenterDashboard" element={<CarpenterDashboard />} />
                 <Route path="/Dashboard" element={<Dashboard />} />
                 <Route path="/carpenter/dashboard" element={<Dashboard />} />
+                <Route path="/carpenter/myresources" element={<MyResources />} />
+                <Route path="/carpenter/assignedorders" element={<AssignedOrders />} />
                 <Route path="/cart" element={<Cart />} />
                 
                 {/* Furniture Category Routes */}

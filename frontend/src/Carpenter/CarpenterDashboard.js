@@ -141,8 +141,8 @@ const CarpenterDashboard = () => {
 
   const tabs = [
     { id: 'furniture', label: 'My Furniture Designs', route: '/carpenter/dashboard' },
-    { id: 'resources', label: 'My Resources' },
-    { id: 'orders', label: 'Assigned Orders' },
+    { id: 'resources', label: 'My Resources' , route: '/carpenter/myresources' },
+    { id: 'orders', label: 'Assigned Orders' ,route: '/carpenter/assigneorders'},
   ];
 
   const handleTabClick = (tab) => {
