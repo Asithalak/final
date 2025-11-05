@@ -139,7 +139,7 @@ const CarpenterDashboard = () => {
     }
   ];
 
-  const tabs = [
+  const tabs = [   
     { id: 'furniture', label: 'My Furniture Designs', route: '/carpenter/dashboard' },
     { id: 'resources', label: 'My Resources' , route: '/carpenter/myresources' },
     { id: 'orders', label: 'Assigned Orders' ,route: '/carpenter/assigneorders'},
