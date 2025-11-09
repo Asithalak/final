@@ -17,11 +17,11 @@ const Login = () => {
       
       // Redirect based on role
       if (result.role === 'carpenter') {
-        navigate('/carpenter/dashboard');
+        navigate('/carpenterdashboard');
       } else if (result.role === 'admin') {
         navigate('/admin/users');
       } else if (result.role === 'customer') {
-        navigate('/');
+        navigate('/customerdashboard');
       } else {
         navigate('/dashboard');
       }

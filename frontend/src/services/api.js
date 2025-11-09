@@ -74,6 +74,7 @@ export const resourcesAPI = {
 export const usersAPI = {
   getAll: (params) => api.get('/users', { params }),
   getCarpenters: () => api.get('/users/carpenters'),
+  getCustomers: () => api.get('/users/customers'),
   getById: (id) => api.get(`/users/${id}`),
   update: (id, userData) => api.put(`/users/${id}`, userData),
   approve: (id) => api.put(`/users/${id}/approve`),

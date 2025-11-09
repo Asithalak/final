@@ -37,6 +37,10 @@ import CarpenterDashboard from './Carpenter/CarpenterDashboard';
 import Dashboard from './Carpenter/Dashboard';
 import MyResources from './Carpenter/MyResources';
 import AssignedOrders from './Carpenter/AssignedOrders';
+
+//customer dashboard
+import CustomerDashboard from './customer/CustomerDashboard';
+
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -62,6 +66,7 @@ function App() {
                 <Route path="/carpenter/dashboard" element={<Dashboard />} />
                 <Route path="/carpenter/myresources" element={<MyResources />} />
                 <Route path="/carpenter/assignedorders" element={<AssignedOrders />} />
+                <Route path="/customerdashboard" element={<CustomerDashboard />} />
                 <Route path="/cart" element={<Cart />} />
                 
                 {/* Furniture Category Routes */}
@@ -93,6 +98,14 @@ function App() {
                       <CarpenterDashboard />
                     </PrivateRoute>
                   } 
+                />
+                <Route 
+                  path="/customerdashboard/*" 
+                  element={
+                    <PrivateRoute>
+                      <CustomerDashboard />
+                    </PrivateRoute>
+                  }
                 />
                 <Route 
                   path="/orders/:id" 

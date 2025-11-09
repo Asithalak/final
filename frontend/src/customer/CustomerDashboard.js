@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ordersAPI } from '../../services/api';
+import { ordersAPI } from '../services/api';
 import { toast } from 'react-toastify';
 
 const CustomerDashboard = () => {
@@ -35,6 +35,11 @@ const CustomerDashboard = () => {
     };
     return colors[status] || 'bg-gray-100 text-gray-800';
   };
+   const tabs = [   
+    { id: 'furniture', label: 'My Furniture Designs', route: '/carpenter/dashboard' },
+    { id: 'resources', label: 'My Resources' , route: '/carpenter/myresources' },
+    { id: 'orders', label: 'Assigned Orders' ,route: '/carpenter/assigneorders'},
+  ];
 
   return (
     <div>

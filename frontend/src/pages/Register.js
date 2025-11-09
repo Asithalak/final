@@ -64,7 +64,7 @@ const Register = () => {
       if (result.role === 'carpenter') {
         navigate('/carpenterdashboard');
       } else if (result.role === 'customer') {
-        navigate('/');
+        navigate('/customerdashboard'); 
       } else {
         navigate('/dashboard');
       }
@@ -235,6 +235,11 @@ const Register = () => {
           {formData.role === 'carpenter' && (
             <p className="text-xs text-gray-500 text-center">
               Note: Carpenter accounts require admin approval before you can start uploading designs.
+            </p>
+          )}
+          {formData.role === 'customer' && (
+            <p className="text-xs text-gray-500 text-center">
+              Welcome aboard! As a customer, you can explore and purchase unique furniture designs crafted by our talented carpenters.
             </p>
           )}
         </form>

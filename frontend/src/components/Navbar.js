@@ -53,7 +53,7 @@ const Navbar = () => {
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 <Link 
-                  to="/carpenterdashboard" 
+                  to={user?.role === 'carpenter' ? '/carpenterdashboard' : user?.role === 'admin' ? '/admin/users' :''}
                   className="text-gray-700 hover:text-primary-600 transition flex items-center space-x-2"
                 >
                   <FaUser size={20} />
@@ -124,11 +124,10 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <Link 
-                  to="/dashboard" 
+                  to={ user?.role === 'customer' ? '/customerdashboard' : user?.role === 'admin' ? '/admin/users' : ''}
                   className="block py-2 text-gray-700 hover:text-primary-600"
-                  onClick={toggleMenu}
                 >
-                  Dashboard
+                   
                 </Link>
                 <button 
                   onClick={() => { logout(); toggleMenu(); }} 
