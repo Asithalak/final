@@ -34,7 +34,7 @@ import AdminUserManagement from './pages/AdminUserManagement';
 
 //carpenter dashboard
 import CarpenterDashboard from './Carpenter/CarpenterDashboard';
-import Dashboard from './Carpenter/Dashboard';
+import MyFurnitureDesigns from './Carpenter/MyFurnitureDesigns';
 import MyResources from './Carpenter/MyResources';
 import AssignedOrders from './Carpenter/AssignedOrders';
 
@@ -61,12 +61,12 @@ function App() {
                 <Route path="/offers" element={<Offers />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/CarpenterDashboard" element={<CarpenterDashboard />} />
-                <Route path="/Dashboard" element={<Dashboard />} />
-                <Route path="/carpenter/dashboard" element={<Dashboard />} />
+                <Route path="/carpenter/carpenterdashboard" element={<CarpenterDashboard />} />
+                <Route path="/carpenter/myfurnituredesigns" element={<MyFurnitureDesigns />} />
                 <Route path="/carpenter/myresources" element={<MyResources />} />
                 <Route path="/carpenter/assignedorders" element={<AssignedOrders />} />
-                <Route path="/customerdashboard" element={<CustomerDashboard />} />
+                <Route path="/customer/customerdashboard" element={<CustomerDashboard />} />
+
                 <Route path="/cart" element={<Cart />} />
                 
                 {/* Furniture Category Routes */}
@@ -92,12 +92,20 @@ function App() {
                 
                 {/* Protected Routes */}
                 <Route 
-                  path="/carpenter/carpenterdashboard/*" 
+                  path="/carpenterdashboard/*" 
                   element={
                     <PrivateRoute>
                       <CarpenterDashboard />
                     </PrivateRoute>
                   } 
+                />
+                <Route 
+                  path="/customer/dashboard/*" 
+                  element={
+                    <PrivateRoute>
+                      <CustomerDashboard />
+                    </PrivateRoute>
+                  }
                 />
                 <Route 
                   path="/customerdashboard/*" 
