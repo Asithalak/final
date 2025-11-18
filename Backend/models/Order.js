@@ -88,6 +88,7 @@ orderSchema.pre('save', function(next) {
   next();
 });
 
+
 // Generate order number
 orderSchema.pre('save', async function(next) {
   if (!this.orderNumber) {
