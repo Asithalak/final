@@ -196,7 +196,7 @@ return (
                   onClick={() => handleTabClick({ id: 'assign-category', label: 'Assign New Category' })}
                   className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
                 >
-                  Assign New Category 
+                  Assign New Category.
                 </button> 
               </div>
             </div>
