@@ -8,7 +8,7 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'customer',
+    role: '',
     phone: '',
     address: '',
     specialization: '',
@@ -160,6 +160,7 @@ const Register = () => {
               >
                 <option value="customer">Customer</option>
                 <option value="carpenter">Carpenter</option>
+                <option value="carpenter">Admin</option>
               </select>
             </div>
 
