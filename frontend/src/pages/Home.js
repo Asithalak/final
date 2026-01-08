@@ -22,6 +22,7 @@ const Home = () => {
               <Link to="/register" className="border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition">
                 Get Started
               </Link>
+              
             </div>
           </div>
         </div>
