@@ -11,7 +11,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const roles = [
-    { 
+    /*{ 
       id: 'admin', 
       name: 'Admin', 
       icon: FaUserShield, 
@@ -20,7 +20,7 @@ const Login = () => {
       borderColor: 'border-red-500',
       textColor: 'text-red-600',
       hoverBg: 'hover:bg-red-100'
-    },
+    },*/
     { 
       id: 'carpenter', 
       name: 'Carpenter', 
@@ -184,19 +184,37 @@ const Login = () => {
           </div>
         </form>
 
-        {/* Info Box */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <p className="text-xs text-gray-500 text-center">
-            <span className="font-semibold">Note:</span> Carpenter and Customer accounts are created by Admin.
-          </p>
+        {/* Registration Links based on selected role */}
+        <div className="text-center border-t pt-4">
+          {selectedRole === 'carpenter' && (
+            <p className="text-sm text-gray-600">
+              New Carpenter?{' '}
+              <Link to="/register/carpenter" className="font-medium text-amber-600 hover:text-amber-500">
+                Register here
+              </Link>
+            </p>
+          )}
+          {selectedRole === 'customer' && (
+            <p className="text-sm text-gray-600">
+              New Customer?{' '}
+              <Link to="/register/customer" className="font-medium text-blue-600 hover:text-blue-500">
+                Register here
+              </Link>
+            </p>
+          )}
+          {!selectedRole && (
+            <p className="text-sm text-gray-500">
+              Select a role to see registration options
+            </p>
+          )}
         </div>
 
         {/* Admin Registration Link */}
-        <div className="text-center border-t pt-4">
-          <p className="text-sm text-gray-600">
-            Are you a new Admin?{' '}
+        <div className="text-center pt-2">
+          <p className="text-xs text-gray-500">
+            Admin?{' '}
             <Link to="/register" className="font-medium text-red-600 hover:text-red-500">
-              Register here
+              Admin Registration
             </Link>
           </p>
         </div>

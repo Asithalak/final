@@ -33,6 +33,7 @@ export const authAPI = {
 // Furniture API
 export const furnitureAPI = {
   getAll: (params) => api.get('/furniture', { params }),
+  getMyFurniture: (params) => api.get('/furniture/my-furniture', { params }),
   getById: (id) => api.get(`/furniture/${id}`),
   create: (formData) => api.post('/furniture', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
@@ -58,6 +59,7 @@ export const ordersAPI = {
 // Resources API
 export const resourcesAPI = {
   getAll: (params) => api.get('/resources', { params }),
+  getMyResources: (params) => api.get('/resources/my-resources', { params }),
   getById: (id) => api.get(`/resources/${id}`),
   create: (formData) => api.post('/resources', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }

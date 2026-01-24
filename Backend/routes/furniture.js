@@ -39,6 +39,34 @@ router.get('/', async (req, res) => {
   }
 });
 
+// @route   GET /api/furniture/my-furniture
+// @desc    Get carpenter's own furniture items
+// @access  Private (Carpenter)
+router.get('/my-furniture', authenticate, isCarpenter, async (req, res) => {
+  try {
+    const { category, search } = req.query;
+    let query = { carpenter: req.user._id };
+
+    if (category) {
+      query.category = category;
+    }
+
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const furniture = await Furniture.find(query)
+      .sort({ createdAt: -1 });
+
+    res.json(furniture);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // @route   GET /api/furniture/:id
 // @desc    Get single furniture item
 // @access  Public
@@ -63,31 +91,52 @@ router.get('/:id', async (req, res) => {
 // @access  Private (Carpenter)
 router.post('/', authenticate, isCarpenter, upload.array('images', 5), async (req, res) => {
   try {
-    const { name, description, category, price, materials, dimensions, stockQuantity, brand } = req.body;
+    const { name, description, category, price, materials, dimensions, stockQuantity, brand, timeRequired } = req.body;
 
     const images = req.files ? req.files.map(file => file.path) : [];
 
+    // Parse materials - can be JSON array or comma-separated string
+    let parsedMaterials = [];
+    if (materials) {
+      try {
+        parsedMaterials = JSON.parse(materials);
+      } catch {
+        parsedMaterials = materials.split(',').map(m => m.trim());
+      }
+    }
+
+    // Parse dimensions if provided
+    let parsedDimensions = {};
+    if (dimensions) {
+      try {
+        parsedDimensions = JSON.parse(dimensions);
+      } catch {
+        parsedDimensions = {};
+      }
+    }
+
     const furniture = await Furniture.create({
       name,
-      description,
-      category,
+      description: description || name,
+      category: category.toLowerCase(),
       price,
       images,
-      materials: JSON.parse(materials),
-      dimensions: JSON.parse(dimensions),
+      materials: parsedMaterials,
+      dimensions: parsedDimensions,
       stockQuantity: stockQuantity || 0,
+      timeRequired: timeRequired || '',
       brand,
       carpenter: req.user._id,
-      isApproved: false,
-      status: 'pending'
+      isApproved: true,  // Auto-approve carpenter's furniture
+      status: 'approved'
     });
 
     res.status(201).json({
-      message: 'Furniture design uploaded successfully. Pending admin approval.',
+      message: 'Furniture design created successfully.',
       furniture
     });
   } catch (error) {
-    res.status(500).json({ message: 'error', error: error.message });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 

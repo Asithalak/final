@@ -33,6 +33,34 @@ router.get('/', authenticate, async (req, res) => {
   }
 });
 
+// @route   GET /api/resources/my-resources
+// @desc    Get carpenter's own resources
+// @access  Private (Carpenter)
+router.get('/my-resources', authenticate, isCarpenter, async (req, res) => {
+  try {
+    const { type, search } = req.query;
+    let query = { seller: req.user._id };
+
+    if (type) {
+      query.type = type;
+    }
+
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const resources = await Resource.find(query)
+      .sort({ createdAt: -1 });
+
+    res.json(resources);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // @route   GET /api/resources/:id
 // @desc    Get single resource
 // @access  Private
@@ -56,7 +84,7 @@ router.get('/:id', authenticate, async (req, res) => {
 // @access  Private (Carpenter)
 router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (req, res) => {
   try {
-    const { name, type, description, quantity, unit, pricePerUnit, specifications } = req.body;
+    const { name, type, description, quantity, unit, pricePerUnit, specifications, supplierName } = req.body;
 
     const images = req.files ? req.files.map(file => file.path) : [];
 
@@ -68,14 +96,15 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (re
       unit,
       pricePerUnit,
       seller: req.user._id,
+      supplierName: supplierName || '',
       images,
       specifications: specifications ? JSON.parse(specifications) : {},
-      isApproved: false,
-      status: 'pending'
+      isApproved: true,  // Auto-approve carpenter's own resources
+      status: 'approved'
     });
 
     res.status(201).json({
-      message: 'Resource uploaded successfully. Pending admin approval.',
+      message: 'Resource added successfully.',
       resource
     });
   } catch (error) {

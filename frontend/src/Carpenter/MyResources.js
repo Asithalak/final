@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { resourcesAPI, furnitureAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const MyResources = () => {
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState('carpenter'); // 'carpenter', 'admin', 'customer'
+  const { user } = useAuth();
   const [resources, setResources] = useState([]);
   const [furnitureItems, setFurnitureItems] = useState([]);
   const [showAddResourceModal, setShowAddResourceModal] = useState(false);
@@ -14,136 +16,216 @@ const MyResources = () => {
   const [selectedResource, setSelectedResource] = useState(null);
   const [selectedFurniture, setSelectedFurniture] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  // Material categories
+  // Material categories matching backend enum
   const materialCategories = [
-    'Wood', 'Metal', 'Fabric', 'Leather', 'Paint', 'Hardware', 'Tools', 'Other'
+    { value: 'wood', label: 'Wood' },
+    { value: 'lumber', label: 'Lumber' },
+    { value: 'metal', label: 'Metal' },
+    { value: 'fabric', label: 'Fabric' },
+    { value: 'glass', label: 'Glass' },
+    { value: 'hardware', label: 'Hardware' },
+    { value: 'paint', label: 'Paint' },
+    { value: 'other', label: 'Other' }
   ];
 
-  // Load user role from localStorage
+  // Unit options matching backend enum
+  const unitOptions = ['piece', 'kg', 'meter', 'sqft', 'liter', 'box'];
+
+  // Furniture categories matching backend enum
+  const furnitureCategories = ['chair', 'table', 'sofa', 'bed', 'cabinet', 'desk', 'shelf', 'other'];
+
+  const userRole = user?.role || 'carpenter';
+
   useEffect(() => {
-    const storedRole = localStorage.getItem('userRole') || 'carpenter';
-    setUserRole(storedRole);
     loadData();
   }, []);
 
-  const loadData = () => {
+  const loadData = async () => {
     setLoading(true);
-    
-    // Mock data - Replace with actual API calls
-    const mockResources = [
-      { id: 1, name: 'Oak Wood', category: 'Wood', quantity: 50, unit: 'pieces', pricePerUnit: 25, supplier: 'Wood Masters Inc.' },
-      { id: 2, name: 'Pine Wood', category: 'Wood', quantity: 75, unit: 'pieces', pricePerUnit: 15, supplier: 'Forest Supply Co.' },
-      { id: 3, name: 'Steel Hinges', category: 'Hardware', quantity: 200, unit: 'pieces', pricePerUnit: 3, supplier: 'Hardware Plus' },
-      { id: 4, name: 'Mahogany Varnish', category: 'Paint', quantity: 20, unit: 'liters', pricePerUnit: 45, supplier: 'Paint World' },
-      { id: 5, name: 'Leather Upholstery', category: 'Leather', quantity: 30, unit: 'meters', pricePerUnit: 60, supplier: 'Leather Works' },
-    ];
+    try {
+      // Load carpenter's resources
+      const resourcesResponse = await resourcesAPI.getMyResources();
+      setResources(resourcesResponse.data || []);
 
-    const mockFurniture = [
-      { id: 1, name: 'Classic Oak Chair', category: 'Chair', timeRequired: '3-4 days', price: 250, materials: ['Oak Wood', 'Steel Hinges', 'Mahogany Varnish'], status: 'Available' },
-      { id: 2, name: 'Modern Dining Table', category: 'Table', timeRequired: '5-7 days', price: 850, materials: ['Oak Wood', 'Mahogany Varnish'], status: 'Available' },
-      { id: 3, name: 'Pine Study Desk', category: 'Desk', timeRequired: '4-5 days', price: 450, materials: ['Pine Wood', 'Steel Hinges', 'Mahogany Varnish'], status: 'Available' },
-      { id: 4, name: 'Leather Sofa', category: 'Sofa', timeRequired: '7-10 days', price: 1200, materials: ['Oak Wood', 'Leather Upholstery', 'Steel Hinges'], status: 'Custom Order' },
-    ];
-
-    setTimeout(() => {
-      setResources(mockResources);
-      setFurnitureItems(mockFurniture);
+      // Load carpenter's furniture
+      const furnitureResponse = await furnitureAPI.getMyFurniture();
+      setFurnitureItems(furnitureResponse.data || []);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      toast.error('Failed to load data');
+    } finally {
       setLoading(false);
-    }, 500);
-  };
-
-  const handleAddResource = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const newResource = {
-      id: resources.length + 1,
-      name: formData.get('name'),
-      category: formData.get('category'),
-      quantity: parseInt(formData.get('quantity')),
-      unit: formData.get('unit'),
-      pricePerUnit: parseFloat(formData.get('pricePerUnit')),
-      supplier: formData.get('supplier'),
-    };
-    setResources([...resources, newResource]);
-    setShowAddResourceModal(false);
-    toast.success('Resource added successfully!');
-  };
-
-  const handleEditResource = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const updatedResources = resources.map(r => 
-      r.id === selectedResource.id ? {
-        ...r,
-        name: formData.get('name'),
-        category: formData.get('category'),
-        quantity: parseInt(formData.get('quantity')),
-        unit: formData.get('unit'),
-        pricePerUnit: parseFloat(formData.get('pricePerUnit')),
-        supplier: formData.get('supplier'),
-      } : r
-    );
-    setResources(updatedResources);
-    setShowEditResourceModal(false);
-    setSelectedResource(null);
-    toast.success('Resource updated successfully!');
-  };
-
-  const handleDeleteResource = (id) => {
-    if (window.confirm('Are you sure you want to delete this resource?')) {
-      setResources(resources.filter(r => r.id !== id));
-      toast.success('Resource deleted successfully!');
     }
   };
 
-  const handleAddFurniture = (e) => {
+  const handleAddResource = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const materials = formData.get('materials').split(',').map(m => m.trim());
-    const newFurniture = {
-      id: furnitureItems.length + 1,
-      name: formData.get('name'),
-      category: formData.get('category'),
-      timeRequired: formData.get('timeRequired'),
-      price: parseFloat(formData.get('price')),
-      materials: materials,
-      status: formData.get('status'),
-    };
-    setFurnitureItems([...furnitureItems, newFurniture]);
-    setShowAddFurnitureModal(false);
-    toast.success('Furniture item added successfully!');
+    setSaving(true);
+    
+    try {
+      const formData = new FormData(e.target);
+      
+      // Create resource data
+      const resourceData = new FormData();
+      resourceData.append('name', formData.get('name'));
+      resourceData.append('type', formData.get('category'));
+      resourceData.append('description', formData.get('name')); // Using name as description
+      resourceData.append('quantity', formData.get('quantity'));
+      resourceData.append('unit', formData.get('unit'));
+      resourceData.append('pricePerUnit', formData.get('pricePerUnit'));
+      resourceData.append('supplierName', formData.get('supplier') || '');
+
+      const response = await resourcesAPI.create(resourceData);
+      
+      setResources([response.data.resource, ...resources]);
+      setShowAddResourceModal(false);
+      toast.success('Resource added successfully!');
+      e.target.reset();
+    } catch (error) {
+      console.error('Error adding resource:', error);
+      toast.error(error.response?.data?.message || 'Failed to add resource');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleEditFurniture = (e) => {
+  const handleEditResource = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const materials = formData.get('materials').split(',').map(m => m.trim());
-    const updatedFurniture = furnitureItems.map(f => 
-      f.id === selectedFurniture.id ? {
-        ...f,
-        name: formData.get('name'),
-        category: formData.get('category'),
-        timeRequired: formData.get('timeRequired'),
-        price: parseFloat(formData.get('price')),
-        materials: materials,
-        status: formData.get('status'),
-      } : f
-    );
-    setFurnitureItems(updatedFurniture);
-    setShowEditFurnitureModal(false);
-    setSelectedFurniture(null);
-    toast.success('Furniture item updated successfully!');
+    setSaving(true);
+    
+    try {
+      const formData = new FormData(e.target);
+      
+      const resourceData = new FormData();
+      resourceData.append('name', formData.get('name'));
+      resourceData.append('type', formData.get('category'));
+      resourceData.append('description', formData.get('name'));
+      resourceData.append('quantity', formData.get('quantity'));
+      resourceData.append('unit', formData.get('unit'));
+      resourceData.append('pricePerUnit', formData.get('pricePerUnit'));
+      resourceData.append('supplierName', formData.get('supplier') || '');
+
+      const response = await resourcesAPI.update(selectedResource._id, resourceData);
+      
+      setResources(resources.map(r => 
+        r._id === selectedResource._id ? response.data.resource : r
+      ));
+      setShowEditResourceModal(false);
+      setSelectedResource(null);
+      toast.success('Resource updated successfully!');
+    } catch (error) {
+      console.error('Error updating resource:', error);
+      toast.error(error.response?.data?.message || 'Failed to update resource');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleDeleteFurniture = (id) => {
+  const handleDeleteResource = async (id) => {
+    if (window.confirm('Are you sure you want to delete this resource?')) {
+      try {
+        await resourcesAPI.delete(id);
+        setResources(resources.filter(r => r._id !== id));
+        toast.success('Resource deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting resource:', error);
+        toast.error(error.response?.data?.message || 'Failed to delete resource');
+      }
+    }
+  };
+
+  const handleAddFurniture = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    
+    try {
+      const formData = new FormData(e.target);
+      const materials = formData.get('materials').split(',').map(m => m.trim());
+      
+      const furnitureData = new FormData();
+      furnitureData.append('name', formData.get('name'));
+      furnitureData.append('category', formData.get('category'));
+      furnitureData.append('description', formData.get('name'));
+      furnitureData.append('price', formData.get('price'));
+      furnitureData.append('materials', JSON.stringify(materials));
+      furnitureData.append('timeRequired', formData.get('timeRequired'));
+      furnitureData.append('stockQuantity', formData.get('status') === 'Available' ? 1 : 0);
+
+      const response = await furnitureAPI.create(furnitureData);
+      
+      setFurnitureItems([response.data.furniture, ...furnitureItems]);
+      setShowAddFurnitureModal(false);
+      toast.success('Furniture item added successfully!');
+      e.target.reset();
+    } catch (error) {
+      console.error('Error adding furniture:', error);
+      toast.error(error.response?.data?.message || 'Failed to add furniture');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditFurniture = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    
+    try {
+      const formData = new FormData(e.target);
+      const materials = formData.get('materials').split(',').map(m => m.trim());
+      
+      const furnitureData = new FormData();
+      furnitureData.append('name', formData.get('name'));
+      furnitureData.append('category', formData.get('category'));
+      furnitureData.append('description', formData.get('name'));
+      furnitureData.append('price', formData.get('price'));
+      furnitureData.append('materials', JSON.stringify(materials));
+      furnitureData.append('timeRequired', formData.get('timeRequired'));
+      furnitureData.append('stockQuantity', formData.get('status') === 'Available' ? 1 : 0);
+
+      const response = await furnitureAPI.update(selectedFurniture._id, furnitureData);
+      
+      setFurnitureItems(furnitureItems.map(f => 
+        f._id === selectedFurniture._id ? response.data.furniture : f
+      ));
+      setShowEditFurnitureModal(false);
+      setSelectedFurniture(null);
+      toast.success('Furniture item updated successfully!');
+    } catch (error) {
+      console.error('Error updating furniture:', error);
+      toast.error(error.response?.data?.message || 'Failed to update furniture');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteFurniture = async (id) => {
     if (window.confirm('Are you sure you want to delete this furniture item?')) {
-      setFurnitureItems(furnitureItems.filter(f => f.id !== id));
-      toast.success('Furniture item deleted successfully!');
+      try {
+        await furnitureAPI.delete(id);
+        setFurnitureItems(furnitureItems.filter(f => f._id !== id));
+        toast.success('Furniture item deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting furniture:', error);
+        toast.error(error.response?.data?.message || 'Failed to delete furniture');
+      }
     }
   };
 
   const canEdit = userRole === 'carpenter';
+
+  // Helper to get category label
+  const getCategoryLabel = (value) => {
+    const cat = materialCategories.find(c => c.value === value);
+    return cat ? cat.label : value;
+  };
+
+  // Helper to get furniture status
+  const getFurnitureStatus = (furniture) => {
+    if (furniture.stockQuantity > 0) return 'Available';
+    return 'Custom Order';
+  };
 
   if (loading) {
     return (
@@ -205,19 +287,19 @@ const MyResources = () => {
             {resources.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {resources.map(resource => (
-                  <div key={resource.id} className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 group">
+                  <div key={resource._id} className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 group">
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          resource.category === 'Wood' ? 'bg-amber-100 text-amber-700' :
-                          resource.category === 'Metal' ? 'bg-gray-100 text-gray-700' :
-                          resource.category === 'Fabric' ? 'bg-purple-100 text-purple-700' :
-                          resource.category === 'Leather' ? 'bg-orange-100 text-orange-700' :
-                          resource.category === 'Paint' ? 'bg-red-100 text-red-700' :
-                          resource.category === 'Hardware' ? 'bg-blue-100 text-blue-700' :
+                          resource.type === 'wood' || resource.type === 'lumber' ? 'bg-amber-100 text-amber-700' :
+                          resource.type === 'metal' ? 'bg-gray-100 text-gray-700' :
+                          resource.type === 'fabric' ? 'bg-purple-100 text-purple-700' :
+                          resource.type === 'paint' ? 'bg-red-100 text-red-700' :
+                          resource.type === 'hardware' ? 'bg-blue-100 text-blue-700' :
+                          resource.type === 'glass' ? 'bg-cyan-100 text-cyan-700' :
                           'bg-green-100 text-green-700'
                         }`}>
-                          {resource.category}
+                          {getCategoryLabel(resource.type)}
                         </span>
                       </div>
                       {canEdit && (
@@ -232,7 +314,7 @@ const MyResources = () => {
                             ✏️ Edit
                           </button>
                           <button
-                            onClick={() => handleDeleteResource(resource.id)}
+                            onClick={() => handleDeleteResource(resource._id)}
                             className="text-red-600 hover:text-red-700 text-sm font-medium"
                           >
                             🗑️ Delete
@@ -259,7 +341,7 @@ const MyResources = () => {
                     </div>
 
                     <div className="pt-4 border-t border-gray-200">
-                      <p className="text-xs text-gray-500">Supplier: <span className="text-gray-700 font-medium">{resource.supplier}</span></p>
+                      <p className="text-xs text-gray-500">Supplier: <span className="text-gray-700 font-medium">{resource.supplierName || 'N/A'}</span></p>
                     </div>
                   </div>
                 ))}
@@ -267,6 +349,14 @@ const MyResources = () => {
             ) : (
               <div className="text-center py-12">
                 <p className="text-gray-500 text-lg">No resources available</p>
+                {canEdit && (
+                  <button
+                    onClick={() => setShowAddResourceModal(true)}
+                    className="mt-4 text-blue-600 hover:text-blue-700 font-medium"
+                  >
+                    + Add your first resource
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -297,19 +387,22 @@ const MyResources = () => {
             {furnitureItems.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {furnitureItems.map(furniture => (
-                  <div key={furniture.id} className="bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 group hover:border-purple-300">
+                  <div key={furniture._id} className="bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 group hover:border-purple-300">
                     <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 border-b border-gray-200">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h3 className="text-2xl font-bold text-gray-900 mb-1">{furniture.name}</h3>
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            furniture.category === 'Chair' ? 'bg-blue-100 text-blue-700' :
-                            furniture.category === 'Table' ? 'bg-green-100 text-green-700' :
-                            furniture.category === 'Sofa' ? 'bg-purple-100 text-purple-700' :
-                            furniture.category === 'Desk' ? 'bg-yellow-100 text-yellow-700' :
+                            furniture.category === 'chair' ? 'bg-blue-100 text-blue-700' :
+                            furniture.category === 'table' ? 'bg-green-100 text-green-700' :
+                            furniture.category === 'sofa' ? 'bg-purple-100 text-purple-700' :
+                            furniture.category === 'desk' ? 'bg-yellow-100 text-yellow-700' :
+                            furniture.category === 'bed' ? 'bg-pink-100 text-pink-700' :
+                            furniture.category === 'cabinet' ? 'bg-orange-100 text-orange-700' :
+                            furniture.category === 'shelf' ? 'bg-teal-100 text-teal-700' :
                             'bg-gray-100 text-gray-700'
                           }`}>
-                            {furniture.category}
+                            {furniture.category ? furniture.category.charAt(0).toUpperCase() + furniture.category.slice(1) : 'Other'}
                           </span>
                         </div>
                         {canEdit && (
@@ -324,7 +417,7 @@ const MyResources = () => {
                               ✏️ Edit
                             </button>
                             <button
-                              onClick={() => handleDeleteFurniture(furniture.id)}
+                              onClick={() => handleDeleteFurniture(furniture._id)}
                               className="text-red-600 hover:text-red-700 text-sm font-medium"
                             >
                               🗑️ Delete
@@ -338,7 +431,7 @@ const MyResources = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="bg-blue-50 rounded-lg p-4">
                           <p className="text-xs text-gray-600 mb-1">⏱️ Time Required</p>
-                          <p className="text-lg font-bold text-blue-700">{furniture.timeRequired}</p>
+                          <p className="text-lg font-bold text-blue-700">{furniture.timeRequired || 'N/A'}</p>
                         </div>
                         <div className="bg-green-50 rounded-lg p-4">
                           <p className="text-xs text-gray-600 mb-1">💰 Price</p>
@@ -349,7 +442,7 @@ const MyResources = () => {
                       <div className="bg-amber-50 rounded-lg p-4">
                         <p className="text-sm font-semibold text-gray-700 mb-2">📦 Required Materials:</p>
                         <div className="flex flex-wrap gap-2">
-                          {furniture.materials.map((material, index) => (
+                          {furniture.materials && furniture.materials.map((material, index) => (
                             <span key={index} className="px-3 py-1 bg-white border border-amber-200 rounded-full text-xs font-medium text-gray-700">
                               {material}
                             </span>
@@ -359,13 +452,13 @@ const MyResources = () => {
 
                       <div className="flex justify-between items-center pt-4 border-t border-gray-200">
                         <span className={`px-4 py-2 rounded-lg text-sm font-semibold ${
-                          furniture.status === 'Available' ? 'bg-green-100 text-green-700' :
+                          getFurnitureStatus(furniture) === 'Available' ? 'bg-green-100 text-green-700' :
                           'bg-orange-100 text-orange-700'
                         }`}>
-                          {furniture.status}
+                          {getFurnitureStatus(furniture)}
                         </span>
                         <button 
-                          onClick={() => navigate(`/furniture/${furniture.id}`)}
+                          onClick={() => navigate(`/furniture/${furniture._id}`)}
                           className="text-purple-600 hover:text-purple-700 font-semibold text-sm flex items-center gap-1"
                         >
                           View Details →
@@ -378,6 +471,14 @@ const MyResources = () => {
             ) : (
               <div className="text-center py-12">
                 <p className="text-gray-500 text-lg">No furniture items available</p>
+                {canEdit && (
+                  <button
+                    onClick={() => setShowAddFurnitureModal(true)}
+                    className="mt-4 text-purple-600 hover:text-purple-700 font-medium"
+                  >
+                    + Add your first furniture item
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -403,38 +504,42 @@ const MyResources = () => {
             <form onSubmit={handleAddResource} className="p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Resource Name</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Resource Name *</label>
                   <input type="text" name="name" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Oak Wood" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
                   <select name="category" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     {materialCategories.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Quantity</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Quantity *</label>
                   <input type="number" name="quantity" required min="0" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Unit</label>
-                  <input type="text" name="unit" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., pieces, meters, liters" />
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Unit *</label>
+                  <select name="unit" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    {unitOptions.map(unit => (
+                      <option key={unit} value={unit}>{unit}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Price per Unit ($)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Price per Unit ($) *</label>
                   <input type="number" name="pricePerUnit" required step="0.01" min="0" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Supplier</label>
-                  <input type="text" name="supplier" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Wood Masters Inc." />
+                  <input type="text" name="supplier" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Wood Masters Inc." />
                 </div>
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button type="submit" className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg">
-                  ✓ Add Resource
+                <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg disabled:opacity-50">
+                  {saving ? 'Saving...' : '✓ Add Resource'}
                 </button>
                 <button type="button" onClick={() => setShowAddResourceModal(false)} className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50">
                   Cancel
@@ -463,38 +568,42 @@ const MyResources = () => {
             <form onSubmit={handleEditResource} className="p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Resource Name</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Resource Name *</label>
                   <input type="text" name="name" required defaultValue={selectedResource.name} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
-                  <select name="category" required defaultValue={selectedResource.category} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                  <select name="category" required defaultValue={selectedResource.type} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     {materialCategories.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Quantity</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Quantity *</label>
                   <input type="number" name="quantity" required min="0" defaultValue={selectedResource.quantity} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Unit</label>
-                  <input type="text" name="unit" required defaultValue={selectedResource.unit} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Unit *</label>
+                  <select name="unit" required defaultValue={selectedResource.unit} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    {unitOptions.map(unit => (
+                      <option key={unit} value={unit}>{unit}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Price per Unit ($)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Price per Unit ($) *</label>
                   <input type="number" name="pricePerUnit" required step="0.01" min="0" defaultValue={selectedResource.pricePerUnit} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Supplier</label>
-                  <input type="text" name="supplier" required defaultValue={selectedResource.supplier} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="text" name="supplier" defaultValue={selectedResource.supplierName} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button type="submit" className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg">
-                  ✓ Update Resource
+                <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg disabled:opacity-50">
+                  {saving ? 'Saving...' : '✓ Update Resource'}
                 </button>
                 <button type="button" onClick={() => { setShowEditResourceModal(false); setSelectedResource(null); }} className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50">
                   Cancel
@@ -523,46 +632,41 @@ const MyResources = () => {
             <form onSubmit={handleAddFurniture} className="p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Furniture Name</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Furniture Name *</label>
                   <input type="text" name="name" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., Classic Oak Chair" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
                   <select name="category" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                    <option value="Chair">Chair</option>
-                    <option value="Table">Table</option>
-                    <option value="Sofa">Sofa</option>
-                    <option value="Bed">Bed</option>
-                    <option value="Desk">Desk</option>
-                    <option value="Cabinet">Cabinet</option>
-                    <option value="Shelf">Shelf</option>
+                    {furnitureCategories.map(cat => (
+                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Time Required</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Time Required *</label>
                   <input type="text" name="timeRequired" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., 3-4 days" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Price ($)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Price ($) *</label>
                   <input type="number" name="price" required step="0.01" min="0" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Required Materials (comma-separated)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Required Materials (comma-separated) *</label>
                   <input type="text" name="materials" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., Oak Wood, Steel Hinges, Mahogany Varnish" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Status *</label>
                   <select name="status" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     <option value="Available">Available</option>
                     <option value="Custom Order">Custom Order</option>
-                    <option value="Out of Stock">Out of Stock</option>
                   </select>
                 </div>
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button type="submit" className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg">
-                  ✓ Add Furniture
+                <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg disabled:opacity-50">
+                  {saving ? 'Saving...' : '✓ Add Furniture'}
                 </button>
                 <button type="button" onClick={() => setShowAddFurnitureModal(false)} className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50">
                   Cancel
@@ -591,46 +695,41 @@ const MyResources = () => {
             <form onSubmit={handleEditFurniture} className="p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Furniture Name</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Furniture Name *</label>
                   <input type="text" name="name" required defaultValue={selectedFurniture.name} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
                   <select name="category" required defaultValue={selectedFurniture.category} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                    <option value="Chair">Chair</option>
-                    <option value="Table">Table</option>
-                    <option value="Sofa">Sofa</option>
-                    <option value="Bed">Bed</option>
-                    <option value="Desk">Desk</option>
-                    <option value="Cabinet">Cabinet</option>
-                    <option value="Shelf">Shelf</option>
+                    {furnitureCategories.map(cat => (
+                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Time Required</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Time Required *</label>
                   <input type="text" name="timeRequired" required defaultValue={selectedFurniture.timeRequired} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Price ($)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Price ($) *</label>
                   <input type="number" name="price" required step="0.01" min="0" defaultValue={selectedFurniture.price} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Required Materials (comma-separated)</label>
-                  <input type="text" name="materials" required defaultValue={selectedFurniture.materials.join(', ')} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Required Materials (comma-separated) *</label>
+                  <input type="text" name="materials" required defaultValue={selectedFurniture.materials?.join(', ')} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-                  <select name="status" required defaultValue={selectedFurniture.status} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Status *</label>
+                  <select name="status" required defaultValue={getFurnitureStatus(selectedFurniture)} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     <option value="Available">Available</option>
                     <option value="Custom Order">Custom Order</option>
-                    <option value="Out of Stock">Out of Stock</option>
                   </select>
                 </div>
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button type="submit" className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg">
-                  ✓ Update Furniture
+                <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg disabled:opacity-50">
+                  {saving ? 'Saving...' : '✓ Update Furniture'}
                 </button>
                 <button type="button" onClick={() => { setShowEditFurnitureModal(false); setSelectedFurniture(null); }} className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50">
                   Cancel

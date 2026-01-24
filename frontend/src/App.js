@@ -15,6 +15,7 @@ import Brands from './pages/Brands';
 import Offers from './pages/Offers';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import RegisterUser from './pages/RegisterUser';
 import OrderTracking from './pages/OrderTracking';
 import Cart from './pages/Cart';
 
@@ -61,6 +62,7 @@ function App() {
                 <Route path="/offers" element={<Offers />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/register/:role" element={<RegisterUser />} />
                 <Route path="/carpenter/carpenterdashboard" element={<CarpenterDashboard />} />
                 <Route path="/carpenter/myfurnituredesigns" element={<MyFurnitureDesigns />} />
                 <Route path="/carpenter/myresources" element={<MyResources />} />

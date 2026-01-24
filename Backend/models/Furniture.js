@@ -41,6 +41,11 @@ const furnitureSchema = new mongoose.Schema({
     default: 0,
     min: 0
   },
+  timeRequired: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   carpenter: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

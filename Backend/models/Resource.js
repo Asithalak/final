@@ -35,6 +35,11 @@ const resourceSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  supplierName: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   images: [{
     type: String
   }],
