@@ -147,11 +147,19 @@ const MyResources = () => {
       const furnitureData = new FormData();
       furnitureData.append('name', formData.get('name'));
       furnitureData.append('category', formData.get('category'));
-      furnitureData.append('description', formData.get('name'));
+      furnitureData.append('description', formData.get('description') || formData.get('name'));
       furnitureData.append('price', formData.get('price'));
       furnitureData.append('materials', JSON.stringify(materials));
       furnitureData.append('timeRequired', formData.get('timeRequired'));
       furnitureData.append('stockQuantity', formData.get('status') === 'Available' ? 1 : 0);
+
+      // Add images
+      const imageFiles = formData.getAll('images');
+      imageFiles.forEach((file) => {
+        if (file && file.size > 0) {
+          furnitureData.append('images', file);
+        }
+      });
 
       const response = await furnitureAPI.create(furnitureData);
       
@@ -178,11 +186,19 @@ const MyResources = () => {
       const furnitureData = new FormData();
       furnitureData.append('name', formData.get('name'));
       furnitureData.append('category', formData.get('category'));
-      furnitureData.append('description', formData.get('name'));
+      furnitureData.append('description', formData.get('description') || formData.get('name'));
       furnitureData.append('price', formData.get('price'));
       furnitureData.append('materials', JSON.stringify(materials));
       furnitureData.append('timeRequired', formData.get('timeRequired'));
       furnitureData.append('stockQuantity', formData.get('status') === 'Available' ? 1 : 0);
+
+      // Add images if new ones are selected
+      const imageFiles = formData.getAll('images');
+      imageFiles.forEach((file) => {
+        if (file && file.size > 0) {
+          furnitureData.append('images', file);
+        }
+      });
 
       const response = await furnitureAPI.update(selectedFurniture._id, furnitureData);
       
@@ -388,6 +404,26 @@ const MyResources = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {furnitureItems.map(furniture => (
                   <div key={furniture._id} className="bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 group hover:border-purple-300">
+                    {/* Furniture Image */}
+                    {furniture.images && furniture.images.length > 0 ? (
+                      <div className="h-48 bg-gray-100 relative overflow-hidden">
+                        <img 
+                          src={furniture.images[0].startsWith('http') ? furniture.images[0] : `http://localhost:8000${furniture.images[0]}`}
+                          alt={furniture.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        {furniture.images.length > 1 && (
+                          <span className="absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded-lg text-xs">
+                            +{furniture.images.length - 1} more
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="h-48 bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center">
+                        <span className="text-6xl">🪑</span>
+                      </div>
+                    )}
+                    
                     <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 border-b border-gray-200">
                       <div className="flex justify-between items-start mb-3">
                         <div>
@@ -662,6 +698,21 @@ const MyResources = () => {
                     <option value="Custom Order">Custom Order</option>
                   </select>
                 </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                  <textarea name="description" rows="3" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Describe your furniture design..."></textarea>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">📷 Upload Images (up to 5)</label>
+                  <input 
+                    type="file" 
+                    name="images" 
+                    multiple 
+                    accept="image/*" 
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" 
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Supported formats: JPG, PNG, GIF. Max 5 images.</p>
+                </div>
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -724,6 +775,29 @@ const MyResources = () => {
                     <option value="Available">Available</option>
                     <option value="Custom Order">Custom Order</option>
                   </select>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                  <textarea name="description" rows="3" defaultValue={selectedFurniture.description} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Describe your furniture design..."></textarea>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">📷 Update Images (up to 5)</label>
+                  {selectedFurniture.images && selectedFurniture.images.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {selectedFurniture.images.map((img, idx) => (
+                        <img key={idx} src={img.startsWith('http') ? img : `http://localhost:8000${img}`} alt={`Current ${idx + 1}`} className="w-16 h-16 object-cover rounded-lg border" />
+                      ))}
+                      <p className="text-xs text-gray-500 w-full">Current images shown above. Upload new images to replace them.</p>
+                    </div>
+                  )}
+                  <input 
+                    type="file" 
+                    name="images" 
+                    multiple 
+                    accept="image/*" 
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" 
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Leave empty to keep current images. Supported formats: JPG, PNG, GIF.</p>
                 </div>
               </div>
 

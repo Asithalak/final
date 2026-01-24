@@ -2,10 +2,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const { MongoMemoryServer } = require('mongodb-memory-server');
+const path = require('path');
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from Backend/.env
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.log('⚠️  Uncaught Exception:', err.message);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.log('⚠️  Unhandled Rejection:', err.message);
+});
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -22,28 +31,29 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
-// Database connection with options
-const connectDB = async () => {
-  let mongoUri = process.env.MONGODB_URI;
+// Database connection with options and retry
+const connectDB = async (retries = 5) => {
+  const mongoUri = process.env.MONGODB_URI;
   
-  try {
-    // Try connecting to configured MongoDB first
-    await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-    });
-    console.log('✅ MongoDB Atlas connected successfully');
-  } catch (err) {
-    console.log('⚠️  MongoDB Atlas not available, starting local memory database...');
-    
-    // Start MongoDB Memory Server as fallback
-    const mongod = await MongoMemoryServer.create();
-    mongoUri = mongod.getUri();
-    
-    await mongoose.connect(mongoUri);
-    console.log('✅ MongoDB Memory Server connected successfully');
-    console.log('📍 Using in-memory database (data will reset on restart)');
+  for (let i = 0; i < retries; i++) {
+    try {
+      console.log(`🔄 Attempting to connect to MongoDB... (attempt ${i + 1}/${retries})`);
+      await mongoose.connect(mongoUri, {
+        serverSelectionTimeoutMS: 30000,
+        socketTimeoutMS: 45000,
+        family: 4,
+      });
+      console.log('✅ MongoDB connected successfully');
+      return;
+    } catch (err) {
+      console.error(`❌ MongoDB connection attempt ${i + 1} failed:`, err.message);
+      if (i < retries - 1) {
+        console.log(`⏳ Waiting 5 seconds before retry...`);
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      }
+    }
   }
+  console.log('💡 All connection attempts failed. Database operations will not work.');
 };
 
 // Handle MongoDB connection events
@@ -55,8 +65,17 @@ mongoose.connection.on('error', (err) => {
   console.log('⚠️  Database connection issue');
 });
 
-// Connect to database
-connectDB();
+// Start server first, then connect to database
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log("connected to backend");
+  
+  // Connect to database after server starts
+  connectDB().catch(err => {
+    console.log('⚠️  Will retry database connection...');
+  });
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -67,7 +86,8 @@ app.use('/api/users', userRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Furniture Showroom API is running' });
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  res.json({ status: 'OK', message: 'Furniture Showroom API is running', database: dbStatus });
 });
 
 // Error handling middleware
@@ -77,10 +97,4 @@ app.use((err, req, res, next) => {
     message: 'Something went wrong!', 
     error: process.env.NODE_ENV === 'development' ? err.message : {} 
   });
-});
-
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log("connected to backend");
 });

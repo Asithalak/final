@@ -47,7 +47,7 @@ router.post('/register', async (req, res) => {
       password,
       role: role || 'customer',
       phone: phone || '',
-      isApproved: role === 'carpenter' ? false : true
+      isApproved: true // Auto-approve all users including carpenters
     };
 
     // Handle address - can be string or object
@@ -98,23 +98,28 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user
-    const user = await User.findOne({ email });
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Please provide email and password' });
+    }
+
+    // Find user (normalize email to lowercase)
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail });
+    
     if (!user) {
+      console.log('Login failed: User not found for email:', normalizedEmail);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Check password
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
+      console.log('Login failed: Password mismatch for user:', normalizedEmail);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Check if carpenter is approved
-    if (user.role === 'carpenter' && !user.isApproved) {
-      return res.status(403).json({ message: 'Your account is pending admin approval' });
-    }
-
+    console.log('Login successful for:', normalizedEmail);
     res.json({
       _id: user._id,
       name: user.name,
