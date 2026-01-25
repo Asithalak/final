@@ -93,7 +93,8 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 5), async (re
   try {
     const { name, description, category, price, materials, dimensions, stockQuantity, brand, timeRequired } = req.body;
 
-    const images = req.files ? req.files.map(file => file.path) : [];
+    // Normalize image paths to use forward slashes for web URLs
+    const images = req.files ? req.files.map(file => file.path.replace(/\\/g, '/')) : [];
 
     // Parse materials - can be JSON array or comma-separated string
     let parsedMaterials = [];
@@ -143,7 +144,7 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 5), async (re
 // @route   PUT /api/furniture/:id
 // @desc    Update furniture
 // @access  Private (Carpenter - own items)
-/*router.put('/:id', authenticate, isCarpenter, upload.array('images', 5), async (req, res) => {
+router.put('/:id', authenticate, isCarpenter, upload.array('images', 5), async (req, res) => {
   try {
     const furniture = await Furniture.findById(req.params.id);
 
@@ -156,12 +157,40 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 5), async (re
       return res.status(403).json({ message: 'Not authorized' });
     }
 
-    const updates = req.body;
-    if (req.files && req.files.length > 0) {
-      updates.images = req.files.map(file => file.path);
+    const { name, description, category, price, materials, dimensions, stockQuantity, brand, timeRequired } = req.body;
+
+    // Update basic fields if provided
+    if (name) furniture.name = name;
+    if (description) furniture.description = description;
+    if (category) furniture.category = category.toLowerCase();
+    if (price) furniture.price = price;
+    if (stockQuantity !== undefined) furniture.stockQuantity = stockQuantity;
+    if (timeRequired) furniture.timeRequired = timeRequired;
+    if (brand) furniture.brand = brand;
+
+    // Parse and update materials
+    if (materials) {
+      try {
+        furniture.materials = JSON.parse(materials);
+      } catch {
+        furniture.materials = materials.split(',').map(m => m.trim());
+      }
     }
 
-    Object.assign(furniture, updates);
+    // Parse and update dimensions
+    if (dimensions) {
+      try {
+        furniture.dimensions = JSON.parse(dimensions);
+      } catch {
+        // Keep existing dimensions
+      }
+    }
+
+    // Update images if new ones are uploaded (normalize paths)
+    if (req.files && req.files.length > 0) {
+      furniture.images = req.files.map(file => file.path.replace(/\\/g, '/'));
+    }
+
     await furniture.save();
 
     res.json({ message: 'Furniture updated successfully', furniture });
@@ -251,6 +280,6 @@ router.post('/:id/review', authenticate, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
-});*/
+});
 
 module.exports = router;

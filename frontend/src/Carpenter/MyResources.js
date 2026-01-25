@@ -17,6 +17,46 @@ const MyResources = () => {
   const [selectedFurniture, setSelectedFurniture] = useState(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [imagePreview, setImagePreview] = useState([]);
+  const [editImagePreview, setEditImagePreview] = useState([]);
+
+  // Handle image preview for add furniture
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 5) {
+      toast.warning('Maximum 5 images allowed');
+      e.target.value = '';
+      setImagePreview([]);
+      return;
+    }
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImagePreview(previews);
+  };
+
+  // Handle image preview for edit furniture
+  const handleEditImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 5) {
+      toast.warning('Maximum 5 images allowed');
+      e.target.value = '';
+      setEditImagePreview([]);
+      return;
+    }
+    const previews = files.map(file => URL.createObjectURL(file));
+    setEditImagePreview(previews);
+  };
+
+  // Clear previews when modal closes
+  const closeAddFurnitureModal = () => {
+    setShowAddFurnitureModal(false);
+    setImagePreview([]);
+  };
+
+  const closeEditFurnitureModal = () => {
+    setShowEditFurnitureModal(false);
+    setSelectedFurniture(null);
+    setEditImagePreview([]);
+  };
 
   // Material categories matching backend enum
   const materialCategories = [
@@ -164,7 +204,7 @@ const MyResources = () => {
       const response = await furnitureAPI.create(furnitureData);
       
       setFurnitureItems([response.data.furniture, ...furnitureItems]);
-      setShowAddFurnitureModal(false);
+      closeAddFurnitureModal();
       toast.success('Furniture item added successfully!');
       e.target.reset();
     } catch (error) {
@@ -205,8 +245,7 @@ const MyResources = () => {
       setFurnitureItems(furnitureItems.map(f => 
         f._id === selectedFurniture._id ? response.data.furniture : f
       ));
-      setShowEditFurnitureModal(false);
-      setSelectedFurniture(null);
+      closeEditFurnitureModal();
       toast.success('Furniture item updated successfully!');
     } catch (error) {
       console.error('Error updating furniture:', error);
@@ -241,6 +280,15 @@ const MyResources = () => {
   const getFurnitureStatus = (furniture) => {
     if (furniture.stockQuantity > 0) return 'Available';
     return 'Custom Order';
+  };
+
+  // Helper to format image URL
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    // Ensure the path starts with /
+    const normalizedPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `http://localhost:8000${normalizedPath}`;
   };
 
   if (loading) {
@@ -408,9 +456,14 @@ const MyResources = () => {
                     {furniture.images && furniture.images.length > 0 ? (
                       <div className="h-48 bg-gray-100 relative overflow-hidden">
                         <img 
-                          src={furniture.images[0].startsWith('http') ? furniture.images[0] : `http://localhost:8000${furniture.images[0]}`}
+                          src={getImageUrl(furniture.images[0])}
                           alt={furniture.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '';
+                            e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center"><span class="text-6xl">🪑</span></div>';
+                          }}
                         />
                         {furniture.images.length > 1 && (
                           <span className="absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded-lg text-xs">
@@ -657,7 +710,7 @@ const MyResources = () => {
             <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-t-2xl">
               <div className="flex justify-between items-center">
                 <h3 className="text-2xl font-bold text-white">Add New Furniture Item</h3>
-                <button onClick={() => setShowAddFurnitureModal(false)} className="text-white/80 hover:text-white">
+                <button onClick={closeAddFurnitureModal} className="text-white/80 hover:text-white">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -709,9 +762,30 @@ const MyResources = () => {
                     name="images" 
                     multiple 
                     accept="image/*" 
+                    onChange={handleImageChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" 
                   />
                   <p className="text-xs text-gray-500 mt-1">Supported formats: JPG, PNG, GIF. Max 5 images.</p>
+                  {/* Image Preview */}
+                  {imagePreview.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {imagePreview.map((src, idx) => (
+                          <div key={idx} className="relative">
+                            <img 
+                              src={src} 
+                              alt={`Preview ${idx + 1}`} 
+                              className="w-20 h-20 object-cover rounded-lg border-2 border-purple-200 shadow-sm" 
+                            />
+                            <span className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                              {idx + 1}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -719,7 +793,7 @@ const MyResources = () => {
                 <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg disabled:opacity-50">
                   {saving ? 'Saving...' : '✓ Add Furniture'}
                 </button>
-                <button type="button" onClick={() => setShowAddFurnitureModal(false)} className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50">
+                <button type="button" onClick={closeAddFurnitureModal} className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50">
                   Cancel
                 </button>
               </div>
@@ -735,7 +809,7 @@ const MyResources = () => {
             <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-t-2xl">
               <div className="flex justify-between items-center">
                 <h3 className="text-2xl font-bold text-white">Edit Furniture Item</h3>
-                <button onClick={() => { setShowEditFurnitureModal(false); setSelectedFurniture(null); }} className="text-white/80 hover:text-white">
+                <button onClick={closeEditFurnitureModal} className="text-white/80 hover:text-white">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -782,12 +856,25 @@ const MyResources = () => {
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">📷 Update Images (up to 5)</label>
+                  {/* Current Images */}
                   {selectedFurniture.images && selectedFurniture.images.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-2">
-                      {selectedFurniture.images.map((img, idx) => (
-                        <img key={idx} src={img.startsWith('http') ? img : `http://localhost:8000${img}`} alt={`Current ${idx + 1}`} className="w-16 h-16 object-cover rounded-lg border" />
-                      ))}
-                      <p className="text-xs text-gray-500 w-full">Current images shown above. Upload new images to replace them.</p>
+                    <div className="mb-3">
+                      <p className="text-sm font-medium text-gray-600 mb-2">Current Images:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedFurniture.images.map((img, idx) => (
+                          <div key={idx} className="relative">
+                            <img 
+                              src={getImageUrl(img)} 
+                              alt={`Current ${idx + 1}`} 
+                              className="w-20 h-20 object-cover rounded-lg border-2 border-gray-200 shadow-sm" 
+                            />
+                            <span className="absolute -top-2 -right-2 bg-gray-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                              {idx + 1}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">Upload new images to replace current ones.</p>
                     </div>
                   )}
                   <input 
@@ -795,9 +882,30 @@ const MyResources = () => {
                     name="images" 
                     multiple 
                     accept="image/*" 
+                    onChange={handleEditImageChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" 
                   />
                   <p className="text-xs text-gray-500 mt-1">Leave empty to keep current images. Supported formats: JPG, PNG, GIF.</p>
+                  {/* New Image Preview */}
+                  {editImagePreview.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-sm font-medium text-green-700 mb-2">New Images Preview:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {editImagePreview.map((src, idx) => (
+                          <div key={idx} className="relative">
+                            <img 
+                              src={src} 
+                              alt={`New Preview ${idx + 1}`} 
+                              className="w-20 h-20 object-cover rounded-lg border-2 border-green-300 shadow-sm" 
+                            />
+                            <span className="absolute -top-2 -right-2 bg-green-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                              {idx + 1}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -805,7 +913,7 @@ const MyResources = () => {
                 <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg disabled:opacity-50">
                   {saving ? 'Saving...' : '✓ Update Furniture'}
                 </button>
-                <button type="button" onClick={() => { setShowEditFurnitureModal(false); setSelectedFurniture(null); }} className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50">
+                <button type="button" onClick={closeEditFurnitureModal} className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50">
                   Cancel
                 </button>
               </div>
