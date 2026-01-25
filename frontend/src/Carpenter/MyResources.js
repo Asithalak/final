@@ -286,8 +286,12 @@ const MyResources = () => {
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith('http')) return imagePath;
+    // Normalize backslashes to forward slashes (Windows paths)
+    let normalizedPath = imagePath.replace(/\\/g, '/');
     // Ensure the path starts with /
-    const normalizedPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    if (!normalizedPath.startsWith('/')) {
+      normalizedPath = '/' + normalizedPath;
+    }
     return `http://localhost:8000${normalizedPath}`;
   };
 
