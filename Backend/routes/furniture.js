@@ -67,6 +67,25 @@ router.get('/my-furniture', authenticate, isCarpenter, async (req, res) => {
   }
 });
 
+// @route   GET /api/furniture/carpenter/:carpenterId
+// @desc    Get all furniture by a specific carpenter
+// @access  Public
+router.get('/carpenter/:carpenterId', async (req, res) => {
+  try {
+    const furniture = await Furniture.find({ 
+      carpenter: req.params.carpenterId,
+      isApproved: true,
+      status: 'approved'
+    })
+    .populate('carpenter', 'name email specialization')
+    .sort({ createdAt: -1 });
+
+    res.json(furniture);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // @route   GET /api/furniture/:id
 // @desc    Get single furniture item
 // @access  Public
