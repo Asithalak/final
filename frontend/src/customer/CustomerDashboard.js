@@ -327,51 +327,14 @@ const CustomerDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {carpenters.map((carpenter) => (
                   <div key={carpenter.id} className="border-2 border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all hover:border-purple-300">
-                    <div className="flex items-start gap-4 mb-4">
+                    <div className="flex items-center gap-4">
                       <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
                         {carpenter.name.charAt(0)}
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-gray-900">{carpenter.name}</h3>
-                        <p className="text-sm text-gray-600">{carpenter.specialization}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-yellow-500 font-bold">⭐ {carpenter.rating}</span>
-                          <span className="text-gray-500 text-sm">• {carpenter.completedOrders} orders</span>
-                        </div>
+                        <p className="text-sm text-gray-500 mt-1">🔨 Carpenter</p>
                       </div>
-                    </div>
-
-                    <div className="space-y-2 mb-4">
-                      <p className="text-sm text-gray-600">
-                        📧 <span className="font-medium">{carpenter.email}</span>
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        📞 <span className="font-medium">{carpenter.phone}</span>
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        🎓 <span className="font-medium">{carpenter.experience} years experience</span>
-                      </p>
-                    </div>
-
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => {
-                          setSelectedCarpenter(carpenter);
-                          setShowDesignsModal(true);
-                        }}
-                        className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all shadow-md"
-                      >
-                        👁️ View Designs
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedCarpenter(carpenter);
-                          setShowResourcesModal(true);
-                        }}
-                        className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md"
-                      >
-                        📦 View Resources
-                      </button>
                     </div>
                   </div>
                 ))}
