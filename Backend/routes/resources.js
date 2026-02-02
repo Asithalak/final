@@ -61,29 +61,6 @@ router.get('/my-resources', authenticate, isCarpenter, async (req, res) => {
   }
 });
 
-// @route   GET /api/resources/:id
-// @desc    Get single resource
-// @access  Private
-router.get('/:id', authenticate, async (req, res) => {
-  try {
-    // Check if this is a request for carpenter's resources
-    if (req.params.id === 'by-carpenter') {
-      return res.status(400).json({ message: 'Use /api/resources/carpenter/:carpenterId endpoint' });
-    }
-    
-    const resource = await Resource.findById(req.params.id)
-      .populate('seller', 'name email phone specialization');
-
-    if (!resource) {
-      return res.status(404).json({ message: 'Resource not found' });
-    }
-
-    res.json(resource);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
-
 // @route   GET /api/resources/carpenter/:carpenterId
 // @desc    Get all resources by a specific carpenter
 // @access  Public
@@ -98,6 +75,24 @@ router.get('/carpenter/:carpenterId', async (req, res) => {
     .sort({ createdAt: -1 });
 
     res.json(resources);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// @route   GET /api/resources/:id
+// @desc    Get single resource
+// @access  Private
+router.get('/:id', authenticate, async (req, res) => {
+  try {
+    const resource = await Resource.findById(req.params.id)
+      .populate('seller', 'name email phone specialization');
+
+    if (!resource) {
+      return res.status(404).json({ message: 'Resource not found' });
+    }
+
+    res.json(resource);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

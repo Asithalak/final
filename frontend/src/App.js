@@ -38,6 +38,7 @@ import CarpenterDashboard from './Carpenter/CarpenterDashboard';
 import MyFurnitureDesigns from './Carpenter/MyFurnitureDesigns';
 import MyResources from './Carpenter/MyResources';
 import AssignedOrders from './Carpenter/AssignedOrders';
+import AllCarpenters from './Carpenter/AllCarpenters';
 
 //customer dashboard
 import CustomerDashboard from './customer/CustomerDashboard';
@@ -67,6 +68,8 @@ function App() {
                 <Route path="/carpenter/myfurnituredesigns" element={<MyFurnitureDesigns />} />
                 <Route path="/carpenter/myresources" element={<MyResources />} />
                 <Route path="/carpenter/assignedorders" element={<AssignedOrders />} />
+                <Route path="/carpenters" element={<AllCarpenters />} />
+                <Route path="/all-carpenters" element={<AllCarpenters />} />
                 <Route path="/customer/customerdashboard" element={<CustomerDashboard />} />
 
                 <Route path="/cart" element={<Cart />} />
