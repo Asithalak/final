@@ -59,7 +59,7 @@ const Register = () => {
       };
 
       console.log('Submitting admin registration:', { ...userData, password: '***' });
-      const result = await register(userData);
+      await register(userData);
       
       navigate('/admin/users');
     } catch (error) {

@@ -6,8 +6,11 @@ import catalogData from '../data/furniture_catalog.json';
 
 const CarpenterDashboard = () => {
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const [furniture, setFurniture] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [resources, setResources] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [orders, setOrders] = useState([]);
   const [carpenters, setCarpenters] = useState([]);
   const [activeTab, setActiveTab] = useState('furniture');

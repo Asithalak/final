@@ -21,6 +21,7 @@ const CustomerDashboard = () => {
     setLoading(true);
     
     // Get user role for filtering
+    // eslint-disable-next-line no-unused-vars
     const storedRole = localStorage.getItem('userRole') || 'customer';
     
     // Mock orders data

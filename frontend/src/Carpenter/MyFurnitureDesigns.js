@@ -35,14 +35,14 @@ const Dashboard = () => {
   });
 
   const categories = [
-    { id: 'all', label: 'All', icon: '', count: allFurniture.length, color: 'from-purple-500 to-purple-700' },
-    { id: 'chair', label: 'Chairs', icon: '', count: catalogData.chairs.length, color: 'from-blue-500 to-blue-700' },
-    { id: 'table', label: 'Tables', icon: '', count: catalogData.tables.length, color: 'from-green-500 to-green-700' },
-    { id: 'sofa', label: 'Sofas', icon: '', count: catalogData.sofas.length, color: 'from-red-500 to-red-700' },
-    { id: 'bed', label: 'Beds', icon: '', count: catalogData.beds.length, color: 'from-indigo-500 to-indigo-700' },
-    { id: 'cabinet', label: 'Cabinets', icon: '', count: catalogData.cabinets.length, color: 'from-yellow-500 to-yellow-700' },
-    { id: 'desk', label: 'Desks', icon: '', count: catalogData.desks.length, color: 'from-teal-500 to-teal-700' },
-    { id: 'shelf', label: 'Shelves', icon: '', count: catalogData.shelves.length, color: 'from-pink-500 to-pink-700' }
+    { id: 'all', label: 'All', icon: '🪑', count: allFurniture.length, color: 'from-purple-500 to-purple-700' },
+    { id: 'chair', label: 'Chairs', icon: '🪑', count: catalogData.chairs.length, color: 'from-blue-500 to-blue-700' },
+    { id: 'table', label: 'Tables', icon: '🪵', count: catalogData.tables.length, color: 'from-green-500 to-green-700' },
+    { id: 'sofa', label: 'Sofas', icon: '🛋️', count: catalogData.sofas.length, color: 'from-red-500 to-red-700' },
+    { id: 'bed', label: 'Beds', icon: '🛏️', count: catalogData.beds.length, color: 'from-indigo-500 to-indigo-700' },
+    { id: 'cabinet', label: 'Cabinets', icon: '🗄️', count: catalogData.cabinets.length, color: 'from-yellow-500 to-yellow-700' },
+    { id: 'desk', label: 'Desks', icon: '🖥️', count: catalogData.desks.length, color: 'from-teal-500 to-teal-700' },
+    { id: 'shelf', label: 'Shelves', icon: '📚', count: catalogData.shelves.length, color: 'from-pink-500 to-pink-700' }
   ];
 
   if (loading) {
@@ -53,13 +53,13 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 shadow-2xl py-12">
         <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-5xl font-bold text-white mb-4"> {carpenterProfile.name}</h1>
+          <h1 className="text-5xl font-bold text-white mb-4">🔨 {carpenterProfile.name}</h1>
           <p className="text-xl text-white">{carpenterProfile.specialization}</p>
-          <p className="text-white"> {carpenterProfile.experience} |  {designs.length} Designs</p>
+          <p className="text-white">⭐ {carpenterProfile.experience} | 🎨 {designs.length} Designs</p>
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold mb-6"> Select Category</h2>
+        <h2 className="text-2xl font-bold mb-6">🏷️ Select Category</h2>
         <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mb-8">
           {categories.map(cat => (
             <button key={cat.id} onClick={() => setActiveCategory(cat.id)} className={`p-4 rounded-xl text-white bg-gradient-to-br ${cat.color} ${activeCategory === cat.id ? 'ring-4' : ''}`}>
@@ -80,7 +80,7 @@ const Dashboard = () => {
                 <div><strong>Material:</strong> {design.wood_material}</div>
                 <div><strong>Finish:</strong> {design.paint_code}</div>
               </div>
-              <button className="w-full bg-primary-600 text-white py-2 rounded-lg font-bold">View</button>
+              <button className="w-full bg-primary-600 text-white py-2 rounded-lg font-bold hover:bg-primary-700 transition">View Details</button>
             </div>
           ))}
         </div>

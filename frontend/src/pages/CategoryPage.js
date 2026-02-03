@@ -10,6 +10,7 @@ import catalogData from '../data/furniture_catalog.json';
  */
 const CategoryPage = () => {
   const { category } = useParams();
+  // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate();
   
   const [items, setItems] = useState([]);
@@ -30,11 +31,13 @@ const CategoryPage = () => {
   // Load items when category changes
   useEffect(() => {
     loadCategoryItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
 
   // Apply filters and sorting when they change
   useEffect(() => {
     applyFiltersAndSort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, filters, sortBy]);
 
   const loadCategoryItems = () => {

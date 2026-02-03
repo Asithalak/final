@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaUserShield, FaTools, FaUser } from 'react-icons/fa';
+import { FaTools, FaUser } from 'react-icons/fa';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });

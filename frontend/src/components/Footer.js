@@ -47,24 +47,24 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Customer Service</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-400 hover:text-white transition">
+                <Link to="/contact" className="text-gray-400 hover:text-white transition">
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-white transition">
+                <Link to="/shipping" className="text-gray-400 hover:text-white transition">
                   Shipping Info
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-white transition">
+                <Link to="/returns" className="text-gray-400 hover:text-white transition">
                   Returns
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-white transition">
+                <Link to="/faq" className="text-gray-400 hover:text-white transition">
                   FAQ
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -73,16 +73,16 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition">
                 <FaFacebook size={24} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition">
                 <FaTwitter size={24} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition">
                 <FaInstagram size={24} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition">
                 <FaLinkedin size={24} />
               </a>
             </div>
