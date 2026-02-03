@@ -10,12 +10,11 @@
       "work_duration": "5 days",
       "paint_code": "#8B4513",
       "images": [
-        "https://www.priyankarafurniture.lk/wp-content/uploads/2025/06/3-64.png",
-        "https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=800&q=80",
-        "https://images.unsplash.com/photo-1503602642458-232111445657?w=800&q=80",
-        "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&q=80",
-        "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800&q=80"
-        
+        "/images/chair/image-1.jpg",
+        "/images/chair/image-2.webp",
+        "/images/chair/image-3.avif",
+        "/images/chair/image-4.avif",
+        "/images/chair/image-5.avif"
       ]
     },
     {
@@ -28,11 +27,11 @@
       "work_duration": "6 days",
       "paint_code": "#5C4033",
       "images": [
-        "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=800&q=80",
-        "https://images.unsplash.com/photo-1519947486511-46149fa0a254?w=800&q=80",
-        "https://images.unsplash.com/photo-1611269154421-4e27233ac5c7?w=800&q=80",
-        "https://images.unsplash.com/photo-1617097900655-846c68f2e323?w=800&q=80",
-        "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&q=80"
+        "/images/chair/image-2.webp",
+        "/images/chair/image-3.avif",
+        "/images/chair/image-4.avif",
+        "/images/chair/image-5.avif",
+        "/images/chair/image-6.avif"
       ]
     },
     {
@@ -45,11 +44,11 @@
       "work_duration": "4 days",
       "paint_code": "#DEB887",
       "images": [
-        "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=800&q=80",
-        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80",
-        "https://images.unsplash.com/photo-1581428982868-e410dd047a90?w=800&q=80",
-        "https://images.unsplash.com/photo-1565191999001-551c187427bb?w=800&q=80",
-        "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800&q=80"
+        "/images/chair/image-3.avif",
+        "/images/chair/image-4.avif",
+        "/images/chair/image-5.avif",
+        "/images/chair/image-6.avif",
+        "/images/chair/image-7.avif"
       ]
     },
     {
@@ -62,11 +61,11 @@
       "work_duration": "8 days",
       "paint_code": "#420C09",
       "images": [
-        "https://images.unsplash.com/photo-1592078615290-033ee584e267?w=800&q=80",
-        "https://images.unsplash.com/photo-1589584200871-ebd44b8f5f50?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
-        "https://images.unsplash.com/photo-1611269154421-4e27233ac5c7?w=800&q=80",
-        "https://images.unsplash.com/photo-1498409505433-aff66f7ba9e6?w=800&q=80"
+        "/images/chair/image-4.avif",
+        "/images/chair/image-5.avif",
+        "/images/chair/image-6.avif",
+        "/images/chair/image-7.avif",
+        "/images/chair/image-8.avif"
       ]
     },
     {
@@ -79,11 +78,11 @@
       "work_duration": "7 days",
       "paint_code": "#B8860B",
       "images": [
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
-        "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&q=80",
-        "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80",
-        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
-        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80"
+        "/images/chair/image-5.avif",
+        "/images/chair/image-6.avif",
+        "/images/chair/image-7.avif",
+        "/images/chair/image-8.avif",
+        "/images/chair/image-9.avif"
       ]
     }
   ],
@@ -98,11 +97,11 @@
       "work_duration": "10 days",
       "paint_code": "#8B4513",
       "images": [
-        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
-        "https://images.unsplash.com/photo-1551298370-9d3d53740c72?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104678098-de229db51175?w=800&q=80",
-        "https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=800&q=80"
+        "/images/table/image-1.jfif",
+        "/images/table/image-2.jfif",
+        "/images/table/image-3.jfif",
+        "/images/table/images-4.jfif",
+        "/images/table/images-5.jfif"
       ]
     },
     {
@@ -115,11 +114,11 @@
       "work_duration": "5 days",
       "paint_code": "#D2B48C",
       "images": [
-        "https://images.unsplash.com/photo-1551298370-9d3d53740c72?w=800&q=80",
-        "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=800&q=80",
-        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
-        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80"
+        "/images/table/image-2.jfif",
+        "/images/table/image-3.jfif",
+        "/images/table/images-4.jfif",
+        "/images/table/images-5.jfif",
+        "/images/table/images-6.jfif"
       ]
     },
     {
@@ -132,11 +131,11 @@
       "work_duration": "7 days",
       "paint_code": "#696969",
       "images": [
-        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80"
+        "/images/table/image-3.jfif",
+        "/images/table/images-4.jfif",
+        "/images/table/images-5.jfif",
+        "/images/table/images-6.jfif",
+        "/images/table/images-7.jfif"
       ]
     },
     {
@@ -149,11 +148,11 @@
       "work_duration": "12 days",
       "paint_code": "#5C4033",
       "images": [
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
-        "https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=800&q=80",
-        "https://images.unsplash.com/photo-1601366184025-1170c8d00b82?w=800&q=80",
-        "https://images.unsplash.com/photo-1551298370-9d3d53740c72?w=800&q=80"
+        "/images/table/images-4.jfif",
+        "/images/table/images-5.jfif",
+        "/images/table/images-6.jfif",
+        "/images/table/images-7.jfif",
+        "/images/table/images-8.jfif"
       ]
     },
     {
@@ -166,11 +165,11 @@
       "work_duration": "6 days",
       "paint_code": "#B8860B",
       "images": [
-        "https://images.unsplash.com/photo-1565191999001-551c187427bb?w=800&q=80",
-        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
-        "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104678098-de229db51175?w=800&q=80",
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80"
+        "/images/table/images-5.jfif",
+        "/images/table/images-6.jfif",
+        "/images/table/images-7.jfif",
+        "/images/table/images-8.jfif",
+        "/images/table/images-9.jfif"
       ]
     }
   ],
@@ -185,11 +184,11 @@
       "work_duration": "15 days",
       "paint_code": "#F5DEB3",
       "images": [
-        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
-        "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80",
-        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80",
-        "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=800&q=80",
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80"
+        "/images/chair/image-1.jpg",
+        "/images/chair/image-2.webp",
+        "/images/chair/image-3.avif",
+        "/images/chair/image-4.avif",
+        "/images/chair/image-5.avif"
       ]
     },
     {
@@ -202,11 +201,11 @@
       "work_duration": "20 days",
       "paint_code": "#8B4513",
       "images": [
-        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80",
-        "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=800&q=80",
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
-        "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&q=80",
-        "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80"
+        "/images/chair/image-2.webp",
+        "/images/chair/image-3.avif",
+        "/images/chair/image-4.avif",
+        "/images/chair/image-5.avif",
+        "/images/chair/image-6.avif"
       ]
     },
     {
@@ -219,11 +218,11 @@
       "work_duration": "18 days",
       "paint_code": "#420C09",
       "images": [
-        "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80",
-        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
-        "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=800&q=80",
-        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80",
-        "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=800&q=80"
+        "/images/chair/image-3.avif",
+        "/images/chair/image-4.avif",
+        "/images/chair/image-5.avif",
+        "/images/chair/image-6.avif",
+        "/images/chair/image-7.avif"
       ]
     },
     {
@@ -236,11 +235,11 @@
       "work_duration": "10 days",
       "paint_code": "#F0E68C",
       "images": [
-        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80",
-        "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=800&q=80",
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
-        "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=800&q=80",
-        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80"
+        "/images/chair/image-4.avif",
+        "/images/chair/image-5.avif",
+        "/images/chair/image-6.avif",
+        "/images/chair/image-7.avif",
+        "/images/chair/image-8.avif"
       ]
     },
     {
@@ -253,11 +252,11 @@
       "work_duration": "12 days",
       "paint_code": "#FFF8DC",
       "images": [
-        "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&q=80",
-        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
-        "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80",
-        "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=800&q=80",
-        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80"
+        "/images/chair/image-5.avif",
+        "/images/chair/image-6.avif",
+        "/images/chair/image-7.avif",
+        "/images/chair/image-8.avif",
+        "/images/chair/image-9.avif"
       ]
     }
   ],
@@ -272,11 +271,11 @@
       "work_duration": "14 days",
       "paint_code": "#8B4513",
       "images": [
-        "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80",
-        "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80",
-        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80",
-        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+        "/images/bed/image-1.jpg",
+        "/images/bed/image-2.jpg",
+        "/images/bed/image-3.jpg",
+        "/images/bed/image-4.jpg",
+        "/images/bed/image-5.jfif"
       ]
     },
     {
@@ -289,11 +288,11 @@
       "work_duration": "12 days",
       "paint_code": "#DEB887",
       "images": [
-        "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80",
-        "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80",
-        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
-        "https://images.unsplash.com/photo-1615800098779-1be32e60cca3?w=800&q=80",
-        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80"
+        "/images/bed/image-2.jpg",
+        "/images/bed/image-3.jpg",
+        "/images/bed/image-4.jpg",
+        "/images/bed/image-5.jfif",
+        "/images/bed/images-6.jfif"
       ]
     },
     {
@@ -306,11 +305,11 @@
       "work_duration": "20 days",
       "paint_code": "#420C09",
       "images": [
-        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
-        "https://images.unsplash.com/photo-1615800098779-1be32e60cca3?w=800&q=80",
-        "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80",
-        "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+        "/images/bed/image-3.jpg",
+        "/images/bed/image-4.jpg",
+        "/images/bed/image-5.jfif",
+        "/images/bed/images-6.jfif",
+        "/images/bed/images-7.jfif"
       ]
     },
     {
@@ -323,11 +322,11 @@
       "work_duration": "16 days",
       "paint_code": "#5C4033",
       "images": [
-        "https://images.unsplash.com/photo-1615800098779-1be32e60cca3?w=800&q=80",
-        "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80",
-        "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80",
-        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
-        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80"
+        "/images/bed/image-4.jpg",
+        "/images/bed/image-5.jfif",
+        "/images/bed/images-6.jfif",
+        "/images/bed/images-7.jfif",
+        "/images/bed/images-8.jfif"
       ]
     },
     {
@@ -340,11 +339,11 @@
       "work_duration": "10 days",
       "paint_code": "#E3DAC9",
       "images": [
-        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80",
-        "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80",
-        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80",
-        "https://images.unsplash.com/photo-1615800098779-1be32e60cca3?w=800&q=80",
-        "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80"
+        "/images/bed/image-5.jfif",
+        "/images/bed/images-6.jfif",
+        "/images/bed/images-7.jfif",
+        "/images/bed/images-8.jfif",
+        "/images/bed/images-9.jfif"
       ]
     }
   ],
@@ -359,11 +358,11 @@
       "work_duration": "11 days",
       "paint_code": "#8B4513",
       "images": [
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+        "/images/cupboard/image-1.jpg",
+        "/images/cupboard/image-2.jpg",
+        "/images/cupboard/image-3.jpg",
+        "/images/cupboard/image-4.jpg",
+        "/images/cupboard/image-5.jpg"
       ]
     },
     {
@@ -376,11 +375,11 @@
       "work_duration": "9 days",
       "paint_code": "#A0826D",
       "images": [
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80"
+        "/images/cupboard/image-2.jpg",
+        "/images/cupboard/image-3.jpg",
+        "/images/cupboard/image-4.jpg",
+        "/images/cupboard/image-5.jpg",
+        "/images/cupboard/image-6.jpg"
       ]
     },
     {
@@ -393,11 +392,11 @@
       "work_duration": "13 days",
       "paint_code": "#B8860B",
       "images": [
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+        "/images/cupboard/image-3.jpg",
+        "/images/cupboard/image-4.jpg",
+        "/images/cupboard/image-5.jpg",
+        "/images/cupboard/image-6.jpg",
+        "/images/cupboard/image-7.jpg"
       ]
     },
     {
@@ -410,11 +409,11 @@
       "work_duration": "8 days",
       "paint_code": "#DEB887",
       "images": [
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+        "/images/cupboard/image-4.jpg",
+        "/images/cupboard/image-5.jpg",
+        "/images/cupboard/image-6.jpg",
+        "/images/cupboard/image-7.jpg",
+        "/images/cupboard/image-8.jpg"
       ]
     },
     {
@@ -427,11 +426,11 @@
       "work_duration": "10 days",
       "paint_code": "#9C4A3A",
       "images": [
-        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+        "/images/cupboard/image-5.jpg",
+        "/images/cupboard/image-6.jpg",
+        "/images/cupboard/image-7.jpg",
+        "/images/cupboard/image-8.jpg",
+        "/images/cupboard/image-9.jpg"
       ]
     }
   ],
@@ -446,11 +445,11 @@
       "work_duration": "12 days",
       "paint_code": "#420C09",
       "images": [
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
-        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
-        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+        "/images/table/image-1.jfif",
+        "/images/table/image-2.jfif",
+        "/images/table/image-3.jfif",
+        "/images/table/images-4.jfif",
+        "/images/table/images-5.jfif"
       ]
     },
     {
@@ -463,11 +462,11 @@
       "work_duration": "7 days",
       "paint_code": "#E3DAC9",
       "images": [
-        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
-        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+        "/images/table/image-2.jfif",
+        "/images/table/image-3.jfif",
+        "/images/table/images-4.jfif",
+        "/images/table/images-5.jfif",
+        "/images/table/images-6.jfif"
       ]
     },
     {
@@ -480,11 +479,11 @@
       "work_duration": "14 days",
       "paint_code": "#8B4513",
       "images": [
-        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
-        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+        "/images/table/image-3.jfif",
+        "/images/table/images-4.jfif",
+        "/images/table/images-5.jfif",
+        "/images/table/images-6.jfif",
+        "/images/table/images-7.jfif"
       ]
     },
     {
@@ -497,11 +496,11 @@
       "work_duration": "5 days",
       "paint_code": "#5C4033",
       "images": [
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
-        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80"
+        "/images/table/images-4.jfif",
+        "/images/table/images-5.jfif",
+        "/images/table/images-6.jfif",
+        "/images/table/images-7.jfif",
+        "/images/table/images-8.jfif"
       ]
     },
     {
@@ -514,11 +513,11 @@
       "work_duration": "10 days",
       "paint_code": "#9C4A3A",
       "images": [
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
-        "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=800&q=80",
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-        "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+        "/images/table/images-5.jfif",
+        "/images/table/images-6.jfif",
+        "/images/table/images-7.jfif",
+        "/images/table/images-8.jfif",
+        "/images/table/images-9.jfif"
       ]
     }
   ],
@@ -533,11 +532,11 @@
       "work_duration": "3 days",
       "paint_code": "#8B4513",
       "images": [
-        "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80"
+        "/images/cupboard/image-1.jpg",
+        "/images/cupboard/image-2.jpg",
+        "/images/cupboard/image-3.jpg",
+        "/images/cupboard/image-4.jpg",
+        "/images/cupboard/image-5.jpg"
       ]
     },
     {
@@ -550,11 +549,11 @@
       "work_duration": "6 days",
       "paint_code": "#E3DAC9",
       "images": [
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
-        "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80",
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+        "/images/cupboard/image-2.jpg",
+        "/images/cupboard/image-3.jpg",
+        "/images/cupboard/image-4.jpg",
+        "/images/cupboard/image-5.jpg",
+        "/images/cupboard/image-6.jpg"
       ]
     },
     {
@@ -567,11 +566,11 @@
       "work_duration": "7 days",
       "paint_code": "#A0826D",
       "images": [
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
-        "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80"
+        "/images/cupboard/image-3.jpg",
+        "/images/cupboard/image-4.jpg",
+        "/images/cupboard/image-5.jpg",
+        "/images/cupboard/image-6.jpg",
+        "/images/cupboard/image-7.jpg"
       ]
     },
     {
@@ -584,11 +583,11 @@
       "work_duration": "5 days",
       "paint_code": "#DEB887",
       "images": [
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
-        "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
-        "https://images.unsplash.com/photo-1595526051245-a14a74fdc2f2?w=800&q=80"
+        "/images/cupboard/image-4.jpg",
+        "/images/cupboard/image-5.jpg",
+        "/images/cupboard/image-6.jpg",
+        "/images/cupboard/image-7.jpg",
+        "/images/cupboard/image-8.jpg"
       ]
     },
     {
@@ -601,11 +600,11 @@
       "work_duration": "8 days",
       "paint_code": "#FFF8DC",
       "images": [
-        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80",
-        "https://images.unsplash.com/photo-1617104551722-3b2d51366f38?w=800&q=80",
-        "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80",
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
-        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80"
+        "/images/cupboard/image-5.jpg",
+        "/images/cupboard/image-6.jpg",
+        "/images/cupboard/image-7.jpg",
+        "/images/cupboard/image-8.jpg",
+        "/images/cupboard/image-9.jpg"
       ]
     }
   ]
