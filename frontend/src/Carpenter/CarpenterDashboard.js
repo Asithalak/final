@@ -328,7 +328,7 @@ return (
                 <div key={category.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 group">
                   <div className="relative h-80 overflow-hidden">
                     <img 
-                      src="/images/carpenter-work.jpg" 
+                      src="/images/homepages/carpenter-work.jpg" 
                       alt={`${category.name} - Carpenter Work`}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                     />
