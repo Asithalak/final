@@ -31,7 +31,7 @@ const CustomerDashboard = () => {
         orderNumber: 'ORD-2025-001',
         createdAt: '2025-11-01',
         status: 'in_production',
-        items: [{ name: 'Oak Chair', quantity: 2 }],
+        items: [{ name: 'Oak Chair', quantity: 2, image: '/images/chair/image-3.jfif' }],
         totalAmount: 500,
         carpenter: 'Michael Johnson',
       },
@@ -40,9 +40,30 @@ const CustomerDashboard = () => {
         orderNumber: 'ORD-2025-002',
         createdAt: '2025-11-05',
         status: 'delivered',
-        items: [{ name: 'Dining Table', quantity: 1 }],
+        items: [{ name: 'Dining Table', quantity: 1, image: '/images/table/image-1.jfif' }],
         totalAmount: 850,
         carpenter: 'Sarah Williams',
+      },
+      {
+        _id: '3',
+        orderNumber: 'ORD-2025-003',
+        createdAt: '2025-11-10',
+        status: 'pending',
+        items: [{ name: 'Queen Bed', quantity: 1, image: '/images/bed/image-4.jfif' }],
+        totalAmount: 1200,
+        carpenter: 'David Brown',
+      },
+      {
+        _id: '4',
+        orderNumber: 'ORD-2025-004',
+        createdAt: '2025-11-12',
+        status: 'confirmed',
+        items: [
+          { name: 'Wooden Cupboard', quantity: 1, image: '/images/cupboard/image-3.avif' },
+          { name: 'Side Table', quantity: 2, image: '/images/table/image-2.jfif' }
+        ],
+        totalAmount: 950,
+        carpenter: 'Michael Johnson',
       },
     ];
 
@@ -193,6 +214,32 @@ const CustomerDashboard = () => {
                   {orders.map((order) => (
                     <div key={order._id} className="border-2 border-gray-200 rounded-xl p-5 hover:shadow-lg transition-all hover:border-blue-300">
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        {/* Product Images */}
+                        <div className="flex -space-x-3">
+                          {order.items.slice(0, 3).map((item, index) => (
+                            <div 
+                              key={index} 
+                              className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-3 border-white shadow-lg overflow-hidden bg-gray-100"
+                              style={{ zIndex: order.items.length - index }}
+                            >
+                              <img 
+                                src={item.image} 
+                                alt={item.name}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.src = 'https://via.placeholder.com/80x80?text=No+Image';
+                                }}
+                              />
+                            </div>
+                          ))}
+                          {order.items.length > 3 && (
+                            <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-3 border-white shadow-lg bg-gray-200 flex items-center justify-center">
+                              <span className="text-gray-600 font-bold">+{order.items.length - 3}</span>
+                            </div>
+                          )}
+                        </div>
+                        
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <p className="font-bold text-lg text-gray-900">Order #{order.orderNumber}</p>
@@ -206,7 +253,25 @@ const CustomerDashboard = () => {
                           <p className="text-sm text-gray-600">
                             🔨 Carpenter: <span className="font-semibold text-gray-900">{order.carpenter}</span>
                           </p>
-                          <p className="text-sm text-gray-600 mt-2">
+                          {/* Items list with images */}
+                          <div className="mt-3 space-y-2">
+                            {order.items.map((item, idx) => (
+                              <div key={idx} className="flex items-center gap-2 bg-gray-50 rounded-lg p-2">
+                                <img 
+                                  src={item.image} 
+                                  alt={item.name}
+                                  className="w-10 h-10 rounded-lg object-cover"
+                                  onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = 'https://via.placeholder.com/40x40?text=No+Image';
+                                  }}
+                                />
+                                <span className="text-sm text-gray-700">{item.name}</span>
+                                <span className="text-xs text-gray-500">x{item.quantity}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <p className="text-sm text-gray-600 mt-3">
                             {order.items.length} item(s) • <span className="text-lg font-bold text-green-600">${order.totalAmount}</span>
                           </p>
                         </div>
