@@ -171,44 +171,44 @@ const Home = () => {
         </section>
       )}
       */}
-      
-      {/* Categories */}
-      <section className="py-16 bg-gray-50">
-        <div className="container-custom">
-          <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
-          {isAuthenticated ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {['chair', 'table', 'sofa', 'bed', 'cabinet', 'desk', 'shelf'].map((category) => (
-                <Link
-                  key={category}
-                  to={`/catalogue?category=${category}`}
-                  className="card hover:shadow-xl transition-shadow cursor-pointer"
-                >
-                  <div className="h-40 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
-                    <span className="text-4xl capitalize">{category}</span>
-                  </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-semibold capitalize">{category}s</h3>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 bg-white rounded-xl shadow-sm">
-              <FaCouch className="text-primary-300 text-6xl mx-auto mb-4" />
-              <p className="text-gray-500 text-lg mb-6">Please register or login to browse our furniture categories</p>
-              <div className="flex justify-center space-x-4">
-                <Link to="/login" className="px-8 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition">
-                  Login
-                </Link>
-                <Link to="/register" className="px-8 py-3 border-2 border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition">
-                  Register
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
+       {/* Categories */}
+                    <section className="py-16 bg-gray-50">
+                      <div className="container-custom">
+                        <h2 className="text-3xl font-bold text-center mb-12">View by Category</h2>
+                        {isAuthenticated ? (
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            {['chair', 'table', 'sofa', 'bed', 'cabinet', 'desk', 'shelf'].map((category) => (
+                              <Link
+                                key={category}
+                                to={`/catalogue?category=${category}`}
+                                className="card hover:shadow-xl transition-shadow cursor-pointer"
+                              >
+                                <div className="h-40 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                                  <span className="text-4xl capitalize">{category}</span>
+                                </div>
+                                <div className="p-4 text-center">
+                                  <h3 className="font-semibold capitalize">{category}s</h3>
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-12 bg-white rounded-xl shadow-sm">
+                            <FaCouch className="text-primary-300 text-6xl mx-auto mb-4" />
+                            <p className="text-gray-500 text-lg mb-6">Please register or login to browse our furniture categories</p>
+                            <div className="flex justify-center space-x-4">
+                              <Link to="/login" className="px-8 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition">
+                                Login
+                              </Link>
+                              <Link to="/register" className="px-8 py-3 border-2 border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition">
+                                Register
+                              </Link>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+  
 
       {/* CTA Section */}
       <section className="py-16 bg-primary-600 text-white">
