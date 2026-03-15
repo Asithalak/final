@@ -54,7 +54,7 @@ const Home = () => {
               Discover handcrafted furniture from expert carpenters. Quality designs delivered to your doorstep.
             </p>
             <div className="flex space-x-4">
-              <Link to="/catalogue" className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+              <Link to="/login" className="border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition">
                 Shop Now
               </Link>
               <Link to="/register" className="border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition">
@@ -107,6 +107,7 @@ const Home = () => {
       </section>
 
       {/* My Orders Section - Only for logged-in customers */}
+      {/*
       {isAuthenticated && isCustomer && (
         <section className="py-16 bg-white border-b">
           <div className="container-custom">
@@ -169,7 +170,8 @@ const Home = () => {
           </div>
         </section>
       )}
-
+      */}
+      
       {/* Categories */}
       <section className="py-16 bg-gray-50">
         <div className="container-custom">
