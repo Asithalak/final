@@ -74,15 +74,15 @@ function App() {
 
                 <Route path="/cart" element={<Cart />} />
                 
-                {/* Furniture Category Routes */}
-                <Route path="/category/chair" element={<Chairs />} />
-                <Route path="/category/table" element={<Tables />} />
-                <Route path="/category/sofa" element={<Sofas />} />
-                <Route path="/category/bed" element={<Beds />} />
-                <Route path="/category/cabinet" element={<Cabinets />} />
-                <Route path="/category/desk" element={<Desks />} />
-                <Route path="/category/shelf" element={<Shelves />} />
-                <Route path="/category/:category" element={<CategoryPage />} />
+                {/* Furniture Category Routes - Requires Login */}
+                <Route path="/category/chair" element={<PrivateRoute><Chairs /></PrivateRoute>} />
+                <Route path="/category/table" element={<PrivateRoute><Tables /></PrivateRoute>} />
+                <Route path="/category/sofa" element={<PrivateRoute><Sofas /></PrivateRoute>} />
+                <Route path="/category/bed" element={<PrivateRoute><Beds /></PrivateRoute>} />
+                <Route path="/category/cabinet" element={<PrivateRoute><Cabinets /></PrivateRoute>} />
+                <Route path="/category/desk" element={<PrivateRoute><Desks /></PrivateRoute>} />
+                <Route path="/category/shelf" element={<PrivateRoute><Shelves /></PrivateRoute>} />
+                <Route path="/category/:category" element={<PrivateRoute><CategoryPage /></PrivateRoute>} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin-login" element={<AdminLogin />} />
