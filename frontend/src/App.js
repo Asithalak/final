@@ -21,13 +21,13 @@ import Cart from './pages/Cart';
 
 // Furniture Category Pages
 import CategoryPage from './pages/CategoryPage';
-import Chairs from './pages/Chairs';
-import Tables from './pages/Tables';
-import Sofas from './pages/Sofas';
-import Beds from './pages/Beds';
-import Cabinets from './pages/Cabinets';
-import Desks from './pages/Desks';
-import Shelves from './pages/Shelves';
+import Chairs from './ViewCategory/Chairs';
+import Tables from './ViewCategory/Tables';
+import Sofas from './ViewCategory/Sofas';
+import Beds from './ViewCategory/Beds';
+import Cabinets from './ViewCategory/Cabinets';
+import Desks from './ViewCategory/Desks';
+import Shelves from './ViewCategory/Shelves';
 
 // Admin Pages
 import AdminLogin from './pages/AdminLogin';

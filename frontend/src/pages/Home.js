@@ -177,17 +177,29 @@ const Home = () => {
                         <h2 className="text-3xl font-bold text-center mb-12">View by Category</h2>
                         {isAuthenticated ? (
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                            {['chair', 'table', 'sofa', 'bed', 'cabinet', 'desk', 'shelf'].map((category) => (
+                            {[
+                              { name: 'chair', image: '/images/Chairs/image-1.jpg' },
+                              { name: 'table', image: '/images/tables/image-1.jfif' },
+                              { name: 'sofa', image: '/images/Sofas/image-1.jfif' },
+                              { name: 'bed', image: '/images/Beds/image-1.jpg' },
+                              { name: 'cabinet', image: '/images/Cabinets/image-1.jpg' },
+                              { name: 'desk', image: '/images/Desks/image-1.jfif' },
+                              { name: 'shelf', image: '/images/Cabinets/image-5.jpg' },
+                            ].map((category) => (
                               <Link
-                                key={category}
-                                to={`/catalogue?category=${category}`}
-                                className="card hover:shadow-xl transition-shadow cursor-pointer"
+                                key={category.name}
+                                to={`/category/${category.name}`}
+                                className="card hover:shadow-xl transition-shadow cursor-pointer overflow-hidden"
                               >
-                                <div className="h-40 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
-                                  <span className="text-4xl capitalize">{category}</span>
+                                <div className="h-40 overflow-hidden">
+                                  <img
+                                    src={category.image}
+                                    alt={category.name}
+                                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                                  />
                                 </div>
                                 <div className="p-4 text-center">
-                                  <h3 className="font-semibold capitalize">{category}s</h3>
+                                  <h3 className="font-semibold capitalize">{category.name}s</h3>
                                 </div>
                               </Link>
                             ))}

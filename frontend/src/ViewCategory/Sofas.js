@@ -1,5 +1,5 @@
 import React from 'react';
-import CategoryPage from './CategoryPage';
+import CategoryPage from '../pages/CategoryPage';
 
 const Sofas = () => {
   return <CategoryPage />;
