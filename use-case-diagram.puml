@@ -1,0 +1,179 @@
+@startuml "Online Furniture Showroom - Complete Use Case Diagram"
+!theme plain
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+title Online Furniture Showroom System - Use Case Diagram
+
+' Define Actors
+:Customer: as customer
+:Carpenter: as carpenter
+:Admin: as admin
+:Guest: as guest
+
+' Define Use Case Packages
+package "Authentication & User Management" {
+  (Register) as UC01
+  (Login) as UC02
+  (Update Profile) as UC03
+  (Approve Carpenter) as UC04
+  (Manage Users) as UC05
+  (View User Statistics) as UC06
+}
+
+package "Furniture Management" {
+  (Browse Furniture Catalogue) as UC10
+  (Search & Filter Furniture) as UC11
+  (View Furniture Details) as UC12
+  (Upload Furniture Design) as UC13
+  (Manage Own Furniture) as UC14
+  (Update Furniture) as UC15
+  (Delete Furniture) as UC16
+  (Approve Furniture Design) as UC17
+}
+
+package "Order & Cart Management" {
+  (Add to Cart) as UC20
+  (Place Order) as UC21
+  (View Order History) as UC22
+  (Track Order Status) as UC23
+  (Cancel Order) as UC24
+  (View All Orders) as UC25
+  (Update Order Status) as UC26
+  (Assign Carpenter to Order) as UC27
+  (Update Payment Status) as UC28
+}
+
+package "Review & Rating System" {
+  (Submit Product Review) as UC30
+  (View Product Reviews) as UC31
+  (Rate Furniture) as UC32
+}
+
+package "Resource Management" {
+  (Upload/Sell Resources) as UC40
+  (View Available Resources) as UC41
+  (Manage Own Resources) as UC42
+  (Update Resource Details) as UC43
+  (Delete Resource) as UC44
+  (Approve Resource Listing) as UC45
+  (Purchase Resources) as UC46
+}
+
+package "Carpenter Services" {
+  (View Assigned Orders) as UC50
+  (Check Resource Availability) as UC51
+  (Request Resources from Admin) as UC52
+  (Start Production) as UC53
+}
+
+' Actor-Use Case Relationships
+
+' Guest Actor
+guest --> UC10
+guest --> UC11
+guest --> UC12
+guest --> UC31
+
+' Customer Actor
+customer --> UC01
+customer --> UC02
+customer --> UC03
+customer --> UC10
+customer --> UC11
+customer --> UC12
+customer --> UC20
+customer --> UC21
+customer --> UC22
+customer --> UC23
+customer --> UC24
+customer --> UC30
+customer --> UC31
+customer --> UC32
+
+' Carpenter Actor
+carpenter --> UC01
+carpenter --> UC02
+carpenter --> UC03
+carpenter --> UC10
+carpenter --> UC11
+carpenter --> UC12
+carpenter --> UC13
+carpenter --> UC14
+carpenter --> UC15
+carpenter --> UC16
+carpenter --> UC40
+carpenter --> UC41
+carpenter --> UC42
+carpenter --> UC43
+carpenter --> UC44
+carpenter --> UC50
+carpenter --> UC51
+carpenter --> UC52
+carpenter --> UC53
+
+' Admin Actor
+admin --> UC02
+admin --> UC03
+admin --> UC04
+admin --> UC05
+admin --> UC06
+admin --> UC10
+admin --> UC11
+admin --> UC12
+admin --> UC16
+admin --> UC17
+admin --> UC25
+admin --> UC26
+admin --> UC27
+admin --> UC28
+admin --> UC41
+admin --> UC44
+admin --> UC45
+admin --> UC46
+
+' Include Relationships
+UC21 ..> UC10 : <<include>>
+UC21 ..> UC20 : <<include>>
+UC13 ..> UC02 : <<include>>
+UC40 ..> UC02 : <<include>>
+UC30 ..> UC12 : <<include>>
+UC26 ..> UC27 : <<include>>
+
+' Extend Relationships
+UC11 ..> UC10 : <<extend>>
+UC23 ..> UC22 : <<extend>>
+UC24 ..> UC22 : <<extend>>
+UC43 ..> UC42 : <<extend>>
+UC15 ..> UC14 : <<extend>>
+
+' Notes
+note right of admin
+  Admin has full control
+  over the entire system
+end note
+
+note right of carpenter
+  Carpenter can both sell
+  designs and resources
+end note
+
+note right of customer
+  Customer can browse,
+  order and review
+end note
+
+note bottom of UC46
+  Admin purchases resources
+  on behalf of carpenters
+  for production needs
+end note
+
+note bottom of UC27
+  Admin assigns carpenter
+  when order needs custom
+  production
+end note
+
+@enduml

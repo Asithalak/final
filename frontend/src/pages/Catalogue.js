@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { furnitureAPI } from '../services/api';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import FurnitureCard from '../components/FurnitureCard';
 import Loading from '../components/Loading';
 import { toast } from 'react-toastify';
+import { FaCouch } from 'react-icons/fa';
 
 const Catalogue = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,24 +18,9 @@ const Catalogue = () => {
     minPrice: searchParams.get('minPrice') || '',
     maxPrice: searchParams.get('maxPrice') || '',
   });
-  const [activeCategory, setActiveCategory] = useState('all');
-
-  // Categories data
-  const categories = [
-    { id: 'all', label: 'All', icon: '🏠', color: 'from-blue-500 to-blue-700' },
-    { id: 'chair', label: 'Chairs', icon: '🪑', color: 'from-purple-500 to-purple-700' },
-    { id: 'table', label: 'Tables', icon: '🪵', color: 'from-green-500 to-green-700' },
-    { id: 'sofa', label: 'Sofas', icon: '🛋️', color: 'from-red-500 to-red-700' },
-    { id: 'bed', label: 'Beds', icon: '🛏️', color: 'from-yellow-500 to-yellow-700' },
-    { id: 'cabinet', label: 'Cabinets', icon: '🗄️', color: 'from-indigo-500 to-indigo-700' },
-    { id: 'desk', label: 'Desks', icon: '🖥️', color: 'from-pink-500 to-pink-700' },
-    { id: 'shelf', label: 'Shelves', icon: '📚', color: 'from-teal-500 to-teal-700' },
-  ];
-
-  // Filter furniture based on active category
-  const filteredDesigns = activeCategory === 'all'
-    ? furniture
-    : furniture.filter(item => item.category === activeCategory);
+  
+  const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     fetchFurniture();
@@ -154,51 +143,84 @@ const Catalogue = () => {
           </button>
         </div>
 
-        {/* Category Selection & Furniture Display */}
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <h2 className="text-2xl font-bold mb-6">🏷️ Select Category</h2>
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mb-8">
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`p-4 rounded-xl text-white bg-gradient-to-br ${cat.color} ${activeCategory === cat.id ? 'ring-4 ring-white' : ''}`}
-              >
-                <div className="text-3xl">{cat.icon}</div>
-                <div className="text-xs font-bold">{cat.label}</div>
-              </button>
+        {/* Results */}
+        {/*
+        <div className="mb-4">
+          <p className="text-gray-600">
+            Showing {furniture.length} {furniture.length === 1 ? 'item' : 'items'}
+          </p>
+        </div>
+
+        {/* Furniture Grid */}
+        {/*
+        {furniture.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {furniture.map((item) => (
+              <FurnitureCard 
+                key={item._id} 
+                furniture={item} 
+                onAddToCart={addToCart}
+              />
             ))}
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {filteredDesigns.length > 0 ? (
-              filteredDesigns.map(item => (
-                <div key={item._id} className="bg-white rounded-2xl shadow-lg p-5">
-                  <img
-                    src={item.imageUrl || '/images/placeholder.jpg'}
-                    alt={item.name}
-                    className="w-full h-48 object-cover rounded-lg mb-4"
-                  />
-                  <h3 className="text-xl font-bold mb-2">{item.name}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{item.description}</p>
-                  <div className="grid grid-cols-2 gap-2 text-sm mb-4">
-                    <div><strong>Category:</strong> {item.category}</div>
-                    <div><strong>Price:</strong> ${item.price}</div>
-                    {item.material && <div><strong>Material:</strong> {item.material}</div>}
-                    {item.stock !== undefined && <div><strong>Stock:</strong> {item.stock}</div>}
-                  </div>
-                  <button className="w-full bg-primary-600 text-white py-2 rounded-lg font-bold hover:bg-primary-700 transition">
-                    View Details
-                  </button>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-3 text-center py-12">
-                <p className="text-gray-500 text-lg">No furniture found in this category</p>
-              </div>
-            )}
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No furniture found matching your criteria</p>
           </div>
-        </div>
+        )}*/}
+        {/* Categories */}
+              <section className="py-16 bg-gray-50">
+                <div className="container-custom">
+                  <h2 className="text-3xl font-bold text-center mb-12">View by Category</h2>
+                  
+                  {isAuthenticated ? (
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                      {[
+                        { name: 'chair', image: '/images/Chairs/image-1.jpg' },
+                        { name: 'table', image: '/images/tables/image-1.jfif' },
+                        { name: 'sofa', image: '/images/Sofas/image-1.jfif' },
+                        { name: 'bed', image: '/images/Beds/image-1.jpg' },
+                        { name: 'cabinet', image: '/images/Cabinets/image-1.jpg' },
+                        { name: 'desk', image: '/images/Desks/image-1.jfif' },
+                        { name: 'shelf', image: '/images/Cabinets/image-5.jpg' },
+                      ].map((category) => (
+                        <Link
+                          key={category.name}
+                          to={`/category/${category.name}`}
+                          className="card hover:shadow-xl transition-shadow cursor-pointer overflow-hidden"
+                        >
+                          <div className="h-40 overflow-hidden">
+                            <img
+                              src={category.image}
+                              alt={category.name}
+                              className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                            />
+                          </div>
+                          <div className="p-4 text-center">
+                            <h3 className="font-semibold capitalize">{category.name}s</h3>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                 
+                    
+                  ) : (
+                    <div className="text-center py-12 bg-white rounded-xl shadow-sm">
+                      <FaCouch className="text-primary-300 text-6xl mx-auto mb-4" />
+                      <p className="text-gray-500 text-lg mb-6">Please register or login to browse our furniture categories</p>
+                      <div className="flex justify-center space-x-4">
+                        <Link to="/login" className="px-8 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition">
+                          Login
+                        </Link>
+                        <Link to="/register" className="px-8 py-3 border-2 border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition">
+                          Register
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
       </div>
     </div>
   );
