@@ -34,6 +34,9 @@ const Navbar = () => {
             <Link to="/offers" className="text-gray-700 hover:text-primary-600 transition">
               Offers
             </Link>
+            <Link to="/gallery" className="text-gray-700 hover:text-primary-600 transition">
+              Gallery
+            </Link>
             <Link to="/carpenters" className="text-gray-700 hover:text-primary-600 transition">
               Carpenters
             </Link>
@@ -107,6 +110,13 @@ const Navbar = () => {
               onClick={toggleMenu}
             >
               Offers
+            </Link>
+            <Link 
+              to="/gallery" 
+              className="block py-2 text-gray-700 hover:text-primary-600"
+              onClick={toggleMenu}
+            >
+              Gallery
             </Link>
             <Link 
               to="/carpenters" 

@@ -18,6 +18,7 @@ import Register from './pages/Register';
 import RegisterUser from './pages/RegisterUser';
 import OrderTracking from './pages/OrderTracking';
 import Cart from './pages/Cart';
+import ImageGalleryPage from './pages/ImageGalleryPage';
 
 // Furniture Category Pages
 import CategoryPage from './pages/CategoryPage';
@@ -73,6 +74,7 @@ function App() {
                 <Route path="/customer/customerdashboard" element={<CustomerDashboard />} />
 
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/gallery" element={<ImageGalleryPage />} />
                 
                 {/* Furniture Category Routes - Requires Login */}
                 <Route path="/category/chair" element={<PrivateRoute><Chairs /></PrivateRoute>} />

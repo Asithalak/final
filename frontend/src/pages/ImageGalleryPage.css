@@ -1,0 +1,105 @@
+/* Image Gallery Page Animations */
+
+@keyframes heroTitleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroSubtitleFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes statFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-title {
+  opacity: 0;
+}
+
+.hero-title.visible {
+  animation: heroTitleFadeIn 0.6s ease-out forwards;
+}
+
+.hero-subtitle {
+  opacity: 0;
+}
+
+.hero-subtitle.visible {
+  animation: heroSubtitleFadeIn 0.6s ease-out 0.2s forwards;
+}
+
+.stat-item {
+  opacity: 0;
+}
+
+.stat-item.visible {
+  animation: statFadeIn 0.6s ease-out forwards;
+}
+
+/* Category button animations */
+.category-btn {
+  transform: scale(1);
+  transition: all 0.2s ease;
+}
+
+.category-btn:hover {
+  transform: scale(1.05);
+}
+
+.category-btn:active {
+  transform: scale(0.95);
+}
+
+.category-btn.active {
+  animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Hero section gradient animation */
+.hero-section {
+  background: linear-gradient(135deg, #2563eb 0%, #9333ea 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 5s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

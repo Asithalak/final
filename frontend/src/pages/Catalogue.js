@@ -183,7 +183,7 @@ const Catalogue = () => {
                         { name: 'bed', image: '/images/Beds/image-1.jpg' },
                         { name: 'cabinet', image: '/images/Cabinets/image-1.jpg' },
                         { name: 'desk', image: '/images/Desks/image-1.jfif' },
-                        { name: 'shelf', image: '/images/Cabinets/image-5.jpg' },
+                        { name: 'shelf', image: '/images/Shelfs/image-1.jpg' },
                       ].map((category) => (
                         <Link
                           key={category.name}
