@@ -9,8 +9,6 @@ import { CartProvider } from './context/CartContext';
 
 // Pages
 import Home from './pages/Home';
-import Catalogue from './pages/Catalogue';
-import FurnitureDetail from './pages/FurnitureDetail';
 import Brands from './pages/Brands';
 import Offers from './pages/Offers';
 import Login from './pages/Login';
@@ -58,8 +56,6 @@ function App() {
             <main className="flex-grow">
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/catalogue" element={<Catalogue />} />
-                <Route path="/furniture/:id" element={<FurnitureDetail />} />
                 <Route path="/brands" element={<Brands />} />
                 <Route path="/offers" element={<Offers />} />
                 <Route path="/login" element={<Login />} />

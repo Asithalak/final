@@ -3,6 +3,7 @@ import { furnitureAPI, resourcesAPI, ordersAPI, usersAPI } from '../services/api
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import catalogData from '../data/furniture_catalog.json';
+import carpenterToolsImage from '../images/homepages/carpenter-work.jpg';
 
 const CarpenterDashboard = () => {
   const navigate = useNavigate();
@@ -240,7 +241,8 @@ const CarpenterDashboard = () => {
     { id: 'furniture', label: 'My Furniture Designs', route: '/carpenter/myfurnituredesigns' },
     { id: 'resources', label: 'My Resources' , route: '/carpenter/myresources' },
     { id: 'orders', label: 'Assigned Orders' ,route: '/carpenter/assigneorders'},
-    { id: 'carpenters', label: 'All Carpenters' },
+    //{ id: 'carpenters', label: 'All Carpenters' }
+     ,
   ];
 
   const handleTabClick = (tab) => {
@@ -262,10 +264,21 @@ const CarpenterDashboard = () => {
     );
   }
 return (
-    <div className="space-y-6">
+    <div className="min-h-screen relative">
+     
+    {/* Content Container */}
+      <div className="relative z-10 space-y-6 p-6">
       {/* Header Section with Role Info */}
-      <div className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 rounded-2xl shadow-2xl overflow-hidden">
-        <div className="p-8">
+      <div className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 rounded-2xl shadow-2xl overflow-hidden relative">
+        {/* Background Image */}
+        <div className="absolute inset-0 opacity-20">
+          <img 
+            src={carpenterToolsImage} 
+            alt="Carpenter Tools" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="p-8 relative z-10">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">
@@ -320,24 +333,29 @@ return (
           </div>
         </div>
          {/* Furniture Categories */}
-        {activeTab === 'furniture' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-6">
+       
+        {/* {activeTab === 'furniture' && (
+          
+          <div className="">
             {assignedCategories.map(catId => {
               const category = categories.find(c => c.id === catId);
               return category ? (
-                <div key={category.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 group">
-                  <div className="relative h-80 overflow-hidden">
+                <div key={category.id} className="">
+                 
                     <img 
-                      src="/images/homepages/carpenter-work.jpg" 
+                      src={carpenterToolsImage} 
                       alt={`${category.name} - Carpenter Work`}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                      className="" 
                     />
-                  </div>
+                   
+                  
+                 
                 </div>
               ) : null;
             })}
           </div>
-        )}
+        )}*/}
+
 
         {/* All Carpenters Tab */}
         {activeTab === 'carpenters' && (
@@ -715,6 +733,7 @@ return (
           </div>
         </div>
       )}
+      </div>
     </div>
   );
   

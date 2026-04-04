@@ -25,9 +25,7 @@ const Navbar = () => {
             <Link to="/" className="text-gray-700 hover:text-primary-600 transition">
               Home
             </Link>
-            <Link to="/catalogue" className="text-gray-700 hover:text-primary-600 transition">
-              Catalogue
-            </Link>
+          
             <Link to="/brands" className="text-gray-700 hover:text-primary-600 transition">
               Brands
             </Link>
@@ -90,13 +88,7 @@ const Navbar = () => {
             >
               Home
             </Link>
-            <Link 
-              to="/catalogue" 
-              className="block py-2 text-gray-700 hover:text-primary-600"
-              onClick={toggleMenu}
-            >
-              Catalogue
-            </Link>
+
             <Link 
               to="/brands" 
               className="block py-2 text-gray-700 hover:text-primary-600"
