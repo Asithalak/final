@@ -50,6 +50,7 @@ const Dashboard = () => {
   }
 
   return (
+    
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 shadow-2xl py-12">
         <div className="max-w-7xl mx-auto px-4">
@@ -58,6 +59,7 @@ const Dashboard = () => {
           <p className="text-white">⭐ {carpenterProfile.experience} | 🎨 {designs.length} Designs</p>
         </div>
       </div>
+      {/*
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h2 className="text-2xl font-bold mb-6">🏷️ Select Category</h2>
         <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mb-8">
@@ -84,7 +86,7 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div>*/}
     </div>
   );
 };

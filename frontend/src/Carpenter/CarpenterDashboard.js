@@ -333,7 +333,11 @@ return (
           </div>
         </div>
          {/* Furniture Categories */}
-       
+        <div className="p-6">
+            
+
+        </div>
+          
         {/* {activeTab === 'furniture' && (
           
           <div className="">
