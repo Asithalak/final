@@ -608,6 +608,7 @@ return (
       {showResourcesModal && selectedCarpenter && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            {/*
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 rounded-t-2xl sticky top-0">
               <div className="flex justify-between items-center">
                 <div>
@@ -627,7 +628,7 @@ return (
                   </svg>
                 </button>
               </div>
-            </div>
+            </div>*/}
 
             <div className="p-6">
               {loadingResources ? (
