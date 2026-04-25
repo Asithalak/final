@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { usersAPI } from '../services/api';
 import { toast } from 'react-toastify';
 
 const AdminUserManagement = () => {
@@ -26,22 +27,11 @@ const AdminUserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/users', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch users');
-      }
-
-      const data = await response.json();
-      setUsers(data);
+      const response = await usersAPI.getAll();
+      setUsers(response.data);
       setLoading(false);
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to fetch users');
       setLoading(false);
     }
   };
@@ -64,25 +54,12 @@ const AdminUserManagement = () => {
     e.preventDefault();
     
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:8000/api/users/${selectedUser._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(editFormData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update user');
-      }
-
+      await usersAPI.update(selectedUser._id, editFormData);
       toast.success('User updated successfully!');
       setShowEditModal(false);
       fetchUsers();
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to update user');
     }
   };
 
@@ -92,43 +69,21 @@ const AdminUserManagement = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete user');
-      }
-
+      await usersAPI.delete(userId);
       toast.success('User deleted successfully!');
       fetchUsers();
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to delete user');
     }
   };
 
   const handleApproveUser = async (userId) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:8000/api/users/${userId}/approve`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to approve user');
-      }
-
+      await usersAPI.approve(userId);
       toast.success('Carpenter approved successfully!');
       fetchUsers();
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to approve user');
     }
   };
 
@@ -159,8 +114,76 @@ const AdminUserManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="flex">
+        <aside className="hidden lg:flex lg:w-64 xl:w-72 flex-col border-r border-gray-200 bg-white min-h-screen sticky top-0">
+          <div className="p-6 border-b border-gray-200">
+            <p className="text-xs uppercase tracking-widest text-gray-400">Admin Panel</p>
+            <p className="text-lg font-semibold text-gray-900 mt-2">{user?.name || 'Admin'}</p>
+            <p className="text-xs text-gray-500">{user?.email}</p>
+          </div>
+          <div className="p-4 space-y-2 flex-1">
+            <button
+              onClick={() => setFilterRole('all')}
+              className={`w-full text-left px-4 py-2 rounded-lg font-semibold transition ${
+                filterRole === 'all'
+                  ? 'bg-primary-600 text-white shadow'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              👥 All Users
+            </button>
+            <button
+              onClick={() => setFilterRole('customer')}
+              className={`w-full text-left px-4 py-2 rounded-lg font-semibold transition ${
+                filterRole === 'customer'
+                  ? 'bg-blue-600 text-white shadow'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              🛍️ Customers
+            </button>
+            <button
+              onClick={() => setFilterRole('carpenter')}
+              className={`w-full text-left px-4 py-2 rounded-lg font-semibold transition ${
+                filterRole === 'carpenter'
+                  ? 'bg-green-600 text-white shadow'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              🔨 Carpenters
+            </button>
+            <button
+              onClick={() => setFilterRole('admin')}
+              className={`w-full text-left px-4 py-2 rounded-lg font-semibold transition ${
+                filterRole === 'admin'
+                  ? 'bg-purple-600 text-white shadow'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              🛡️ Admins
+            </button>
+            <button
+              onClick={fetchUsers}
+              className="w-full text-left px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition"
+            >
+              🔄 Refresh Users
+            </button>
+          </div>
+          <div className="p-4 border-t border-gray-200">
+            <button
+              onClick={() => {
+                logout();
+                navigate('/admin-login');
+              }}
+              className="w-full px-4 py-2 rounded-lg font-semibold text-white bg-primary-600 hover:bg-primary-700 transition"
+            >
+              Logout
+            </button>
+          </div>
+        </aside>
+        <div className="flex-1 py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl shadow-xl p-8 mb-8 text-white">
           <div className="flex items-center justify-between">
@@ -469,6 +492,8 @@ const AdminUserManagement = () => {
           </div>
         </div>
       )}
+    </div>
+      </div>
     </div>
   );
 };

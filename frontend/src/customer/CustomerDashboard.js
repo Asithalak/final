@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ordersAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,6 +11,8 @@ const CustomerDashboard = () => {
   const [showCustomerDetailsModal, setShowCustomerDetailsModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Get user role from localStorage
@@ -105,8 +107,64 @@ const CustomerDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="flex">
+        <aside className="hidden lg:flex lg:w-64 xl:w-72 flex-col border-r border-gray-200 bg-white min-h-screen sticky top-0">
+          <div className="p-6 border-b border-gray-200">
+            <p className="text-xs uppercase tracking-widest text-gray-400">Customer Panel</p>
+            <p className="text-lg font-semibold text-gray-900 mt-2">{user?.name || 'Customer'}</p>
+            <p className="text-xs text-gray-500">{user?.email}</p>
+          </div>
+          <div className="p-4 space-y-2 flex-1">
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`w-full text-left px-4 py-2 rounded-lg font-semibold transition ${
+                activeTab === 'orders'
+                  ? 'bg-blue-600 text-white shadow'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              📦 My Orders
+            </button>
+            <button
+              onClick={() => navigate('/category/chair')}
+              className="w-full text-left px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition"
+            >
+              🛒 Place New Order
+            </button>
+            <button
+              onClick={() => navigate('/carpenters')}
+              className="w-full text-left px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition"
+            >
+              🔨 View Carpenters
+            </button>
+            {userRole === 'admin' && (
+              <button
+                onClick={() => setActiveTab('customers')}
+                className={`w-full text-left px-4 py-2 rounded-lg font-semibold transition ${
+                  activeTab === 'customers'
+                    ? 'bg-green-600 text-white shadow'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                👥 Customer Details
+              </button>
+            )}
+          </div>
+          <div className="p-4 border-t border-gray-200">
+            <button
+              onClick={() => {
+                logout();
+                navigate('/login');
+              }}
+              className="w-full px-4 py-2 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 transition"
+            >
+              Logout
+            </button>
+          </div>
+        </aside>
+        <div className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl shadow-2xl p-8">
@@ -141,6 +199,12 @@ const CustomerDashboard = () => {
             >
               📦 My Orders
             </button>
+            <Link
+              to="/category/chair"
+              className="px-6 py-3 rounded-lg font-semibold transition-all bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg hover:from-green-700 hover:to-emerald-700"
+            >
+              🛒 Place New Order
+            </Link>
             <Link
               to="/carpenters"
               className="px-6 py-3 rounded-lg font-semibold transition-all bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:from-purple-700 hover:to-pink-700"
@@ -269,7 +333,7 @@ const CustomerDashboard = () => {
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">📦</div>
                   <p className="text-gray-500 text-lg mb-4">You haven't placed any orders yet</p>
-                  <Link to="/catalogue" className="inline-block px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg">
+                  <Link to="/category/chair" className="inline-block px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg">
                     Start Shopping
                   </Link>
                 </div>
@@ -347,9 +411,9 @@ const CustomerDashboard = () => {
       </div>
 
       {/* Customer Details Modal - Admin Only */}
-      {showCustomerDetailsModal && selectedCustomer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        {showCustomerDetailsModal && selectedCustomer && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6 rounded-t-2xl sticky top-0">
               <div className="flex justify-between items-center">
                 <div>
@@ -417,6 +481,8 @@ const CustomerDashboard = () => {
           </div>
         </div>
       )}
+    </div>
+      </div>
     </div>
   );
 };

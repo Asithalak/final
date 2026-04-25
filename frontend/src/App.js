@@ -45,7 +45,10 @@ import CustomerDashboard from './customer/CustomerDashboard';
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import PrivateRoute from './components/PrivateRoute'; 
+import PrivateRoute from './components/PrivateRoute';
+import CarpenterLayout from './components/CarpenterLayout';
+import CustomerLayout from './components/CustomerLayout';
+import AdminLayout from './components/AdminLayout';
 function App() {
   return (
     <Router>
@@ -62,15 +65,69 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/register/:role" element={<RegisterUser />} />
                 <Route path="/carpenter/carpenterdashboard" element={<CarpenterDashboard />} />
-                <Route path="/carpenter/myfurnituredesigns" element={<MyFurnitureDesigns />} />
-                <Route path="/carpenter/myresources" element={<MyResources />} />
-                <Route path="/carpenter/assignedorders" element={<AssignedOrders />} />
+                <Route 
+                  path="/carpenter/myfurnituredesigns" 
+                  element={
+                    <PrivateRoute>
+                      <CarpenterLayout>
+                        <MyFurnitureDesigns />
+                      </CarpenterLayout>
+                    </PrivateRoute>
+                  } 
+                />
+                <Route 
+                  path="/carpenter/myresources" 
+                  element={
+                    <PrivateRoute>
+                      <CarpenterLayout>
+                        <MyResources />
+                      </CarpenterLayout>
+                    </PrivateRoute>
+                  } 
+                />
+                <Route 
+                  path="/carpenter/assignedorders" 
+                  element={
+                    <PrivateRoute>
+                      <CarpenterLayout>
+                        <AssignedOrders />
+                      </CarpenterLayout>
+                    </PrivateRoute>
+                  } 
+                />
                 <Route path="/carpenters" element={<AllCarpenters />} />
                 <Route path="/all-carpenters" element={<AllCarpenters />} />
-                <Route path="/customer/customerdashboard" element={<CustomerDashboard />} />
+                <Route 
+                  path="/customer/customerdashboard" 
+                  element={
+                    <PrivateRoute>
+                      <CustomerLayout>
+                        <CustomerDashboard />
+                      </CustomerLayout>
+                    </PrivateRoute>
+                  } 
+                />
 
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/gallery" element={<ImageGalleryPage />} />
+                <Route 
+                  path="/cart" 
+                  element={
+                    <PrivateRoute>
+                      <CustomerLayout>
+                        <Cart />
+                      </CustomerLayout>
+                    </PrivateRoute>
+                  } 
+                />
+                <Route 
+                  path="/gallery" 
+                  element={
+                    <PrivateRoute>
+                      <CustomerLayout>
+                        <ImageGalleryPage />
+                      </CustomerLayout>
+                    </PrivateRoute>
+                  } 
+                />
                 
                 {/* Furniture Category Routes - Requires Login */}
                 <Route path="/category/chair" element={<PrivateRoute><Chairs /></PrivateRoute>} />
@@ -88,7 +145,9 @@ function App() {
                   path="/admin/users" 
                   element={
                     <PrivateRoute>
-                      <AdminUserManagement />
+                      <AdminLayout>
+                        <AdminUserManagement />
+                      </AdminLayout>
                     </PrivateRoute>
                   } 
                 />

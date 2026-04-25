@@ -22,6 +22,7 @@ const furnitureRoutes = require('./routes/furniture');
 const orderRoutes = require('./routes/orders');
 const resourceRoutes = require('./routes/resources');
 const userRoutes = require('./routes/users');
+const notificationRoutes = require('./routes/notifications');
 
 const app = express(); 
 
@@ -83,6 +84,7 @@ app.use('/api/furniture', furnitureRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { notificationsAPI } from '../services/api';
 
 const AssignedOrders = () => {
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState('carpenter'); // 'carpenter', 'admin', 'customer'
   const [orders, setOrders] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showResourcesModal, setShowResourcesModal] = useState(false);
   const [showDeliveryModal, setShowDeliveryModal] = useState(false);
@@ -17,7 +20,38 @@ const AssignedOrders = () => {
     const storedRole = localStorage.getItem('userRole') || 'carpenter';
     setUserRole(storedRole);
     loadOrders();
+    if (storedRole === 'carpenter') {
+      loadNotifications();
+    }
   }, []);
+
+  const loadNotifications = async () => {
+    setLoadingNotifications(true);
+    try {
+      const response = await notificationsAPI.getAll();
+      setNotifications(response.data || []);
+    } catch (error) {
+      console.error('Failed to load notifications:', error);
+      setNotifications([]);
+    } finally {
+      setLoadingNotifications(false);
+    }
+  };
+
+  const handleMarkRead = async (notificationId) => {
+    try {
+      await notificationsAPI.markRead(notificationId);
+      setNotifications(prev =>
+        prev.map(notification =>
+          notification._id === notificationId
+            ? { ...notification, isRead: true }
+            : notification
+        )
+      );
+    } catch (error) {
+      toast.error('Failed to mark notification as read');
+    }
+  };
 
   const loadOrders = () => {
     setLoading(true);
@@ -247,6 +281,69 @@ const AssignedOrders = () => {
             </div>
           </div>
         </div>
+
+        {userRole === 'carpenter' && (
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+              <h2 className="text-xl font-bold text-gray-900">🔔 New Order Messages</h2>
+              <button
+                onClick={loadNotifications}
+                className="self-start md:self-auto px-4 py-2 rounded-lg bg-indigo-50 text-indigo-700 font-semibold hover:bg-indigo-100 transition"
+              >
+                Refresh
+              </button>
+            </div>
+            {loadingNotifications ? (
+              <p className="text-sm text-gray-500">Loading messages...</p>
+            ) : notifications.length > 0 ? (
+              <div className="space-y-4">
+                {notifications.map(notification => (
+                  <div
+                    key={notification._id}
+                    className={`border rounded-xl p-4 ${
+                      notification.isRead ? 'border-gray-200 bg-gray-50' : 'border-indigo-300 bg-indigo-50'
+                    }`}
+                  >
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                      <div>
+                        <p className="text-sm text-gray-500">
+                          {new Date(notification.createdAt).toLocaleString()}
+                        </p>
+                        <p className="text-lg font-semibold text-gray-900">{notification.title}</p>
+                        <p className="text-sm text-gray-700">{notification.message}</p>
+                        {notification.order?.orderNumber && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            Order: {notification.order.orderNumber}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {notification.order?._id && (
+                          <button
+                            onClick={() => navigate(`/orders/${notification.order._id}`)}
+                            className="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition"
+                          >
+                            View Order
+                          </button>
+                        )}
+                        {!notification.isRead && (
+                          <button
+                            onClick={() => handleMarkRead(notification._id)}
+                            className="px-4 py-2 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition"
+                          >
+                            Mark as Read
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">No new order messages yet.</p>
+            )}
+          </div>
+        )}
 
         {/* Filters */}
         <div className="bg-white rounded-xl shadow-md p-4">

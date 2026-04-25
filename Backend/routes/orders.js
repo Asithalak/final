@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
 const Furniture = require('../models/Furniture');
+const Notification = require('../models/Notification');
 const { authenticate, isAdmin } = require('../middleware/auth');
 
 // @route   POST /api/orders
@@ -51,6 +52,26 @@ router.post('/', authenticate, async (req, res) => {
       notes,
       status: 'pending'
     });
+
+    const carpenterIds = [
+      ...new Set(
+        orderItems
+          .map(item => item.carpenter?.toString())
+          .filter(Boolean)
+      )
+    ];
+
+    if (carpenterIds.length > 0) {
+      const notifications = carpenterIds.map(carpenterId => ({
+        recipient: carpenterId,
+        order: order._id,
+        title: 'New order received',
+        message: `New order ${order.orderNumber} placed by ${req.user.name || 'a customer'}.`,
+        type: 'order_created'
+      }));
+
+      await Notification.insertMany(notifications);
+    }
 
     await order.populate('items.furniture');
     

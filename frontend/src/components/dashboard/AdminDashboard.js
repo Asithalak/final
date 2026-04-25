@@ -17,7 +17,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchData = async () => {
     try {
@@ -32,17 +32,19 @@ const AdminDashboard = () => {
       const allFurniture = furnitureRes.data;
       const allResources = resourcesRes.data;
       const pendingCarpentersList = usersRes.data.filter(u => u.role === 'carpenter' && !u.isApproved);
+      const pendingFurnitureList = allFurniture.filter(f => !f.isApproved);
+      const pendingResourcesList = allResources.filter(r => !r.isApproved);
 
       setStats({
         users: usersRes.data.length,
         furniture: allFurniture.length,
         resources: allResources.length,
         orders: ordersRes.data.length,
-        pendingApprovals: pendingFurniture.length + pendingResources.length + pendingCarpentersList.length,
+        pendingApprovals: pendingFurnitureList.length + pendingResourcesList.length + pendingCarpentersList.length,
       });
 
-      setPendingFurniture(allFurniture.filter(f => !f.isApproved));
-      setPendingResources(allResources.filter(r => !r.isApproved));
+      setPendingFurniture(pendingFurnitureList);
+      setPendingResources(pendingResourcesList);
       setPendingCarpenters(pendingCarpentersList);
     } catch (error) {
       toast.error('Failed to fetch dashboard data');

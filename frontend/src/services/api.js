@@ -85,4 +85,10 @@ export const usersAPI = {
   delete: (id) => api.delete(`/users/${id}`),
 };
 
+// Notifications API
+export const notificationsAPI = {
+  getAll: () => api.get('/notifications'),
+  markRead: (id) => api.put(`/notifications/${id}/read`),
+};
+
 export default api;

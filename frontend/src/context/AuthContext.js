@@ -38,9 +38,16 @@ export const AuthProvider = ({ children }) => {
       console.log('Attempting to register with data:', { ...userData, password: '***' });
       const response = await authAPI.register(userData);
       localStorage.setItem('token', response.data.token);
-      setUser(response.data);
+      let userDataResult = response.data;
+      try {
+        const userResponse = await authAPI.getCurrentUser();
+        userDataResult = userResponse.data;
+      } catch (fetchError) {
+        console.error('Failed to fetch current user after registration:', fetchError);
+      }
+      setUser(userDataResult);
       toast.success('Registration successful!');
-      return response.data;
+      return userDataResult;
     } catch (error) {
       console.error('Registration error:', error.response?.data || error.message);
       const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
@@ -53,9 +60,16 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authAPI.login(credentials);
       localStorage.setItem('token', response.data.token);
-      setUser(response.data);
+      let userDataResult = response.data;
+      try {
+        const userResponse = await authAPI.getCurrentUser();
+        userDataResult = userResponse.data;
+      } catch (fetchError) {
+        console.error('Failed to fetch current user after login:', fetchError);
+      }
+      setUser(userDataResult);
       toast.success('Login successful!');
-      return response.data;
+      return userDataResult;
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
       throw error;

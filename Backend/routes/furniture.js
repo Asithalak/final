@@ -6,8 +6,8 @@ const upload = require('../middleware/upload');
 
 // @route   GET /api/furniture
 // @desc    Get all approved furniture
-// @access  Public
-router.get('/', async (req, res) => {
+// @access  Private
+router.get('/', authenticate, async (req, res) => {
   try {
     const { category, search, minPrice, maxPrice } = req.query;
     let query = { isApproved: true, status: 'approved' };

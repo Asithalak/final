@@ -2,11 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { furnitureAPI, resourcesAPI, ordersAPI, usersAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import catalogData from '../data/furniture_catalog.json';
 import carpenterToolsImage from '../images/homepages/carpenter-work.jpg';
 
 const CarpenterDashboard = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   // eslint-disable-next-line no-unused-vars
   const [furniture, setFurniture] = useState([]);
   // eslint-disable-next-line no-unused-vars
@@ -26,16 +28,16 @@ const CarpenterDashboard = () => {
   
   // Role-based access control (can be fetched from auth context/API)
   // For now, using localStorage or default to 'carpenter'
-  const [userRole, setUserRole] = useState('carpenter'); // 'carpenter', 'customer', 'admin'
+  const [userRole, setUserRole] = useState(user?.role || 'carpenter'); // 'carpenter', 'customer', 'admin'
   const [assignedCategories, setAssignedCategories] = useState(['chair', 'table']); // Carpenter's assigned categories
 
   // Load user role from localStorage or API
   useEffect(() => {
-    const storedRole = localStorage.getItem('userRole') || 'carpenter';
+    const storedRole = localStorage.getItem('userRole');
     const storedCategories = JSON.parse(localStorage.getItem('assignedCategories') || '["chair", "table"]');
-    setUserRole(storedRole);
+    setUserRole(user?.role || storedRole || 'carpenter');
     setAssignedCategories(storedCategories);
-  }, []);
+  }, [user]);
 
   const fetchData = useCallback(async () => {
     try {
@@ -177,6 +179,13 @@ const CarpenterDashboard = () => {
     }
   };
 
+  const formatAddress = (address) => {
+    if (!address) return 'N/A';
+    if (typeof address === 'string') return address;
+    const parts = [address.street, address.city, address.state, address.zipCode, address.country].filter(Boolean);
+    return parts.length ? parts.join(', ') : 'N/A';
+  };
+
   // Categories data with images from catalog
   const categories = [
     { 
@@ -294,6 +303,35 @@ return (
               <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
                 <p className="text-xs text-primary-100">Role</p>
                 <p className="text-lg font-bold text-white capitalize">{userRole}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 p-4">
+            <p className="text-xs uppercase tracking-wide text-primary-100">Registered User Details</p>
+            <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-primary-100">
+              <div>
+                <p className="text-lg font-semibold text-white">{user?.name || 'Unknown User'}</p>
+                <p className="text-primary-100">{user?.email || 'No email available'}</p>
+              </div>
+              <div className="space-y-1">
+                <p>
+                  <span className="font-semibold text-white">Phone:</span> {user?.phone || 'N/A'}
+                </p>
+                <p>
+                  <span className="font-semibold text-white">Address:</span> {formatAddress(user?.address)}
+                </p>
+                {userRole === 'carpenter' && (
+                  <>
+                    <p>
+                      <span className="font-semibold text-white">Specialization:</span> {user?.specialization || 'N/A'}
+                    </p>
+                    <p>
+                      <span className="font-semibold text-white">Experience:</span>{' '}
+                      {user?.experience ? `${user.experience} years` : 'N/A'}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>

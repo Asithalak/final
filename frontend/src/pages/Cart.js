@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +10,7 @@ const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+  const [paymentMethod, setPaymentMethod] = useState('cash');
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
@@ -30,7 +31,7 @@ const Cart = () => {
           quantity: item.quantity,
         })),
         deliveryAddress: user.address || {},
-        paymentMethod: 'cash',
+        paymentMethod,
       };
 
       const response = await ordersAPI.create(orderData);
@@ -55,7 +56,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="py-8 bg-gray-50 min-h-screen">
+    <div className="py-8 bg-gray-50">
       <div className="container-custom">
         <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
 
@@ -135,6 +136,42 @@ const Cart = () => {
                 <div className="border-t pt-2 flex justify-between text-lg font-bold">
                   <span>Total</span>
                   <span className="text-primary-600">${getCartTotal().toFixed(2)}</span>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <p className="text-sm font-semibold text-gray-700 mb-2">Payment Method</p>
+                <div className="space-y-2">
+                  <label className="flex items-center justify-between rounded-lg border border-gray-200 px-3 py-2 cursor-pointer hover:border-primary-300">
+                    <span className="text-sm text-gray-700">Cash on Delivery</span>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="cash"
+                      checked={paymentMethod === 'cash'}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                    />
+                  </label>
+                  <label className="flex items-center justify-between rounded-lg border border-gray-200 px-3 py-2 cursor-pointer hover:border-primary-300">
+                    <span className="text-sm text-gray-700">Card Payment</span>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="card"
+                      checked={paymentMethod === 'card'}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                    />
+                  </label>
+                  <label className="flex items-center justify-between rounded-lg border border-gray-200 px-3 py-2 cursor-pointer hover:border-primary-300">
+                    <span className="text-sm text-gray-700">Online Payment</span>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="online"
+                      checked={paymentMethod === 'online'}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                    />
+                  </label>
                 </div>
               </div>
 
