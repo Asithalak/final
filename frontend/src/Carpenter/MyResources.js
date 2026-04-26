@@ -102,27 +102,33 @@ const MyResources = () => {
 
   const handleAddResource = async (e) => {
     e.preventDefault();
+    
+    // Check resource limit
+    if (resources.length >= 100) {
+      toast.error('You have reached the maximum resource limit (100). Please delete some resources before adding new ones.');
+      return;
+    }
+    
     setSaving(true);
     
     try {
-      const formData = new FormData(e.target);
-      
-      // Create resource data
+      const formElement = e.target;
       const resourceData = new FormData();
-      resourceData.append('name', formData.get('name'));
-      resourceData.append('type', formData.get('category'));
-      resourceData.append('description', formData.get('name')); // Using name as description
-      resourceData.append('quantity', formData.get('quantity'));
-      resourceData.append('unit', formData.get('unit'));
-      resourceData.append('pricePerUnit', formData.get('pricePerUnit'));
-      resourceData.append('supplierName', formData.get('supplier') || '');
+      
+      resourceData.append('name', formElement.elements.name.value);
+      resourceData.append('type', formElement.elements.category.value);
+      resourceData.append('description', formElement.elements.description?.value || formElement.elements.name.value);
+      resourceData.append('quantity', formElement.elements.quantity.value);
+      resourceData.append('unit', formElement.elements.unit.value);
+      resourceData.append('pricePerUnit', formElement.elements.pricePerUnit.value);
+      resourceData.append('supplierName', formElement.elements.supplier?.value || '');
 
       const response = await resourcesAPI.create(resourceData);
       
       setResources([response.data.resource, ...resources]);
       setShowAddResourceModal(false);
       toast.success('Resource added successfully!');
-      e.target.reset();
+      formElement.reset();
     } catch (error) {
       console.error('Error adding resource:', error);
       toast.error(error.response?.data?.message || 'Failed to add resource');
@@ -136,16 +142,16 @@ const MyResources = () => {
     setSaving(true);
     
     try {
-      const formData = new FormData(e.target);
-      
+      const formElement = e.target;
       const resourceData = new FormData();
-      resourceData.append('name', formData.get('name'));
-      resourceData.append('type', formData.get('category'));
-      resourceData.append('description', formData.get('name'));
-      resourceData.append('quantity', formData.get('quantity'));
-      resourceData.append('unit', formData.get('unit'));
-      resourceData.append('pricePerUnit', formData.get('pricePerUnit'));
-      resourceData.append('supplierName', formData.get('supplier') || '');
+      
+      resourceData.append('name', formElement.elements.name.value);
+      resourceData.append('type', formElement.elements.category.value);
+      resourceData.append('description', formElement.elements.description?.value || formElement.elements.name.value);
+      resourceData.append('quantity', formElement.elements.quantity.value);
+      resourceData.append('unit', formElement.elements.unit.value);
+      resourceData.append('pricePerUnit', formElement.elements.pricePerUnit.value);
+      resourceData.append('supplierName', formElement.elements.supplier?.value || '');
 
       const response = await resourcesAPI.update(selectedResource._id, resourceData);
       
@@ -340,15 +346,66 @@ const MyResources = () => {
                 </h2>
                 <p className="text-blue-100 mt-1">Total: {resources.length} items in stock</p>
               </div>
-              {canEdit && (
-                <button
-                  onClick={() => setShowAddResourceModal(true)}
-                  className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl"
-                >
-                  + Add Resource
-                </button>
-              )}
+              <div className="flex gap-3 items-center">
+                {canEdit && (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                      <p className="text-xs text-blue-100">Resources Used</p>
+                      <p className="text-xl font-bold text-white">{resources.length}/100</p>
+                    </div>
+                    {resources.length >= 100 && (
+                      <div className="bg-red-500/20 text-red-200 px-3 py-1 rounded-lg text-xs font-semibold">
+                        ⚠️ Limit Reached
+                      </div>
+                    )}
+                    {resources.length >= 85 && resources.length < 100 && (
+                      <div className="bg-yellow-500/20 text-yellow-200 px-3 py-1 rounded-lg text-xs font-semibold">
+                        ⚠️ {100 - resources.length} remaining
+                      </div>
+                    )}
+                  </div>
+                )}
+                {canEdit && (
+                  <button
+                    onClick={() => {
+                      if (resources.length >= 100) {
+                        toast.error('Maximum resource limit (100) reached. Delete some resources first.');
+                      } else {
+                        setShowAddResourceModal(true);
+                      }
+                    }}
+                    disabled={resources.length >= 100}
+                    className={`px-6 py-3 rounded-xl font-semibold transition-all shadow-lg ${
+                      resources.length >= 100
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-white text-blue-600 hover:bg-blue-50 hover:shadow-xl'
+                    }`}
+                  >
+                    + Add Resource
+                  </button>
+                )}
+              </div>
             </div>
+            {/* Resource Usage Progress Bar */}
+            {canEdit && (
+              <div className="px-6 pb-6 pt-4 border-t border-blue-400">
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-sm font-semibold text-blue-900">Resource Capacity</p>
+                  <p className="text-sm font-bold text-blue-900">{resources.length}/100</p>
+                </div>
+                <div className="w-full bg-blue-200 rounded-full h-3 overflow-hidden">
+                  <div 
+                    className={`h-full rounded-full transition-all duration-300 ${
+                      resources.length >= 100 ? 'bg-red-500' :
+                      resources.length >= 85 ? 'bg-yellow-500' :
+                      resources.length >= 50 ? 'bg-orange-500' :
+                      'bg-green-500'
+                    }`}
+                    style={{ width: `${Math.min((resources.length / 100) * 100, 100)}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="p-6">
@@ -629,6 +686,10 @@ const MyResources = () => {
                   <input type="text" name="supplier" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Wood Masters Inc." />
                 </div>
               </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                <textarea name="description" rows="3" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Add detailed information about this resource..."></textarea>
+              </div>
 
               <div className="flex gap-3 pt-4">
                 <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg disabled:opacity-50">
@@ -692,6 +753,10 @@ const MyResources = () => {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Supplier</label>
                   <input type="text" name="supplier" defaultValue={selectedResource.supplierName} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                <textarea name="description" rows="3" defaultValue={selectedResource.description} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Add detailed information about this resource..."></textarea>
               </div>
 
               <div className="flex gap-3 pt-4">

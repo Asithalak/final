@@ -80,6 +80,59 @@ router.get('/carpenter/:carpenterId', async (req, res) => {
   }
 });
 
+// @route   POST /api/resources
+// @desc    Upload new resource
+// @access  Private (Carpenter)
+router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (req, res) => {
+  try {
+    const { name, type, description, quantity, unit, pricePerUnit, specifications, supplierName } = req.body;
+
+    // Validate required fields
+    if (!name || !type || !description || quantity === undefined || !unit || pricePerUnit === undefined) {
+      return res.status(400).json({ 
+        message: 'Missing required fields: name, type, description, quantity, unit, pricePerUnit'
+      });
+    }
+
+    // Check resource limit (max 100 resources per carpenter)
+    const existingResourceCount = await Resource.countDocuments({ seller: req.user._id });
+    if (existingResourceCount >= 100) {
+      return res.status(400).json({ 
+        message: 'You have reached the maximum resource limit (100). Please delete some resources before adding new ones.',
+        resourceCount: existingResourceCount,
+        limit: 100
+      });
+    }
+
+    const images = req.files ? req.files.map(file => file.path) : [];
+
+    const resource = await Resource.create({
+      name: String(name).trim(),
+      type: String(type).trim(),
+      description: String(description).trim(),
+      quantity: Number(quantity),
+      unit: String(unit).trim(),
+      pricePerUnit: Number(pricePerUnit),
+      seller: req.user._id,
+      supplierName: supplierName ? String(supplierName).trim() : '',
+      images,
+      specifications: specifications ? JSON.parse(specifications) : {},
+      isApproved: true,  // Auto-approve carpenter's own resources
+      status: 'approved'
+    });
+
+    res.status(201).json({
+      message: 'Resource added successfully.',
+      resource,
+      resourceCount: existingResourceCount + 1,
+      limit: 100
+    });
+  } catch (error) {
+    console.error('Resource creation error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // @route   GET /api/resources/:id
 // @desc    Get single resource
 // @access  Private
@@ -93,39 +146,6 @@ router.get('/:id', authenticate, async (req, res) => {
     }
 
     res.json(resource);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
-
-// @route   POST /api/resources
-// @desc    Upload new resource
-// @access  Private (Carpenter)
-router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (req, res) => {
-  try {
-    const { name, type, description, quantity, unit, pricePerUnit, specifications, supplierName } = req.body;
-
-    const images = req.files ? req.files.map(file => file.path) : [];
-
-    const resource = await Resource.create({
-      name,
-      type,
-      description,
-      quantity,
-      unit,
-      pricePerUnit,
-      seller: req.user._id,
-      supplierName: supplierName || '',
-      images,
-      specifications: specifications ? JSON.parse(specifications) : {},
-      isApproved: true,  // Auto-approve carpenter's own resources
-      status: 'approved'
-    });
-
-    res.status(201).json({
-      message: 'Resource added successfully.',
-      resource
-    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -147,16 +167,26 @@ router.put('/:id', authenticate, isCarpenter, upload.array('images', 3), async (
       return res.status(403).json({ message: 'Not authorized' });
     }
 
-    const updates = req.body;
+    const { name, type, description, quantity, unit, pricePerUnit, supplierName } = req.body;
+    
+    // Update fields with type conversion
+    if (name) resource.name = String(name).trim();
+    if (type) resource.type = String(type).trim();
+    if (description) resource.description = String(description).trim();
+    if (quantity !== undefined) resource.quantity = Number(quantity);
+    if (unit) resource.unit = String(unit).trim();
+    if (pricePerUnit !== undefined) resource.pricePerUnit = Number(pricePerUnit);
+    if (supplierName !== undefined) resource.supplierName = String(supplierName).trim();
+    
     if (req.files && req.files.length > 0) {
-      updates.images = req.files.map(file => file.path);
+      resource.images = req.files.map(file => file.path);
     }
 
-    Object.assign(resource, updates);
     await resource.save();
 
     res.json({ message: 'Resource updated successfully', resource });
   } catch (error) {
+    console.error('Resource update error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });

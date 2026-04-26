@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { furnitureAPI, resourcesAPI, ordersAPI, usersAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import catalogData from '../data/furniture_catalog.json';
 import carpenterToolsImage from '../images/homepages/carpenter-work.jpg';
 
@@ -24,6 +25,9 @@ const CarpenterDashboard = () => {
   const [loadingDesigns, setLoadingDesigns] = useState(false);
   const [loadingResources, setLoadingResources] = useState(false);
   
+  // Get authenticated user from context
+  const { user } = useAuth();
+
   // Role-based access control (can be fetched from auth context/API)
   // For now, using localStorage or default to 'carpenter'
   const [userRole, setUserRole] = useState('carpenter'); // 'carpenter', 'customer', 'admin'
@@ -36,6 +40,12 @@ const CarpenterDashboard = () => {
     setUserRole(storedRole);
     setAssignedCategories(storedCategories);
   }, []);
+
+  // Current carpenter data
+  const [currentCarpenterData, setCurrentCarpenterData] = useState(null);
+  const [currentCarpenterFurniture, setCurrentCarpenterFurniture] = useState([]);
+  const [currentCarpenterResources, setCurrentCarpenterResources] = useState([]);
+  const [loadingCurrentData, setLoadingCurrentData] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -117,6 +127,59 @@ const CarpenterDashboard = () => {
     };
     fetchCarpenters();
   }, []);
+
+  // Fetch current user's carpenter data
+  useEffect(() => {
+    const fetchCurrentCarpenterData = async () => {
+      try {
+        setLoadingCurrentData(true);
+        
+        // Use user from context if available
+        if (user) {
+          setCurrentCarpenterData(user);
+          
+          // Fetch current carpenter's furniture
+          try {
+            const furnitureRes = await furnitureAPI.getMyFurniture();
+            setCurrentCarpenterFurniture(furnitureRes.data || []);
+          } catch (error) {
+            console.log('Could not fetch furniture:', error);
+            setCurrentCarpenterFurniture([]);
+          }
+          
+          // Fetch current carpenter's resources
+          try {
+            const resourcesRes = await resourcesAPI.getMyResources();
+            setCurrentCarpenterResources(resourcesRes.data || []);
+          } catch (error) {
+            console.log('Could not fetch resources:', error);
+            setCurrentCarpenterResources([]);
+          }
+        } else {
+          // Fallback: try to fetch from API
+          try {
+            const meResponse = await usersAPI.getMe();
+            const currentUser = meResponse.data;
+            setCurrentCarpenterData(currentUser);
+            
+            const furnitureRes = await furnitureAPI.getMyFurniture();
+            setCurrentCarpenterFurniture(furnitureRes.data || []);
+            
+            const resourcesRes = await resourcesAPI.getMyResources();
+            setCurrentCarpenterResources(resourcesRes.data || []);
+          } catch (error) {
+            console.log('Could not fetch current carpenter data:', error);
+          }
+        }
+      } finally {
+        setLoadingCurrentData(false);
+      }
+    };
+    
+    if (userRole === 'carpenter') {
+      fetchCurrentCarpenterData();
+    }
+  }, [userRole, user]);
 
   // Fetch carpenter's designs when View Designs is clicked
   const handleViewDesigns = async (carpenter) => {
@@ -314,8 +377,290 @@ return (
           )}
         </div>
       </div>
-{/* Tabs Section */}
-      <div className="bg-white rounded-2xl shadow-md overflow-hidden rounded-lg p-4">
+{/* Dashboard Content - Three Sections */}
+      <div className="space-y-8">
+        
+        {/* SECTION 1: Carpenter Details */}
+        {userRole === 'carpenter' && (
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl overflow-hidden shadow-lg">
+            <div className="bg-gradient-to-r from-amber-600 to-orange-600 p-6">
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">🔨</div>
+                <h2 className="text-2xl font-bold text-white">Carpenter Profile</h2>
+              </div>
+            </div>
+            <div className="p-8">
+              {loadingCurrentData ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600 mx-auto"></div>
+                  <p className="mt-3 text-gray-600">Loading profile...</p>
+                </div>
+              ) : currentCarpenterData ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Left: Profile Info */}
+                  <div className="space-y-4">
+                    <div className="bg-white rounded-xl p-4 shadow-sm">
+                      <p className="text-xs text-gray-500 font-medium mb-1">NAME</p>
+                      <p className="text-2xl font-bold text-gray-900">{currentCarpenterData.name || 'Not Set'}</p>
+                    </div>
+                    
+                    {currentCarpenterData.specialization && (
+                      <div className="bg-white rounded-xl p-4 shadow-sm">
+                        <p className="text-xs text-gray-500 font-medium mb-1">SPECIALIZATION</p>
+                        <p className="text-lg font-semibold text-amber-700">🎯 {currentCarpenterData.specialization}</p>
+                      </div>
+                    )}
+                    
+                    {currentCarpenterData.experience !== undefined && (
+                      <div className="bg-white rounded-xl p-4 shadow-sm">
+                        <p className="text-xs text-gray-500 font-medium mb-1">EXPERIENCE</p>
+                        <p className="text-lg font-semibold text-amber-700">⭐ {currentCarpenterData.experience} years</p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Right: Contact & Status */}
+                  <div className="space-y-4">
+                    {currentCarpenterData.email && (
+                      <div className="bg-white rounded-xl p-4 shadow-sm">
+                        <p className="text-xs text-gray-500 font-medium mb-1">EMAIL</p>
+                        <p className="text-sm text-gray-700">📧 {currentCarpenterData.email}</p>
+                      </div>
+                    )}
+                    
+                    {currentCarpenterData.phone && (
+                      <div className="bg-white rounded-xl p-4 shadow-sm">
+                        <p className="text-xs text-gray-500 font-medium mb-1">PHONE</p>
+                        <p className="text-sm text-gray-700">📞 {currentCarpenterData.phone}</p>
+                      </div>
+                    )}
+                    
+                    <div className="bg-white rounded-xl p-4 shadow-sm">
+                      <p className="text-xs text-gray-500 font-medium mb-1">STATUS</p>
+                      <div className="flex items-center gap-2">
+                        <span className={`w-3 h-3 rounded-full ${currentCarpenterData.isApproved ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
+                        <p className="text-sm font-semibold text-gray-700">{currentCarpenterData.isApproved ? '✓ Approved' : '⏳ Pending Approval'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-600">
+                  <p>Could not load carpenter profile</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {/* SECTION 2: Available Materials & Resources */}
+        {userRole === 'carpenter' && (
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl overflow-hidden shadow-lg">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6">
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">📦</div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Available Materials & Resources</h2>
+                  <p className="text-blue-100 text-sm mt-1">Inventory of raw materials you have in stock</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-8">
+              {loadingCurrentData ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                  <p className="mt-3 text-gray-600">Loading resources...</p>
+                </div>
+              ) : currentCarpenterResources && currentCarpenterResources.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {currentCarpenterResources.map((resource, index) => (
+                    <div key={resource._id || index} className="bg-white rounded-xl border-2 border-blue-100 p-6 hover:shadow-lg transition-all">
+                      <div className="flex items-start justify-between mb-4">
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-900">{resource.name}</h3>
+                          <span className="inline-block mt-2 px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full capitalize">
+                            📂 {resource.type || 'Material'}
+                          </span>
+                        </div>
+                        <span className={`px-3 py-1 rounded-lg text-xs font-bold ${resource.quantity > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          {resource.quantity > 0 ? '✓ In Stock' : '✗ Out'}
+                        </span>
+                      </div>
+                      
+                      {resource.description && (
+                        <p className="text-sm text-gray-600 mb-4 line-clamp-2">{resource.description}</p>
+                      )}
+                      
+                      <div className="space-y-3 bg-gray-50 rounded-lg p-4 mb-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">📦 Quantity</span>
+                          <span className="font-bold text-gray-900">{resource.quantity} {resource.unit}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">💵 Unit Price</span>
+                          <span className="font-bold text-green-600">Rs.{resource.pricePerUnit || 0}</span>
+                        </div>
+                        <div className="border-t pt-3 flex justify-between items-center">
+                          <span className="text-sm font-medium text-gray-700">💰 Total Value</span>
+                          <span className="text-lg font-bold text-indigo-600">Rs.{(resource.quantity || 0) * (resource.pricePerUnit || 0)}</span>
+                        </div>
+                      </div>
+                      
+                      {resource.status && (
+                        <div className="flex justify-between items-center pt-3 border-t">
+                          <span className="text-xs text-gray-500">Status:</span>
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            resource.status === 'approved' ? 'bg-green-100 text-green-700' :
+                            resource.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-gray-100 text-gray-700'
+                          }`}>
+                            {resource.status}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16 bg-white rounded-xl">
+                  <div className="text-6xl mb-4">📦</div>
+                  <p className="text-gray-600 text-lg font-medium">No resources added yet</p>
+                  <p className="text-gray-500 text-sm mt-2">Start adding materials to your inventory</p>
+                  <button 
+                    onClick={() => navigate('/carpenter/myresources')}
+                    className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
+                  >
+                    Add Resources
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {/* SECTION 3: Furniture Items */}
+        {userRole === 'carpenter' && (
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl overflow-hidden shadow-lg">
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6">
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">🪑</div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">My Furniture Designs</h2>
+                  <p className="text-purple-100 text-sm mt-1">Furniture items you have created and listed</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-8">
+              {loadingCurrentData ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
+                  <p className="mt-3 text-gray-600">Loading furniture...</p>
+                </div>
+              ) : currentCarpenterFurniture && currentCarpenterFurniture.length > 10 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {currentCarpenterFurniture.map((furniture, index) => (
+                    <div key={furniture._id || index} className="bg-white rounded-xl border-2 border-purple-100 overflow-hidden hover:shadow-lg transition-all">
+                      {/* Image Section */}
+                      <div className="relative h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+                        {furniture.images && furniture.images.length > 10 ? (
+                          <img 
+                            src={furniture.images[10].startsWith('http') ? furniture.images[10] : `http://localhost:5000${furniture.images[10]}`} 
+                            alt={furniture.name} 
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.src = '🪑';
+                              e.target.className = 'text-6xl';
+                            }}
+                          />
+                        ) : (
+                          <span className="text-6xl">🪑</span>
+                        )}
+                        {/* Category Badge */}
+                        <span className="absolute top-3 left-3 px-3 py-1 bg-purple-600 text-white text-xs font-bold rounded-full uppercase">
+                          {furniture.category}
+                        </span>
+                        {/* Stock Badge */}
+                        <span className={`absolute top-3 right-3 px-2 py-1 rounded-lg text-xs font-bold ${
+                          furniture.stockQuantity > 0 ? 'bg-green-500 text-white' : 'bg-orange-500 text-white'
+                        }`}>
+                          {furniture.stockQuantity > 0 ? `${furniture.stockQuantity} Stock` : 'Custom'}
+                        </span>
+                      </div>
+                      
+                      {/* Content Section */}
+                      <div className="p-5">
+                        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">{furniture.name}</h3>
+                        
+                        {furniture.description && (
+                          <p className="text-sm text-gray-600 mb-4 line-clamp-2">{furniture.description}</p>
+                        )}
+                        
+                        <div className="space-y-2 bg-gray-50 rounded-lg p-3 mb-4">
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-gray-600">💰 Price</span>
+                            <span className="font-bold text-green-600">Rs.{furniture.price}</span>
+                          </div>
+                          
+                          {furniture.materials && furniture.materials.length > 0 && (
+                            <div className="flex justify-between items-start text-sm">
+                              <span className="text-gray-600">🪵 Materials</span>
+                              <span className="text-right text-gray-700 max-w-xs">{furniture.materials.join(', ')}</span>
+                            </div>
+                          )}
+                          
+                          {furniture.timeRequired && (
+                            <div className="flex justify-between items-center text-sm">
+                              <span className="text-gray-600">⏱️ Time</span>
+                              <span className="text-gray-700">{furniture.timeRequired}</span>
+                            </div>
+                          )}
+                          
+                          {furniture.dimensions && (furniture.dimensions.length || furniture.dimensions.width || furniture.dimensions.height) && (
+                            <div className="flex justify-between items-center text-sm border-t pt-2">
+                              <span className="text-gray-600">📏 Dimensions</span>
+                              <span className="text-gray-700">
+                                {furniture.dimensions.length || 0}×{furniture.dimensions.width || 0}×{furniture.dimensions.height || 0} {furniture.dimensions.unit || 'cm'}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {furniture.status && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-500">Status:</span>
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                              furniture.status === 'approved' ? 'bg-green-100 text-green-700' :
+                              furniture.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                              'bg-gray-100 text-gray-700'
+                            }`}>
+                              {furniture.status}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16 bg-white rounded-xl">
+                  <div className="text-6xl mb-4">🪑</div>
+                  <p className="text-gray-600 text-lg font-medium">No furniture designs yet</p>
+                  <p className="text-gray-500 text-sm mt-2">Start creating your furniture designs</p>
+                  <button 
+                    onClick={() => navigate('/carpenter/myfurnituredesigns')}
+                    className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition"
+                  >
+                    Add Furniture Design
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Tabs Section - For other roles or alternative view */}
+      <div className="bg-white rounded-2xl shadow-md overflow-hidden rounded-lg p-4 mt-8">
         <div className="flex justify-center space-x-4">
             {tabs.map(tab => (
               <button

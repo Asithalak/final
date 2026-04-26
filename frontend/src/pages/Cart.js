@@ -46,8 +46,8 @@ const Cart = () => {
     return (
       <div className="container-custom py-16 text-center">
         <h2 className="text-2xl font-bold mb-4">Your cart is empty</h2>
-        <p className="text-gray-600 mb-8">Browse our catalogue and add items to your cart</p>
-        <button onClick={() => navigate('/catalogue')} className="btn-primary">
+        <p className="text-gray-600 mb-8">Browse our collection and add items to your cart</p>
+        <button onClick={() => navigate('/gallery')} className="btn-primary">
           Continue Shopping
         </button>
       </div>
