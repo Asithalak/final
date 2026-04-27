@@ -46,6 +46,32 @@ const MyResources = () => {
     setEditImagePreview(previews);
   };
 
+  // Handle image preview for add resource
+  const handleAddResourceImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 3) {
+      toast.warning('Maximum 3 images allowed');
+      e.target.value = '';
+      setImagePreview([]);
+      return;
+    }
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImagePreview(previews);
+  };
+
+  // Handle image preview for edit resource
+  const handleEditResourceImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 3) {
+      toast.warning('Maximum 3 images allowed');
+      e.target.value = '';
+      setEditImagePreview([]);
+      return;
+    }
+    const previews = files.map(file => URL.createObjectURL(file));
+    setEditImagePreview(previews);
+  };
+
   // Clear previews when modal closes
   const closeAddFurnitureModal = () => {
     setShowAddFurnitureModal(false);
@@ -115,18 +141,42 @@ const MyResources = () => {
       const formElement = e.target;
       const resourceData = new FormData();
       
-      resourceData.append('name', formElement.elements.name.value);
-      resourceData.append('type', formElement.elements.category.value);
-      resourceData.append('description', formElement.elements.description?.value || formElement.elements.name.value);
-      resourceData.append('quantity', formElement.elements.quantity.value);
-      resourceData.append('unit', formElement.elements.unit.value);
-      resourceData.append('pricePerUnit', formElement.elements.pricePerUnit.value);
-      resourceData.append('supplierName', formElement.elements.supplier?.value || '');
+      const name = formElement.elements.name.value?.trim();
+      const category = formElement.elements.category.value?.trim();
+      const quantity = formElement.elements.quantity.value?.trim();
+      const unit = formElement.elements.unit.value?.trim();
+      const pricePerUnit = formElement.elements.pricePerUnit.value?.trim();
+      const description = formElement.elements.description?.value?.trim() || name;
+      const supplierName = formElement.elements.supplier?.value?.trim() || '';
+
+      // Validate required fields
+      if (!name || !category || !quantity || !unit || !pricePerUnit) {
+        toast.error('Please fill in all required fields');
+        setSaving(false);
+        return;
+      }
+
+      resourceData.append('name', name);
+      resourceData.append('type', category);
+      resourceData.append('description', description);
+      resourceData.append('quantity', quantity);
+      resourceData.append('unit', unit);
+      resourceData.append('pricePerUnit', pricePerUnit);
+      resourceData.append('supplierName', supplierName);
+
+      // Add images if provided
+      const imagesInput = formElement.elements.images;
+      if (imagesInput?.files?.length > 0) {
+        for (let i = 0; i < Math.min(imagesInput.files.length, 3); i++) {
+          resourceData.append('images', imagesInput.files[i]);
+        }
+      }
 
       const response = await resourcesAPI.create(resourceData);
       
       setResources([response.data.resource, ...resources]);
       setShowAddResourceModal(false);
+      setImagePreview([]);
       toast.success('Resource added successfully!');
       formElement.reset();
     } catch (error) {
@@ -145,13 +195,36 @@ const MyResources = () => {
       const formElement = e.target;
       const resourceData = new FormData();
       
-      resourceData.append('name', formElement.elements.name.value);
-      resourceData.append('type', formElement.elements.category.value);
-      resourceData.append('description', formElement.elements.description?.value || formElement.elements.name.value);
-      resourceData.append('quantity', formElement.elements.quantity.value);
-      resourceData.append('unit', formElement.elements.unit.value);
-      resourceData.append('pricePerUnit', formElement.elements.pricePerUnit.value);
-      resourceData.append('supplierName', formElement.elements.supplier?.value || '');
+      const name = formElement.elements.name.value?.trim();
+      const category = formElement.elements.category.value?.trim();
+      const quantity = formElement.elements.quantity.value?.trim();
+      const unit = formElement.elements.unit.value?.trim();
+      const pricePerUnit = formElement.elements.pricePerUnit.value?.trim();
+      const description = formElement.elements.description?.value?.trim() || name;
+      const supplierName = formElement.elements.supplier?.value?.trim() || '';
+
+      // Validate required fields
+      if (!name || !category || quantity === '' || !unit || pricePerUnit === '') {
+        toast.error('Please fill in all required fields');
+        setSaving(false);
+        return;
+      }
+
+      resourceData.append('name', name);
+      resourceData.append('type', category);
+      resourceData.append('description', description);
+      resourceData.append('quantity', quantity);
+      resourceData.append('unit', unit);
+      resourceData.append('pricePerUnit', pricePerUnit);
+      resourceData.append('supplierName', supplierName);
+
+      // Add new images if provided
+      const imagesInput = formElement.elements.images;
+      if (imagesInput?.files?.length > 0) {
+        for (let i = 0; i < Math.min(imagesInput.files.length, 3); i++) {
+          resourceData.append('images', imagesInput.files[i]);
+        }
+      }
 
       const response = await resourcesAPI.update(selectedResource._id, resourceData);
       
@@ -160,6 +233,7 @@ const MyResources = () => {
       ));
       setShowEditResourceModal(false);
       setSelectedResource(null);
+      setEditImagePreview([]);
       toast.success('Resource updated successfully!');
     } catch (error) {
       console.error('Error updating resource:', error);
@@ -691,6 +765,34 @@ const MyResources = () => {
                 <textarea name="description" rows="3" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Add detailed information about this resource..."></textarea>
               </div>
 
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">📷 Upload Images (optional - up to 3)</label>
+                <input 
+                  type="file" 
+                  name="images" 
+                  multiple 
+                  accept="image/*" 
+                  onChange={handleAddResourceImageChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                />
+                <p className="text-xs text-gray-500 mt-1">Supported formats: JPG, PNG, GIF, WebP. Max 3 images, 5MB each.</p>
+                {imagePreview.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {imagePreview.map((src, idx) => (
+                        <img 
+                          key={idx}
+                          src={src} 
+                          alt={`Preview ${idx + 1}`} 
+                          className="w-20 h-20 object-cover rounded-lg border-2 border-blue-200 shadow-sm" 
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <div className="flex gap-3 pt-4">
                 <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg disabled:opacity-50">
                   {saving ? 'Saving...' : '✓ Add Resource'}
@@ -757,6 +859,53 @@ const MyResources = () => {
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
                 <textarea name="description" rows="3" defaultValue={selectedResource.description} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Add detailed information about this resource..."></textarea>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">📷 Upload New Images (optional - up to 3)</label>
+                <input 
+                  type="file" 
+                  name="images" 
+                  multiple 
+                  accept="image/*" 
+                  onChange={handleEditResourceImageChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                />
+                <p className="text-xs text-gray-500 mt-1">Supported formats: JPG, PNG, GIF, WebP. Max 3 images, 5MB each.</p>
+                {editImagePreview.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-medium text-gray-700 mb-2">New Preview:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {editImagePreview.map((src, idx) => (
+                        <img 
+                          key={idx}
+                          src={src} 
+                          alt={`Preview ${idx + 1}`} 
+                          className="w-20 h-20 object-cover rounded-lg border-2 border-blue-200 shadow-sm" 
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {selectedResource?.images?.length > 0 && editImagePreview.length === 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Current Images:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedResource.images.map((img, idx) => (
+                        <img 
+                          key={idx}
+                          src={img.startsWith('http') ? img : `http://localhost:8000/${img}`}
+                          alt={`Current ${idx + 1}`} 
+                          className="w-20 h-20 object-cover rounded-lg border-2 border-gray-200 shadow-sm opacity-70" 
+                          onError={(e) => {
+                            e.target.src = '';
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-3 pt-4">
