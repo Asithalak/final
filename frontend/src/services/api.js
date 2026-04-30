@@ -36,12 +36,8 @@ export const furnitureAPI = {
   getMyFurniture: (params) => api.get('/furniture/my-furniture', { params }),
   getByCarpenter: (carpenterId) => api.get(`/furniture/carpenter/${carpenterId}`),
   getById: (id) => api.get(`/furniture/${id}`),
-  create: (formData) => api.post('/furniture', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
-  update: (id, formData) => api.put(`/furniture/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
+  create: (formData) => api.post('/furniture', formData),
+  update: (id, formData) => api.put(`/furniture/${id}`, formData),
   approve: (id) => api.put(`/furniture/${id}/approve`),
   delete: (id) => api.delete(`/furniture/${id}`),
   addReview: (id, review) => api.post(`/furniture/${id}/review`, review),
@@ -63,12 +59,9 @@ export const resourcesAPI = {
   getMyResources: (params) => api.get('/resources/my-resources', { params }),
   getByCarpenter: (carpenterId) => api.get(`/resources/carpenter/${carpenterId}`),
   getById: (id) => api.get(`/resources/${id}`),
-  create: (formData) => api.post('/resources', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
-  update: (id, formData) => api.put(`/resources/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
+
+  create: (formData) => api.post('/resources', formData),
+  update: (id, formData) => api.put(`/resources/${id}`, formData),
   approve: (id) => api.put(`/resources/${id}/approve`),
   purchase: (id, data) => api.post(`/resources/${id}/purchase`, data),
   delete: (id) => api.delete(`/resources/${id}`),

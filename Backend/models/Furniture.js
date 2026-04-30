@@ -81,20 +81,7 @@ const furnitureSchema = new mongoose.Schema({
       type: Date,
       default: Date.now
     }
-  }],
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
-
-furnitureSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
+  }]
+}, { timestamps: true });
 
 module.exports = mongoose.model('Furniture', furnitureSchema);

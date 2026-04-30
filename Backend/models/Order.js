@@ -72,30 +72,15 @@ const orderSchema = new mongoose.Schema({
   },
   deliveryDate: {
     type: Date
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
   }
-});
-
-orderSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
-
+}, { timestamps: true });
 
 // Generate order number
-orderSchema.pre('save', async function(next) {
+orderSchema.pre('save', async function() {
   if (!this.orderNumber) {
     const count = await mongoose.model('Order').countDocuments();
     this.orderNumber = `ORD${Date.now()}${count + 1}`;
   }
-  next();
 });
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -85,10 +85,16 @@ router.get('/carpenter/:carpenterId', async (req, res) => {
 // @access  Private (Carpenter)
 router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (req, res) => {
   try {
+    console.log('Creating resource...');
+    console.log('User:', req.user?._id, req.user?.role);
+    console.log('Body:', req.body);
+    console.log('Files:', req.files?.length);
+    
     const { name, type, description, quantity, unit, pricePerUnit, specifications, supplierName } = req.body;
 
     // Validate required fields
     if (!name || !type || !description || quantity === undefined || !unit || pricePerUnit === undefined) {
+      console.log('Validation failed - missing fields');
       return res.status(400).json({ 
         message: 'Missing required fields: name, type, description, quantity, unit, pricePerUnit'
       });
@@ -106,6 +112,16 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (re
 
     const images = req.files ? req.files.map(file => file.path) : [];
 
+    console.log('Creating resource with data:', {
+      name,
+      type,
+      description,
+      quantity,
+      unit,
+      pricePerUnit,
+      seller: req.user._id
+    });
+
     const resource = await Resource.create({
       name: String(name).trim(),
       type: String(type).trim(),
@@ -121,6 +137,8 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (re
       status: 'approved'
     });
 
+    console.log('Resource created successfully:', resource._id);
+
     res.status(201).json({
       message: 'Resource added successfully.',
       resource,
@@ -129,7 +147,17 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (re
     });
   } catch (error) {
     console.error('Resource creation error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error('Error details:', {
+      name: error.name,
+      message: error.message,
+      code: error.code,
+      errors: error.errors
+    });
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message,
+      details: error.errors ? Object.keys(error.errors).map(k => error.errors[k].message) : undefined
+    });
   }
 });
 
