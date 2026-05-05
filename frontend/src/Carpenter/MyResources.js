@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { resourcesAPI, furnitureAPI } from '../services/api';
+import { resourcesAPI, furnitureAPI, API_BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const MyResources = () => {
@@ -19,6 +19,8 @@ const MyResources = () => {
   const [saving, setSaving] = useState(false);
   const [imagePreview, setImagePreview] = useState([]);
   const [editImagePreview, setEditImagePreview] = useState([]);
+  const [selectedFurnitureFiles, setSelectedFurnitureFiles] = useState([]);
+  const [selectedEditFurnitureFiles, setSelectedEditFurnitureFiles] = useState([]);
 
   // Handle image preview for add furniture
   const handleImageChange = (e) => {
@@ -27,10 +29,12 @@ const MyResources = () => {
       toast.warning('Maximum 5 images allowed');
       e.target.value = '';
       setImagePreview([]);
+      setSelectedFurnitureFiles([]);
       return;
     }
     const previews = files.map(file => URL.createObjectURL(file));
     setImagePreview(previews);
+    setSelectedFurnitureFiles(files);
   };
 
   // Handle image preview for edit furniture
@@ -40,10 +44,12 @@ const MyResources = () => {
       toast.warning('Maximum 5 images allowed');
       e.target.value = '';
       setEditImagePreview([]);
+      setSelectedEditFurnitureFiles([]);
       return;
     }
     const previews = files.map(file => URL.createObjectURL(file));
     setEditImagePreview(previews);
+    setSelectedEditFurnitureFiles(files);
   };
 
   // Handle image preview for add resource
@@ -76,12 +82,14 @@ const MyResources = () => {
   const closeAddFurnitureModal = () => {
     setShowAddFurnitureModal(false);
     setImagePreview([]);
+    setSelectedFurnitureFiles([]);
   };
 
   const closeEditFurnitureModal = () => {
     setShowEditFurnitureModal(false);
     setSelectedFurniture(null);
     setEditImagePreview([]);
+    setSelectedEditFurnitureFiles([]);
   };
 
   // Material categories matching backend enum
@@ -99,8 +107,19 @@ const MyResources = () => {
   // Unit options matching backend enum
   const unitOptions = ['piece', 'kg', 'meter', 'sqft', 'liter', 'box'];
 
-  // Furniture categories matching backend enum
-  const furnitureCategories = ['chair', 'table', 'sofa', 'bed', 'cabinet', 'desk', 'shelf', 'other'];
+  // Furniture categories requested for resource mapping
+  const resourceFurnitureCategories = [
+    { value: 'bed', label: 'Bed' },
+    { value: 'chair', label: 'Chair' },
+    { value: 'desk', label: 'Desk' },
+    { value: 'table', label: 'Table' },
+    { value: 'sofa', label: 'Sofas' },
+    { value: 'cabinet', label: 'Cabinets' },
+    { value: 'other', label: 'Others' }
+  ];
+
+  // Furniture categories for furniture form dropdown
+  const furnitureCategories = ['bed', 'chair', 'desk', 'table', 'sofa', 'cabinet', 'other'];
 
   const userRole = user?.role || 'carpenter';
 
@@ -143,6 +162,7 @@ const MyResources = () => {
       
       const name = formElement.elements.name.value?.trim();
       const category = formElement.elements.category.value?.trim();
+      const furnitureCategory = formElement.elements.furnitureCategory?.value?.trim() || 'other';
       const quantity = formElement.elements.quantity.value?.trim();
       const unit = formElement.elements.unit.value?.trim();
       const pricePerUnit = formElement.elements.pricePerUnit.value?.trim();
@@ -158,6 +178,7 @@ const MyResources = () => {
 
       resourceData.append('name', name);
       resourceData.append('type', category);
+      resourceData.append('furnitureCategory', furnitureCategory);
       resourceData.append('description', description);
       resourceData.append('quantity', quantity);
       resourceData.append('unit', unit);
@@ -181,7 +202,11 @@ const MyResources = () => {
       formElement.reset();
     } catch (error) {
       console.error('Error adding resource:', error);
-      toast.error(error.response?.data?.message || 'Failed to add resource');
+      console.error('Resource add error payload:', error.response?.data);
+      const details = error.response?.data?.details;
+      const detailsText = Array.isArray(details) ? ` (${details.join(', ')})` : '';
+      const backendError = error.response?.data?.error ? `: ${error.response.data.error}` : '';
+      toast.error((error.response?.data?.message || 'Failed to add resource') + backendError + detailsText);
     } finally {
       setSaving(false);
     }
@@ -197,6 +222,7 @@ const MyResources = () => {
       
       const name = formElement.elements.name.value?.trim();
       const category = formElement.elements.category.value?.trim();
+      const furnitureCategory = formElement.elements.furnitureCategory?.value?.trim() || 'other';
       const quantity = formElement.elements.quantity.value?.trim();
       const unit = formElement.elements.unit.value?.trim();
       const pricePerUnit = formElement.elements.pricePerUnit.value?.trim();
@@ -212,6 +238,7 @@ const MyResources = () => {
 
       resourceData.append('name', name);
       resourceData.append('type', category);
+      resourceData.append('furnitureCategory', furnitureCategory);
       resourceData.append('description', description);
       resourceData.append('quantity', quantity);
       resourceData.append('unit', unit);
@@ -285,6 +312,7 @@ const MyResources = () => {
       
       setFurnitureItems([response.data.furniture, ...furnitureItems]);
       closeAddFurnitureModal();
+      setSelectedFurnitureFiles([]);
       toast.success('Furniture item added successfully!');
       e.target.reset();
     } catch (error) {
@@ -362,17 +390,30 @@ const MyResources = () => {
     return 'Custom Order';
   };
 
+  const getFurnitureCategoryLabel = (category) => {
+    if (category === 'sofa') return 'Sofas';
+    if (category === 'cabinet') return 'Cabinets';
+    if (category === 'other') return 'Others';
+    return category.charAt(0).toUpperCase() + category.slice(1);
+  };
+
   // Helper to format image URL
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith('http')) return imagePath;
-    // Normalize backslashes to forward slashes (Windows paths)
+
     let normalizedPath = imagePath.replace(/\\/g, '/');
-    // Ensure the path starts with /
+
+    const uploadsSegmentIndex = normalizedPath.indexOf('uploads/');
+    if (uploadsSegmentIndex !== -1) {
+      normalizedPath = normalizedPath.slice(uploadsSegmentIndex);
+    }
+
     if (!normalizedPath.startsWith('/')) {
       normalizedPath = '/' + normalizedPath;
     }
-    return `http://localhost:8000${normalizedPath}`;
+
+    return `${API_BASE_URL}${normalizedPath}`;
   };
 
   if (loading) {
@@ -487,6 +528,31 @@ const MyResources = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {resources.map(resource => (
                   <div key={resource._id} className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 group">
+                    {/* Resource Image */}
+                    {resource.images && resource.images.length > 0 ? (
+                      <div className="h-40 bg-gray-100 rounded-lg overflow-hidden mb-4 relative">
+                        <img
+                          src={getImageUrl(resource.images[0])}
+                          alt={resource.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '';
+                            e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center"><span class="text-5xl opacity-70">🪵</span></div>';
+                          }}
+                        />
+                        {resource.images.length > 1 && (
+                          <span className="absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded text-xs">
+                            +{resource.images.length - 1} more
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="h-40 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg flex items-center justify-center mb-4">
+                        <span className="text-5xl opacity-70">🪵</span>
+                      </div>
+                    )}
+
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
@@ -730,9 +796,15 @@ const MyResources = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Resource Name *</label>
                   <input type="text" name="name" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Oak Wood" />
+                  <label className="block text-sm font-semibold text-gray-700 mt-3 mb-2">Furniture Category *</label>
+                  <select name="furnitureCategory" required defaultValue="other" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    {resourceFurnitureCategories.map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Material Type *</label>
                   <select name="category" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     {materialCategories.map(cat => (
                       <option key={cat.value} value={cat.value}>{cat.label}</option>
@@ -826,9 +898,15 @@ const MyResources = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Resource Name *</label>
                   <input type="text" name="name" required defaultValue={selectedResource.name} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <label className="block text-sm font-semibold text-gray-700 mt-3 mb-2">Furniture Category *</label>
+                  <select name="furnitureCategory" required defaultValue={selectedResource.furnitureCategory || 'other'} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    {resourceFurnitureCategories.map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Material Type *</label>
                   <select name="category" required defaultValue={selectedResource.type} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     {materialCategories.map(cat => (
                       <option key={cat.value} value={cat.value}>{cat.label}</option>
@@ -894,7 +972,7 @@ const MyResources = () => {
                       {selectedResource.images.map((img, idx) => (
                         <img 
                           key={idx}
-                          src={img.startsWith('http') ? img : `http://localhost:8000/${img}`}
+                          src={getImageUrl(img)}
                           alt={`Current ${idx + 1}`} 
                           className="w-20 h-20 object-cover rounded-lg border-2 border-gray-200 shadow-sm opacity-70" 
                           onError={(e) => {
@@ -941,12 +1019,10 @@ const MyResources = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Furniture Name *</label>
                   <input type="text" name="name" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., Classic Oak Chair" />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mt-3 mb-2">Category *</label>
                   <select name="category" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     {furnitureCategories.map(cat => (
-                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                      <option key={cat} value={cat}>{getFurnitureCategoryLabel(cat)}</option>
                     ))}
                   </select>
                 </div>
@@ -984,6 +1060,16 @@ const MyResources = () => {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" 
                   />
                   <p className="text-xs text-gray-500 mt-1">Supported formats: JPG, PNG, GIF. Max 5 images.</p>
+                  {selectedFurnitureFiles.length > 0 && (
+                    <div className="mt-2 text-xs text-gray-600">
+                      <p className="font-medium text-gray-700 mb-1">Selected files:</p>
+                      <ul className="space-y-1">
+                        {selectedFurnitureFiles.map((file, idx) => (
+                          <li key={`${file.name}-${idx}`}>{file.name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   {/* Image Preview */}
                   {imagePreview.length > 0 && (
                     <div className="mt-3">
@@ -1040,12 +1126,15 @@ const MyResources = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Furniture Name *</label>
                   <input type="text" name="name" required defaultValue={selectedFurniture.name} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mt-3 mb-2">Category *</label>
                   <select name="category" required defaultValue={selectedFurniture.category} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    {selectedFurniture.category && !furnitureCategories.includes(selectedFurniture.category) && (
+                      <option value={selectedFurniture.category}>
+                        {selectedFurniture.category.charAt(0).toUpperCase() + selectedFurniture.category.slice(1)}
+                      </option>
+                    )}
                     {furnitureCategories.map(cat => (
-                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                      <option key={cat} value={cat}>{getFurnitureCategoryLabel(cat)}</option>
                     ))}
                   </select>
                 </div>
@@ -1104,6 +1193,16 @@ const MyResources = () => {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" 
                   />
                   <p className="text-xs text-gray-500 mt-1">Leave empty to keep current images. Supported formats: JPG, PNG, GIF.</p>
+                  {selectedEditFurnitureFiles.length > 0 && (
+                    <div className="mt-2 text-xs text-gray-600">
+                      <p className="font-medium text-gray-700 mb-1">Selected files:</p>
+                      <ul className="space-y-1">
+                        {selectedEditFurnitureFiles.map((file, idx) => (
+                          <li key={`${file.name}-${idx}`}>{file.name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   {/* New Image Preview */}
                   {editImagePreview.length > 0 && (
                     <div className="mt-3">

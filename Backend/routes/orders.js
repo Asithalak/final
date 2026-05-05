@@ -10,12 +10,28 @@ const { authenticate, isAdmin } = require('../middleware/auth');
 router.post('/', authenticate, async (req, res) => {
   try {
     const { items, deliveryAddress, paymentMethod, notes } = req.body;
+    const allowedPaymentMethods = ['cash', 'card', 'online', 'upi'];
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ message: 'Order items are required' });
+    }
+
+    if (paymentMethod && !allowedPaymentMethods.includes(paymentMethod)) {
+      return res.status(400).json({ message: 'Invalid payment method' });
+    }
+
+    const resolvedPaymentMethod = paymentMethod === 'upi' ? 'online' : (paymentMethod || 'cash');
 
     // Calculate total and check stock
     let totalAmount = 0;
     const orderItems = [];
 
     for (const item of items) {
+      const quantity = Number(item.quantity);
+      if (!item.furniture || !Number.isFinite(quantity) || quantity <= 0) {
+        return res.status(400).json({ message: 'Invalid order item details' });
+      }
+
       const furniture = await Furniture.findById(item.furniture);
       
       if (!furniture) {
@@ -24,20 +40,20 @@ router.post('/', authenticate, async (req, res) => {
 
       orderItems.push({
         furniture: furniture._id,
-        quantity: item.quantity,
+        quantity,
         price: furniture.price,
         carpenter: furniture.carpenter
       });
 
-      totalAmount += furniture.price * item.quantity;
+      totalAmount += furniture.price * quantity;
 
       // Check stock
-      if (furniture.stockQuantity < item.quantity) {
+      if (furniture.stockQuantity < quantity) {
         // Mark as needs production
         continue;
       } else {
         // Reduce stock
-        furniture.stockQuantity -= item.quantity;
+        furniture.stockQuantity -= quantity;
         await furniture.save();
       }
     }
@@ -47,7 +63,8 @@ router.post('/', authenticate, async (req, res) => {
       items: orderItems,
       totalAmount,
       deliveryAddress,
-      paymentMethod,
+      paymentMethod: resolvedPaymentMethod,
+      paymentStatus: resolvedPaymentMethod === 'card' ? 'paid' : 'pending',
       notes,
       status: 'pending'
     });

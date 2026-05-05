@@ -1,12 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
-import { furnitureAPI } from '../services/api';
+import { furnitureAPI, API_BASE_URL } from '../services/api';
 import './ShoppingGallery.css';
+
+const CATEGORY_OPTIONS = [
+  { value: 'all', label: 'All' },
+  { value: 'bed', label: 'Bed' },
+  { value: 'chair', label: 'Chair' },
+  { value: 'desk', label: 'Desk' },
+  { value: 'table', label: 'Table' },
+  { value: 'sofa', label: 'Sofas' },
+  { value: 'cabinet', label: 'Cabinets' },
+  { value: 'other', label: 'Others' }
+];
+
+const normalizeCategory = (category = '') => {
+  const normalized = String(category).trim().toLowerCase();
+  if (normalized === 'sofas') return 'sofa';
+  if (normalized === 'cabinets') return 'cabinet';
+  if (normalized === 'others') return 'other';
+  return normalized;
+};
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return '/images/placeholder.jpg';
+  if (String(imagePath).startsWith('http')) return imagePath;
+
+  let normalizedPath = String(imagePath).replace(/\\/g, '/');
+  const uploadsIndex = normalizedPath.indexOf('uploads/');
+  if (uploadsIndex !== -1) {
+    normalizedPath = normalizedPath.slice(uploadsIndex);
+  }
+  if (!normalizedPath.startsWith('/')) {
+    normalizedPath = `/${normalizedPath}`;
+  }
+  return `${API_BASE_URL}${normalizedPath}`;
+};
 
 const ShoppingGallery = () => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState('all');
   const [selectedItem, setSelectedItem] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,10 +64,6 @@ const ShoppingGallery = () => {
       
       setItems(furnitureList);
       
-      // Extract unique categories
-      const uniqueCategories = [...new Set(furnitureList.map(item => item.category))].filter(Boolean);
-      setCategories(['all', ...uniqueCategories]);
-      
       setLoading(false);
     } catch (error) {
       console.error('Error loading furniture:', error);
@@ -47,7 +76,7 @@ const ShoppingGallery = () => {
 
     // Filter by category
     if (activeCategory !== 'all') {
-      filtered = filtered.filter(item => item.category === activeCategory);
+      filtered = filtered.filter(item => normalizeCategory(item.category) === activeCategory);
     }
 
     // Filter by search term
@@ -83,23 +112,34 @@ const ShoppingGallery = () => {
     setFilteredItems(filtered);
   };
 
+  const getCategoryCount = (categoryValue) => {
+    if (categoryValue === 'all') {
+      return items.length;
+    }
+    return items.filter(item => normalizeCategory(item.category) === categoryValue).length;
+  };
+
   const handleAddToCart = (item, quantity = 1) => {
     addToCart({
       _id: item._id,
       name: item.name,
       price: item.price,
-      image: item.images?.[0] || '/images/placeholder.jpg',
+      image: getImageUrl(item.images?.[0]),
+      images: item.images || [],
       description: item.description,
       category: item.category,
+      stockQuantity: item.stockQuantity ?? item.availableQuantity ?? 0,
     }, quantity);
   };
 
-  const renderItemCard = (item) => (
+  const renderItemCard = (item) => {
+    const availableQuantity = item.availableQuantity ?? item.stockQuantity ?? 0;
+    return (
     <div key={item._id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1">
       {/* Image Container */}
       <div className="relative h-48 overflow-hidden bg-gray-200">
         <img
-          src={item.images?.[0] || '/images/placeholder.jpg'}
+          src={getImageUrl(item.images?.[0])}
           alt={item.name}
           className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 cursor-pointer"
           onClick={() => setSelectedItem(item)}
@@ -142,9 +182,9 @@ const ShoppingGallery = () => {
                 <p className="text-sm text-gray-500 line-through">Rs.{item.originalPrice}</p>
               )}
             </div>
-            {item.availableQuantity ? (
+            {availableQuantity > 0 ? (
               <span className="text-xs font-semibold bg-green-100 text-green-700 px-2 py-1 rounded">
-                {item.availableQuantity} in stock
+                {availableQuantity} in stock
               </span>
             ) : (
               <span className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-1 rounded">
@@ -160,22 +200,23 @@ const ShoppingGallery = () => {
             >
               👁️ View Details
             </button>
-            <button
-              onClick={() => handleAddToCart(item)}
-              disabled={!item.availableQuantity}
-              className={`flex-1 px-3 py-2 rounded-lg font-semibold transition-all text-sm ${
-                item.availableQuantity
-                  ? 'bg-blue-600 text-white hover:bg-blue-700'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              🛒 Add to Cart
+              <button
+                onClick={() => handleAddToCart(item)}
+                disabled={availableQuantity <= 0}
+                className={`flex-1 px-3 py-2 rounded-lg font-semibold transition-all text-sm ${
+                  availableQuantity > 0
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                🛒 Add to Cart
             </button>
           </div>
         </div>
       </div>
     </div>
   );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -237,17 +278,17 @@ const ShoppingGallery = () => {
         {/* Category Filter */}
         <div className="mb-8 pb-4 border-b-2">
           <div className="flex flex-wrap gap-3">
-            {categories.map((category) => (
+            {CATEGORY_OPTIONS.map((category) => (
               <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
+                key={category.value}
+                onClick={() => setActiveCategory(category.value)}
                 className={`px-6 py-3 rounded-full font-semibold transition-all ${
-                  activeCategory === category
+                  activeCategory === category.value
                     ? 'bg-blue-600 text-white shadow-lg'
                     : 'bg-white text-gray-700 border-2 border-gray-300 hover:border-blue-600'
                 }`}
               >
-                {category === 'all' ? '🏠 All' : category.toUpperCase()}
+                {`${category.label} (${getCategoryCount(category.value)})`}
               </button>
             ))}
           </div>
@@ -308,7 +349,7 @@ const ShoppingGallery = () => {
                 <div>
                   <div className="bg-gray-200 rounded-xl overflow-hidden mb-4">
                     <img
-                      src={selectedItem.images?.[0] || '/images/placeholder.jpg'}
+                      src={getImageUrl(selectedItem.images?.[0])}
                       alt={selectedItem.name}
                       className="w-full h-96 object-cover"
                       onError={(e) => {
@@ -321,7 +362,7 @@ const ShoppingGallery = () => {
                       {selectedItem.images.map((img, idx) => (
                         <img
                           key={idx}
-                          src={img}
+                          src={getImageUrl(img)}
                           alt={`${selectedItem.name} ${idx + 1}`}
                           className="w-full h-20 object-cover rounded-lg cursor-pointer hover:opacity-80"
                           onError={(e) => {
@@ -407,11 +448,13 @@ const ShoppingGallery = () => {
 
                     <div className="flex items-center gap-3">
                       <span className={`px-4 py-2 rounded-full font-bold ${
-                        selectedItem.availableQuantity
+                        (selectedItem.availableQuantity ?? selectedItem.stockQuantity ?? 0) > 0
                           ? 'bg-green-100 text-green-700'
                           : 'bg-red-100 text-red-700'
                       }`}>
-                        {selectedItem.availableQuantity ? `${selectedItem.availableQuantity} in stock` : 'Out of stock'}
+                        {(selectedItem.availableQuantity ?? selectedItem.stockQuantity ?? 0) > 0
+                          ? `${selectedItem.availableQuantity ?? selectedItem.stockQuantity ?? 0} in stock`
+                          : 'Out of stock'}
                       </span>
                     </div>
 
@@ -421,14 +464,14 @@ const ShoppingGallery = () => {
                         handleAddToCart(selectedItem);
                         setSelectedItem(null);
                       }}
-                      disabled={!selectedItem.availableQuantity}
+                      disabled={(selectedItem.availableQuantity ?? selectedItem.stockQuantity ?? 0) <= 0}
                       className={`w-full py-3 rounded-lg font-bold text-white transition-all text-lg ${
-                        selectedItem.availableQuantity
+                        (selectedItem.availableQuantity ?? selectedItem.stockQuantity ?? 0) > 0
                           ? 'bg-blue-600 hover:bg-blue-700'
                           : 'bg-gray-400 cursor-not-allowed'
                       }`}
                     >
-                      {selectedItem.availableQuantity ? '🛒 Add to Cart' : '❌ Out of Stock'}
+                      {(selectedItem.availableQuantity ?? selectedItem.stockQuantity ?? 0) > 0 ? '🛒 Add to Cart' : '❌ Out of Stock'}
                     </button>
                   </div>
                 </div>

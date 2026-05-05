@@ -15,6 +15,11 @@ const resourceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  furnitureCategory: {
+    type: String,
+    enum: ['bed', 'chair', 'desk', 'table', 'sofa', 'cabinet', 'other'],
+    default: 'other'
+  },
   quantity: {
     type: Number,
     required: true,

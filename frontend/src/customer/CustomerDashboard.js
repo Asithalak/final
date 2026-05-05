@@ -1,7 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ordersAPI, usersAPI } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL, ordersAPI, usersAPI } from '../services/api';
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return 'https://via.placeholder.com/64x64?text=No+Image';
+  if (String(imagePath).startsWith('http')) return imagePath;
+
+  let normalizedPath = String(imagePath).replace(/\\/g, '/');
+  const uploadsIndex = normalizedPath.indexOf('uploads/');
+  if (uploadsIndex !== -1) {
+    normalizedPath = normalizedPath.slice(uploadsIndex);
+  }
+  if (!normalizedPath.startsWith('/')) {
+    normalizedPath = `/${normalizedPath}`;
+  }
+
+  return `${API_BASE_URL}${normalizedPath}`;
+};
 
 const CustomerDashboard = () => {
   const [userRole, setUserRole] = useState('customer'); // 'customer', 'admin'
@@ -47,7 +62,7 @@ const CustomerDashboard = () => {
         items: order.items.map(item => ({
           name: item.furniture?.name || 'Unknown Item',
           quantity: item.quantity,
-          image: item.furniture?.images?.[0] || '/images/placeholder.jpg',
+          image: getImageUrl(item.furniture?.images?.[0]),
           price: item.price
         })),
         totalAmount: order.totalAmount,
@@ -267,7 +282,7 @@ const CustomerDashboard = () => {
                                     <p className="text-sm text-gray-600">Quantity: <span className="font-bold">{item.quantity}</span></p>
                                   </div>
                                 </div>
-                                <p className="text-lg font-bold text-green-600">Rs.{item.price * item.quantity}</p>
+                                <p className="text-lg font-bold text-green-600">Rs.{(item.price * item.quantity).toFixed(2)}</p>
                               </div>
                             ))}
                           </div>
@@ -344,7 +359,7 @@ const CustomerDashboard = () => {
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                           <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-5 border-2 border-green-300 flex-1">
                             <p className="text-sm text-gray-600 font-medium mb-1">TOTAL AMOUNT</p>
-                            <p className="text-3xl font-bold text-green-600">Rs.{order.totalAmount}</p>
+                            <p className="text-3xl font-bold text-green-600">Rs.{Number(order.totalAmount).toFixed(2)}</p>
                           </div>
                           <Link 
                             to={`/orders/${order._id}`}

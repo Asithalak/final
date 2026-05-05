@@ -2,6 +2,25 @@
 import { useAuth } from '../context/AuthContext';
 import { furnitureAPI } from '../services/api';
 
+const CATEGORY_OPTIONS = [
+  { value: 'all', label: 'All' },
+  { value: 'bed', label: 'Bed' },
+  { value: 'chair', label: 'Chair' },
+  { value: 'desk', label: 'Desk' },
+  { value: 'table', label: 'Table' },
+  { value: 'sofa', label: 'Sofas' },
+  { value: 'cabinet', label: 'Cabinets' },
+  { value: 'other', label: 'Others' }
+];
+
+const normalizeCategory = (category = '') => {
+  const normalized = String(category).trim().toLowerCase();
+  if (normalized === 'sofas') return 'sofa';
+  if (normalized === 'cabinets') return 'cabinet';
+  if (normalized === 'others') return 'other';
+  return normalized;
+};
+
 const MyFurnitureDesigns = () => {
   const { user } = useAuth();
   const [furnitureItems, setFurnitureItems] = useState([]);
@@ -32,13 +51,10 @@ const MyFurnitureDesigns = () => {
     }
   };
 
-  // Get unique categories from furniture items
-  const categories = ['all', ...new Set(furnitureItems.map(item => item.category))].filter(Boolean);
-
   // Filter designs by category
   const filteredDesigns = activeCategory === 'all' 
     ? furnitureItems 
-    : furnitureItems.filter(design => design.category === activeCategory);
+    : furnitureItems.filter(design => normalizeCategory(design.category) === activeCategory);
 
   // Helper to get category color
   const getCategoryColor = (category) => {
@@ -94,25 +110,25 @@ const MyFurnitureDesigns = () => {
           <div className="mb-8">
             <h2 className="text-2xl font-bold mb-6 text-gray-900">🏷️ Filter by Category</h2>
             <div className="flex flex-wrap gap-3">
-              {categories.map(category => {
-                const categoryItems = category === 'all' 
+              {CATEGORY_OPTIONS.map(category => {
+                const categoryItems = category.value === 'all' 
                   ? furnitureItems 
-                  : furnitureItems.filter(item => item.category === category);
-                const isActive = activeCategory === category;
+                  : furnitureItems.filter(item => normalizeCategory(item.category) === category.value);
+                const isActive = activeCategory === category.value;
                 
                 return (
                   <button
-                    key={category}
-                    onClick={() => setActiveCategory(category)}
+                    key={category.value}
+                    onClick={() => setActiveCategory(category.value)}
                     className={`px-6 py-3 rounded-xl font-semibold transition-all ${
                       isActive
-                        ? `bg-gradient-to-br ${getCategoryColor(category)} text-white shadow-lg scale-105`
+                        ? `bg-gradient-to-br ${getCategoryColor(category.value)} text-white shadow-lg scale-105`
                         : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-orange-500'
                     }`}
                   >
-                    {category === 'all' 
+                    {category.value === 'all' 
                       ? `All (${furnitureItems.length})` 
-                      : `${category.charAt(0).toUpperCase() + category.slice(1)} (${categoryItems.length})`
+                      : `${category.label} (${categoryItems.length})`
                     }
                   </button>
                 );

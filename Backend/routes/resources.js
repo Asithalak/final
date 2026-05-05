@@ -4,6 +4,15 @@ const Resource = require('../models/Resource');
 const { authenticate, isAdmin, isCarpenter } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
+const toUploadPaths = (files = []) => files.map(file => `uploads/${file.filename}`.replace(/\\/g, '/'));
+const normalizeFurnitureCategory = (category = '') => {
+  const normalized = String(category).trim().toLowerCase();
+  if (normalized === 'sofas') return 'sofa';
+  if (normalized === 'cabinets') return 'cabinet';
+  if (normalized === 'others') return 'other';
+  return normalized;
+};
+
 // @route   GET /api/resources
 // @desc    Get all approved resources
 // @access  Private
@@ -90,13 +99,51 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (re
     console.log('Body:', req.body);
     console.log('Files:', req.files?.length);
     
-    const { name, type, description, quantity, unit, pricePerUnit, specifications, supplierName } = req.body;
+    const {
+      name,
+      type,
+      category,
+      description,
+      furnitureCategory,
+      quantity,
+      unit,
+      pricePerUnit,
+      specifications,
+      supplierName
+    } = req.body;
+
+    const normalizedName = String(name || '').trim();
+    const normalizedType = String(type || category || '').trim().toLowerCase();
+    const normalizedDescription = String(description || normalizedName).trim();
+    const normalizedUnit = String(unit || '').trim().toLowerCase();
+    const normalizedFurnitureCategory = normalizeFurnitureCategory(furnitureCategory || 'other');
 
     // Validate required fields
-    if (!name || !type || !description || quantity === undefined || !unit || pricePerUnit === undefined) {
+    if (!normalizedName || !normalizedType || !normalizedDescription || quantity === undefined || !normalizedUnit || pricePerUnit === undefined) {
       console.log('Validation failed - missing fields');
       return res.status(400).json({ 
         message: 'Missing required fields: name, type, description, quantity, unit, pricePerUnit'
+      });
+    }
+
+    const allowedTypes = new Set(['lumber', 'wood', 'metal', 'fabric', 'glass', 'hardware', 'paint', 'other']);
+    if (!allowedTypes.has(normalizedType)) {
+      return res.status(400).json({
+        message: `Invalid resource type "${normalizedType}". Allowed: ${Array.from(allowedTypes).join(', ')}`
+      });
+    }
+
+    const allowedUnits = new Set(['piece', 'kg', 'meter', 'sqft', 'liter', 'box']);
+    if (!allowedUnits.has(normalizedUnit)) {
+      return res.status(400).json({
+        message: `Invalid unit "${normalizedUnit}". Allowed: ${Array.from(allowedUnits).join(', ')}`
+      });
+    }
+
+    const allowedFurnitureCategories = new Set(['bed', 'chair', 'desk', 'table', 'sofa', 'cabinet', 'other']);
+    if (!allowedFurnitureCategories.has(normalizedFurnitureCategory)) {
+      return res.status(400).json({
+        message: `Invalid furniture category "${normalizedFurnitureCategory}". Allowed: ${Array.from(allowedFurnitureCategories).join(', ')}`
       });
     }
 
@@ -110,29 +157,52 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (re
       });
     }
 
-    const images = req.files ? req.files.map(file => file.path) : [];
+    const parsedQuantity = Number(quantity);
+    const parsedPricePerUnit = Number(pricePerUnit);
+
+    if (!Number.isFinite(parsedQuantity) || parsedQuantity < 0) {
+      return res.status(400).json({ message: 'Quantity must be a valid non-negative number' });
+    }
+
+    if (!Number.isFinite(parsedPricePerUnit) || parsedPricePerUnit < 0) {
+      return res.status(400).json({ message: 'Price per unit must be a valid non-negative number' });
+    }
+
+    let parsedSpecifications = {};
+    if (specifications) {
+      try {
+        parsedSpecifications = typeof specifications === 'string'
+          ? JSON.parse(specifications)
+          : specifications;
+      } catch {
+        return res.status(400).json({ message: 'Invalid specifications format' });
+      }
+    }
+
+    const images = toUploadPaths(req.files);
 
     console.log('Creating resource with data:', {
-      name,
-      type,
-      description,
-      quantity,
-      unit,
-      pricePerUnit,
+      name: normalizedName,
+      type: normalizedType,
+      description: normalizedDescription,
+      quantity: parsedQuantity,
+      unit: normalizedUnit,
+      pricePerUnit: parsedPricePerUnit,
       seller: req.user._id
     });
 
     const resource = await Resource.create({
-      name: String(name).trim(),
-      type: String(type).trim(),
-      description: String(description).trim(),
-      quantity: Number(quantity),
-      unit: String(unit).trim(),
-      pricePerUnit: Number(pricePerUnit),
+      name: normalizedName,
+      type: normalizedType,
+      description: normalizedDescription,
+      quantity: parsedQuantity,
+      unit: normalizedUnit,
+      pricePerUnit: parsedPricePerUnit,
       seller: req.user._id,
       supplierName: supplierName ? String(supplierName).trim() : '',
+      furnitureCategory: normalizedFurnitureCategory,
       images,
-      specifications: specifications ? JSON.parse(specifications) : {},
+      specifications: parsedSpecifications,
       isApproved: true,  // Auto-approve carpenter's own resources
       status: 'approved'
     });
@@ -153,8 +223,23 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 3), async (re
       code: error.code,
       errors: error.errors
     });
-    res.status(500).json({ 
-      message: 'Server error', 
+    if (error?.name === 'ValidationError') {
+      return res.status(400).json({
+        message: 'Validation failed',
+        error: error.message,
+        details: Object.keys(error.errors).map(k => error.errors[k].message)
+      });
+    }
+
+    if (error?.name === 'SyntaxError') {
+      return res.status(400).json({
+        message: 'Invalid JSON payload',
+        error: error.message
+      });
+    }
+
+    res.status(500).json({
+      message: 'Server error',
       error: error.message,
       details: error.errors ? Object.keys(error.errors).map(k => error.errors[k].message) : undefined
     });
@@ -195,7 +280,7 @@ router.put('/:id', authenticate, isCarpenter, upload.array('images', 3), async (
       return res.status(403).json({ message: 'Not authorized' });
     }
 
-    const { name, type, description, quantity, unit, pricePerUnit, supplierName } = req.body;
+    const { name, type, description, quantity, unit, pricePerUnit, supplierName, furnitureCategory } = req.body;
     
     // Update fields with type conversion
     if (name) resource.name = String(name).trim();
@@ -205,9 +290,12 @@ router.put('/:id', authenticate, isCarpenter, upload.array('images', 3), async (
     if (unit) resource.unit = String(unit).trim();
     if (pricePerUnit !== undefined) resource.pricePerUnit = Number(pricePerUnit);
     if (supplierName !== undefined) resource.supplierName = String(supplierName).trim();
+    if (furnitureCategory !== undefined) {
+      resource.furnitureCategory = normalizeFurnitureCategory(furnitureCategory);
+    }
     
     if (req.files && req.files.length > 0) {
-      resource.images = req.files.map(file => file.path);
+      resource.images = toUploadPaths(req.files);
     }
 
     await resource.save();

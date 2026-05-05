@@ -70,7 +70,7 @@ function App() {
                 <Route path="/all-carpenters" element={<AllCarpenters />} />
                 <Route path="/customer/customerdashboard" element={<CustomerDashboard />} />
 
-                <Route path="/cart" element={<Cart />} />
+                <Route path="/cart" element={<PrivateRoute customersOnly><Cart /></PrivateRoute>} />
                 <Route path="/gallery" element={<PrivateRoute><ShoppingGallery /></PrivateRoute>} />
                 <Route path="/image-gallery" element={<ImageGalleryPage />} />
                 
