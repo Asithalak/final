@@ -46,7 +46,7 @@ import CustomerDashboard from './customer/CustomerDashboard';
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import PrivateRoute from './components/PrivateRoute'; 
+import PrivateRoute from './components/PrivateRoute';
 function App() {
   return (
     <Router>
@@ -68,6 +68,7 @@ function App() {
                 <Route path="/carpenter/assignedorders" element={<AssignedOrders />} />
                 <Route path="/carpenters" element={<AllCarpenters />} />
                 <Route path="/all-carpenters" element={<AllCarpenters />} />
+                <Route path="/carpenter-directory" element={<AllCarpenters />} />
                 <Route path="/customer/customerdashboard" element={<CustomerDashboard />} />
 
                 <Route path="/cart" element={<PrivateRoute customersOnly><Cart /></PrivateRoute>} />

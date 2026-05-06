@@ -35,6 +35,22 @@ const userSchema = new mongoose.Schema({
     zipCode: String,
     country: String
   },
+  // GPS location for carpenters
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number], // [longitude, latitude]
+      required: false
+    },
+    latitude: Number,
+    longitude: Number,
+    accuracy: Number, // accuracy in meters
+    timestamp: Date
+  },
   profileImage: {
     type: String,
     default: ''
@@ -65,6 +81,9 @@ userSchema.pre('save', async function() {
     throw error;
   }
 });
+
+// Geospatial index for location-based queries
+userSchema.index({ 'location.coordinates': '2dsphere' });
 
 // Compare password method
 userSchema.methods.comparePassword = async function(candidatePassword) {

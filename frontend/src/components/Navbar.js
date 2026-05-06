@@ -36,7 +36,7 @@ const Navbar = () => {
               Gallery
             </Link>
             <Link to="/carpenters" className="text-gray-700 hover:text-primary-600 transition">
-              Carpenters
+              All Carpenters
             </Link>
           
           </div>
@@ -115,7 +115,7 @@ const Navbar = () => {
               className="block py-2 text-gray-700 hover:text-primary-600"
               onClick={toggleMenu}
             >
-              Carpenters
+              All Carpenters
             </Link>
             <Link 
               to="/cart" 
