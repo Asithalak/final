@@ -63,6 +63,18 @@ router.post('/register', async (req, res) => {
     if (role === 'carpenter') {
       if (specialization) userData.specialization = specialization.trim();
       if (experience !== undefined) userData.experience = Number(experience) || 0;
+      
+      // Handle GPS location for carpenters
+      if (req.body.location) {
+        userData.location = {
+          type: 'Point',
+          coordinates: [req.body.location.longitude, req.body.location.latitude],
+          latitude: req.body.location.latitude,
+          longitude: req.body.location.longitude,
+          accuracy: req.body.location.accuracy,
+          timestamp: req.body.location.timestamp || new Date()
+        };
+      }
     }
 
     // Create user

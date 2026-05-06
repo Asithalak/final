@@ -46,16 +46,52 @@ router.get('/', authenticate, isAdmin, async (req, res) => {
 });
 
 // @route   GET /api/users/carpenters
-// @desc    Get all approved carpenters
+// @desc    Get all approved carpenters with location data (public endpoint)
 // @access  Public
 router.get('/carpenters', async (req, res) => {
   try {
     const carpenters = await User.find({ 
-      role: 'carpenter', 
-      isApproved: true 
-    }).select('-password');
+      role: 'carpenter',
+      isApproved: true
+    }).select('name specialization experience phone email address location').lean();
     
     res.json(carpenters);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// @route   GET /api/users/carpenters/nearby
+// @desc    Get carpenters within a certain radius from coordinates (public endpoint)
+// @access  Public
+router.get('/carpenters/nearby', async (req, res) => {
+  try {
+    const { latitude, longitude, maxDistance } = req.query;
+
+    if (!latitude || !longitude) {
+      return res.status(400).json({ 
+        message: 'Please provide latitude and longitude' 
+      });
+    }
+
+    const distance = parseInt(maxDistance) || 10000; // Default 10km
+
+    // Find carpenters near the coordinates using geospatial query
+    const carpenters = await User.find({
+      role: 'carpenter',
+      isApproved: true,
+      'location.coordinates': {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(longitude), parseFloat(latitude)]
+          },
+          $maxDistance: distance
+        }
+      }
+    }).select('name specialization experience phone email address location').lean();
+
+    res.json(carpenters || []);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

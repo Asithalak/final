@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const multer = require('multer');
 const path = require('path');
 
 // Load environment variables from Backend/.env
@@ -29,7 +30,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database connection with options and retry
 const connectDB = async (retries = 5) => {
@@ -93,6 +94,21 @@ app.get('/api/health', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
+
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({
+      message: err.message || 'File upload error',
+      error: err.message
+    });
+  }
+
+  if (err?.message === 'Only image files are allowed!') {
+    return res.status(400).json({
+      message: err.message,
+      error: err.message
+    });
+  }
+
   res.status(500).json({ 
     message: 'Something went wrong!', 
     error: process.env.NODE_ENV === 'development' ? err.message : {} 

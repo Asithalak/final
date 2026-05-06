@@ -20,6 +20,21 @@ const AllCarpenters = () => {
     loadCarpenters();
   }, []);
 
+  const formatAddress = (address) => {
+    if (!address) return 'N/A';
+    if (typeof address === 'string') return address;
+
+    const parts = [
+      address.street,
+      address.city,
+      address.state,
+      address.zipCode,
+      address.country
+    ].filter(Boolean);
+
+    return parts.length ? parts.join(', ') : 'N/A';
+  };
+
   const loadCarpenters = async () => {
     setLoading(true);
     try {
@@ -28,11 +43,23 @@ const AllCarpenters = () => {
       if (response.data && response.data.length > 0) {
         // Map API data - designs and resources will be fetched when viewing
         const apiCarpenters = response.data.map((carpenter) => ({
+          ...(Array.isArray(carpenter.location?.coordinates) && carpenter.location.coordinates.length >= 2
+            ? {
+                location: {
+                  ...carpenter.location,
+                  longitude: carpenter.location.longitude ?? carpenter.location.coordinates[0],
+                  latitude: carpenter.location.latitude ?? carpenter.location.coordinates[1],
+                }
+              }
+            : {
+                location: carpenter.location || null
+              }),
           id: carpenter._id,
           _id: carpenter._id,
           name: carpenter.name || 'Unknown Carpenter',
           email: carpenter.email || 'N/A',
           phone: carpenter.phone || 'N/A',
+          address: formatAddress(carpenter.address),
           specialization: carpenter.specialization || 'General Furniture',
           experience: carpenter.experience || 2,
           rating: carpenter.rating || 4.5,
@@ -95,6 +122,29 @@ const AllCarpenters = () => {
     setSelectedCarpenter(carpenter);
     setShowResourcesModal(true);
     fetchCarpenterResources(carpenter._id || carpenter.id);
+  };
+
+  const handleOpenMap = (carpenter) => {
+    const latitude = Number(carpenter?.location?.latitude);
+    const longitude = Number(carpenter?.location?.longitude);
+    const hasCoordinates = Number.isFinite(latitude) && Number.isFinite(longitude);
+
+    let url = '';
+    if (hasCoordinates) {
+      url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+    } else {
+      const addressQuery = [carpenter?.address, carpenter?.name]
+        .filter((value) => value && value !== 'N/A')
+        .join(', ');
+
+      if (!addressQuery) {
+        toast.info('Location is not available for this carpenter');
+        return;
+      }
+      url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressQuery)}`;
+    }
+
+    window.open(url, '_blank');
   };
 
   // Get unique specializations for filter
@@ -257,7 +307,42 @@ const AllCarpenters = () => {
                       <span>📞</span>
                       <span>{carpenter.phone}</span>
                     </p>
+                    <p className="flex items-start gap-2">
+                      <span>🏠</span>
+                      <span>{carpenter.address}</span>
+                    </p>
                   </div>
+
+                  {carpenter.location?.latitude && carpenter.location?.longitude ? (
+                    <button
+                      type="button"
+                      onClick={() => handleOpenMap(carpenter)}
+                      className="mb-4 w-full text-left bg-blue-50 border border-blue-200 rounded-lg p-3 hover:bg-blue-100 transition-colors"
+                    >
+                      <p className="text-sm font-semibold text-blue-900 mb-1">📍 Location</p>
+                      <p className="text-xs text-blue-700">
+                        Latitude: {Number(carpenter.location.latitude).toFixed(6)}
+                      </p>
+                      <p className="text-xs text-blue-700">
+                        Longitude: {Number(carpenter.location.longitude).toFixed(6)}
+                      </p>
+                      {carpenter.location.accuracy ? (
+                        <p className="text-xs text-blue-700">
+                          Accuracy: {Math.round(carpenter.location.accuracy)}m
+                        </p>
+                      ) : null}
+                      <p className="mt-2 text-xs font-semibold text-blue-800">🗺️ Click to open in Google Maps</p>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => handleOpenMap(carpenter)}
+                      className="mb-4 w-full text-left bg-gray-100 border border-gray-200 rounded-lg p-3 hover:bg-gray-200 transition-colors"
+                    >
+                      <p className="text-xs text-gray-700">📍 Location not provided</p>
+                      <p className="text-xs font-semibold text-gray-700 mt-1">🗺️ Click to open in Google Maps</p>
+                    </button>
+                  )}
 
                   {/* Action Buttons */}
                   <div className="flex gap-2">

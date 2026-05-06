@@ -15,6 +15,11 @@ const resourceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  furnitureCategory: {
+    type: String,
+    enum: ['bed', 'chair', 'desk', 'table', 'sofa', 'cabinet', 'other'],
+    default: 'other'
+  },
   quantity: {
     type: Number,
     required: true,
@@ -55,23 +60,7 @@ const resourceSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'approved', 'rejected', 'out_of_stock'],
     default: 'pending'
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
   }
-});
-
-resourceSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  if (this.quantity === 0) {
-    this.status = 'out_of_stock';
-  }
-  next();
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Resource', resourceSchema);

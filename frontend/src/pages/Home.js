@@ -54,7 +54,7 @@ const Home = () => {
               Discover handcrafted furniture from expert carpenters. Quality designs delivered to your doorstep.
             </p>
             <div className="flex space-x-4">
-              <Link to="/catalogue" className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+              <Link to="/login" className="border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition">
                 Shop Now
               </Link>
               <Link to="/register" className="border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition">
@@ -106,92 +106,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* My Orders Section - Only for logged-in customers */}
-      {isAuthenticated && isCustomer && (
-        <section className="py-16 bg-white border-b">
-          <div className="container-custom">
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex items-center gap-3">
-                <FaClipboardList className="text-primary-600 text-3xl" />
-                <h2 className="text-3xl font-bold">My Orders</h2>
-              </div>
-              <Link 
-                to="/customerdashboard" 
-                className="text-primary-600 hover:text-primary-800 font-semibold flex items-center gap-2"
-              >
-                View All Orders →
-              </Link>
-            </div>
-            
-            {loadingOrders ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Loading your orders...</p>
-              </div>
-            ) : recentOrders.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {recentOrders.map((order) => (
-                  <div key={order._id} className="bg-gray-50 rounded-xl p-5 border-2 border-gray-200 hover:border-primary-300 hover:shadow-lg transition-all">
-                    <div className="flex justify-between items-start mb-3">
-                      <p className="font-bold text-gray-900">
-                        Order #{order.orderNumber || order._id.slice(-6).toUpperCase()}
-                      </p>
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}>
-                        {order.status.replace(/_/g, ' ').toUpperCase()}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">
-                      📅 {new Date(order.createdAt).toLocaleDateString()}
-                    </p>
-                    <div className="flex items-center gap-2 mb-3">
-                      <FaBox className="text-gray-400" />
-                      <span className="text-sm text-gray-600">{order.items?.length || 0} item(s)</span>
-                      <span className="text-lg font-bold text-green-600 ml-auto">${order.totalAmount}</span>
-                    </div>
-                    <Link 
-                      to={`/orders/${order._id}`}
-                      className="block w-full text-center px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition"
-                    >
-                      Track Order
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12 bg-gray-50 rounded-xl">
-                <div className="text-6xl mb-4">📦</div>
-                <p className="text-gray-500 text-lg mb-4">You haven't placed any orders yet</p>
-                <Link to="/catalogue" className="inline-block px-8 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition">
-                  Start Shopping
-                </Link>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
+      
 
-      {/* Categories */}
-      <section className="py-16 bg-gray-50">
-        <div className="container-custom">
-          <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {['chair', 'table', 'sofa', 'bed', 'cabinet', 'desk', 'shelf'].map((category) => (
-              <Link 
-                key={category}
-                to={`/catalogue?category=${category}`}
-                className="card hover:shadow-xl transition-shadow cursor-pointer"
-              >
-                <div className="h-40 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
-                  <span className="text-4xl capitalize">{category}</span>
-                </div>
-                <div className="p-4 text-center">
-                  <h3 className="font-semibold capitalize">{category}s</h3>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+     
 
       {/* CTA Section */}
       <section className="py-16 bg-primary-600 text-white">

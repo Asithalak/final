@@ -14,9 +14,16 @@ const RegisterUser = () => {
     address: '',
     // Carpenter specific fields
     specialization: '',
-    experience: ''
+    experience: '',
+    // GPS location
+    latitude: null,
+    longitude: null,
+    accuracy: null
   });
   const [loading, setLoading] = useState(false);
+  const [geoLoading, setGeoLoading] = useState(false);
+  const [geoError, setGeoError] = useState('');
+  const [geoSuccess, setGeoSuccess] = useState('');
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -90,6 +97,18 @@ const RegisterUser = () => {
       if (isCarpenter) {
         userData.specialization = formData.specialization.trim() || '';
         userData.experience = formData.experience ? parseInt(formData.experience) : 0;
+        
+        // Add GPS location for carpenters
+        if (formData.latitude && formData.longitude) {
+          userData.location = {
+            type: 'Point',
+            coordinates: [formData.longitude, formData.latitude],
+            latitude: formData.latitude,
+            longitude: formData.longitude,
+            accuracy: formData.accuracy,
+            timestamp: new Date()
+          };
+        }
       }
 
       console.log(`Submitting ${role} registration:`, { ...userData, password: '***' });
@@ -110,6 +129,43 @@ const RegisterUser = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      setGeoError('Geolocation is not supported by your browser');
+      return;
+    }
+
+    setGeoLoading(true);
+    setGeoError('');
+    setGeoSuccess('');
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude, accuracy } = position.coords;
+        setFormData((prev) => ({
+          ...prev,
+          latitude,
+          longitude,
+          accuracy: Math.round(accuracy)
+        }));
+        setGeoSuccess(`✓ Location captured! (Accuracy: ${Math.round(accuracy)}m)`);
+        setGeoLoading(false);
+      },
+      (error) => {
+        let errorMsg = 'Failed to get location';
+        if (error.code === error.PERMISSION_DENIED) {
+          errorMsg = 'Location permission denied. Please enable location access.';
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          errorMsg = 'Location information is unavailable.';
+        } else if (error.code === error.TIMEOUT) {
+          errorMsg = 'Location request timed out.';
+        }
+        setGeoError(errorMsg);
+        setGeoLoading(false);
+      }
+    );
   };
 
   // Invalid role check
@@ -240,6 +296,52 @@ const RegisterUser = () => {
                     className={`input-field mt-1 ${config.borderColor}`}
                     placeholder="e.g., 5"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    📍 Work Location (GPS)
+                  </label>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleGetLocation}
+                      disabled={geoLoading}
+                      className={`flex-1 py-2 px-3 rounded-lg font-semibold text-white transition ${
+                        geoLoading
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : `${config.buttonBg}`
+                      }`}
+                    >
+                      {geoLoading ? '🔍 Getting Location...' : '📍 Capture Location'}
+                    </button>
+                  </div>
+                  {geoError && (
+                    <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+                      ✕ {geoError}
+                    </div>
+                  )}
+                  {geoSuccess && (
+                    <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-green-700 text-sm">
+                      {geoSuccess}
+                    </div>
+                  )}
+                  {formData.latitude && formData.longitude && (
+                    <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
+                      <p className="font-semibold text-blue-900">📍 Location Captured</p>
+                      <p className="text-blue-700 text-xs mt-1">
+                        Latitude: {formData.latitude.toFixed(6)}
+                      </p>
+                      <p className="text-blue-700 text-xs">
+                        Longitude: {formData.longitude.toFixed(6)}
+                      </p>
+                      {formData.accuracy && (
+                        <p className="text-blue-700 text-xs">
+                          Accuracy: {formData.accuracy}m
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </>
             )}

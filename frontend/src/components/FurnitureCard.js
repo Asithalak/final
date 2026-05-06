@@ -1,10 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
+import { API_BASE_URL } from '../services/api';
 
 const FurnitureCard = ({ furniture, onAddToCart }) => {
-  const imageUrl = furniture.images?.[0] 
-    ? `http://localhost:5000/${furniture.images[0]}` 
+  const imageUrl = furniture.images?.[0]
+    ? (() => {
+        const rawPath = String(furniture.images[0]);
+        if (rawPath.startsWith('http')) return rawPath;
+
+        let normalizedPath = rawPath.replace(/\\/g, '/');
+        const uploadsIndex = normalizedPath.indexOf('uploads/');
+        if (uploadsIndex !== -1) {
+          normalizedPath = normalizedPath.slice(uploadsIndex);
+        }
+        if (!normalizedPath.startsWith('/')) {
+          normalizedPath = `/${normalizedPath}`;
+        }
+        return `${API_BASE_URL}${normalizedPath}`;
+      })()
     : 'https://via.placeholder.com/300x200?text=No+Image';
 
   return (

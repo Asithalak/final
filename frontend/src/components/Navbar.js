@@ -25,17 +25,18 @@ const Navbar = () => {
             <Link to="/" className="text-gray-700 hover:text-primary-600 transition">
               Home
             </Link>
-            <Link to="/catalogue" className="text-gray-700 hover:text-primary-600 transition">
-              Catalogue
-            </Link>
+          
             <Link to="/brands" className="text-gray-700 hover:text-primary-600 transition">
               Brands
             </Link>
             <Link to="/offers" className="text-gray-700 hover:text-primary-600 transition">
               Offers
             </Link>
+            <Link to="/gallery" className="text-gray-700 hover:text-primary-600 transition">
+              Gallery
+            </Link>
             <Link to="/carpenters" className="text-gray-700 hover:text-primary-600 transition">
-              Carpenters
+              All Carpenters
             </Link>
           
           </div>
@@ -87,13 +88,7 @@ const Navbar = () => {
             >
               Home
             </Link>
-            <Link 
-              to="/catalogue" 
-              className="block py-2 text-gray-700 hover:text-primary-600"
-              onClick={toggleMenu}
-            >
-              Catalogue
-            </Link>
+
             <Link 
               to="/brands" 
               className="block py-2 text-gray-700 hover:text-primary-600"
@@ -109,11 +104,18 @@ const Navbar = () => {
               Offers
             </Link>
             <Link 
+              to="/gallery" 
+              className="block py-2 text-gray-700 hover:text-primary-600"
+              onClick={toggleMenu}
+            >
+              Gallery
+            </Link>
+            <Link 
               to="/carpenters" 
               className="block py-2 text-gray-700 hover:text-primary-600"
               onClick={toggleMenu}
             >
-              Carpenters
+              All Carpenters
             </Link>
             <Link 
               to="/cart" 

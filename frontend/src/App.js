@@ -9,8 +9,6 @@ import { CartProvider } from './context/CartContext';
 
 // Pages
 import Home from './pages/Home';
-import Catalogue from './pages/Catalogue';
-import FurnitureDetail from './pages/FurnitureDetail';
 import Brands from './pages/Brands';
 import Offers from './pages/Offers';
 import Login from './pages/Login';
@@ -18,16 +16,18 @@ import Register from './pages/Register';
 import RegisterUser from './pages/RegisterUser';
 import OrderTracking from './pages/OrderTracking';
 import Cart from './pages/Cart';
+import ImageGalleryPage from './pages/ImageGalleryPage';
+import ShoppingGallery from './pages/ShoppingGallery';
 
 // Furniture Category Pages
 import CategoryPage from './pages/CategoryPage';
-import Chairs from './pages/Chairs';
-import Tables from './pages/Tables';
-import Sofas from './pages/Sofas';
-import Beds from './pages/Beds';
-import Cabinets from './pages/Cabinets';
-import Desks from './pages/Desks';
-import Shelves from './pages/Shelves';
+import Chairs from './ViewCategory/Chairs';
+import Tables from './ViewCategory/Tables';
+import Sofas from './ViewCategory/Sofas';
+import Beds from './ViewCategory/Beds';
+import Cabinets from './ViewCategory/Cabinets';
+import Desks from './ViewCategory/Desks';
+import Shelves from './ViewCategory/Shelves';
 
 // Admin Pages
 import AdminLogin from './pages/AdminLogin';
@@ -46,7 +46,7 @@ import CustomerDashboard from './customer/CustomerDashboard';
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import PrivateRoute from './components/PrivateRoute'; 
+import PrivateRoute from './components/PrivateRoute';
 function App() {
   return (
     <Router>
@@ -57,8 +57,6 @@ function App() {
             <main className="flex-grow">
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/catalogue" element={<Catalogue />} />
-                <Route path="/furniture/:id" element={<FurnitureDetail />} />
                 <Route path="/brands" element={<Brands />} />
                 <Route path="/offers" element={<Offers />} />
                 <Route path="/login" element={<Login />} />
@@ -70,19 +68,22 @@ function App() {
                 <Route path="/carpenter/assignedorders" element={<AssignedOrders />} />
                 <Route path="/carpenters" element={<AllCarpenters />} />
                 <Route path="/all-carpenters" element={<AllCarpenters />} />
+                <Route path="/carpenter-directory" element={<AllCarpenters />} />
                 <Route path="/customer/customerdashboard" element={<CustomerDashboard />} />
 
-                <Route path="/cart" element={<Cart />} />
+                <Route path="/cart" element={<PrivateRoute customersOnly><Cart /></PrivateRoute>} />
+                <Route path="/gallery" element={<PrivateRoute><ShoppingGallery /></PrivateRoute>} />
+                <Route path="/image-gallery" element={<ImageGalleryPage />} />
                 
-                {/* Furniture Category Routes */}
-                <Route path="/category/chair" element={<Chairs />} />
-                <Route path="/category/table" element={<Tables />} />
-                <Route path="/category/sofa" element={<Sofas />} />
-                <Route path="/category/bed" element={<Beds />} />
-                <Route path="/category/cabinet" element={<Cabinets />} />
-                <Route path="/category/desk" element={<Desks />} />
-                <Route path="/category/shelf" element={<Shelves />} />
-                <Route path="/category/:category" element={<CategoryPage />} />
+                {/* Furniture Category Routes - Requires Login */}
+                <Route path="/category/chair" element={<PrivateRoute><Chairs /></PrivateRoute>} />
+                <Route path="/category/table" element={<PrivateRoute><Tables /></PrivateRoute>} />
+                <Route path="/category/sofa" element={<PrivateRoute><Sofas /></PrivateRoute>} />
+                <Route path="/category/bed" element={<PrivateRoute><Beds /></PrivateRoute>} />
+                <Route path="/category/cabinet" element={<PrivateRoute><Cabinets /></PrivateRoute>} />
+                <Route path="/category/desk" element={<PrivateRoute><Desks /></PrivateRoute>} />
+                <Route path="/category/shelf" element={<PrivateRoute><Shelves /></PrivateRoute>} />
+                <Route path="/category/:category" element={<PrivateRoute><CategoryPage /></PrivateRoute>} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin-login" element={<AdminLogin />} />

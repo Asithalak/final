@@ -4,14 +4,15 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
 const api = axios.create({
   baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // Add token to requests
 api.interceptors.request.use(
   (config) => {
+    if (config.data instanceof FormData && config.headers) {
+      delete config.headers['Content-Type'];
+    }
+
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -22,6 +23,8 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export const API_BASE_URL = API_URL.replace(/\/api\/?$/, '');
 
 // Auth API
 export const authAPI = {
@@ -36,12 +39,8 @@ export const furnitureAPI = {
   getMyFurniture: (params) => api.get('/furniture/my-furniture', { params }),
   getByCarpenter: (carpenterId) => api.get(`/furniture/carpenter/${carpenterId}`),
   getById: (id) => api.get(`/furniture/${id}`),
-  create: (formData) => api.post('/furniture', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
-  update: (id, formData) => api.put(`/furniture/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
+  create: (formData) => api.post('/furniture', formData),
+  update: (id, formData) => api.put(`/furniture/${id}`, formData),
   approve: (id) => api.put(`/furniture/${id}/approve`),
   delete: (id) => api.delete(`/furniture/${id}`),
   addReview: (id, review) => api.post(`/furniture/${id}/review`, review),
@@ -63,12 +62,9 @@ export const resourcesAPI = {
   getMyResources: (params) => api.get('/resources/my-resources', { params }),
   getByCarpenter: (carpenterId) => api.get(`/resources/carpenter/${carpenterId}`),
   getById: (id) => api.get(`/resources/${id}`),
-  create: (formData) => api.post('/resources', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
-  update: (id, formData) => api.put(`/resources/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
+
+  create: (formData) => api.post('/resources', formData),
+  update: (id, formData) => api.put(`/resources/${id}`, formData),
   approve: (id) => api.put(`/resources/${id}/approve`),
   purchase: (id, data) => api.post(`/resources/${id}/purchase`, data),
   delete: (id) => api.delete(`/resources/${id}`),
@@ -77,6 +73,7 @@ export const resourcesAPI = {
 // Users API
 export const usersAPI = {
   getAll: (params) => api.get('/users', { params }),
+  getMe: () => api.get('/auth/me'),
   getCarpenters: () => api.get('/users/carpenters'),
   getCustomers: () => api.get('/users/customers'),
   getById: (id) => api.get(`/users/${id}`),

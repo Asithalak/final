@@ -10,11 +10,11 @@
       "work_duration": "5 days",
       "paint_code": "#8B4513",
       "images": [
-        "/images/chair/image-1.jpg",
-        "/images/chair/image-2.webp",
-        "/images/chair/image-3.avif",
-        "/images/chair/image-4.avif",
-        "/images/chair/image-5.avif"
+        "/images/Chairs/image-1.jpg",
+        "/images/Chairs/image-2.webp",
+        "/images/Chairs/image-3.jfif",
+        "/images/Chairs/image-4.jpg",
+        "/images/Chairs/image-5.jpg"
       ]
     },
     {
@@ -27,11 +27,11 @@
       "work_duration": "6 days",
       "paint_code": "#5C4033",
       "images": [
-        "/images/chair/image-2.webp",
-        "/images/chair/image-3.avif",
-        "/images/chair/image-4.avif",
-        "/images/chair/image-5.avif",
-        "/images/chair/image-6.avif"
+        "/images/Chairs/image-2.webp",
+        "/images/Chairs/image-3.jfif",
+        "/images/Chairs/image-4.jpg",
+        "/images/Chairs/image-5.jpg",
+        "/images/Chairs/image-6.jfif"
       ]
     },
     {
@@ -44,11 +44,11 @@
       "work_duration": "4 days",
       "paint_code": "#DEB887",
       "images": [
-        "/images/chair/image-3.avif",
-        "/images/chair/image-4.avif",
-        "/images/chair/image-5.avif",
-        "/images/chair/image-6.avif",
-        "/images/chair/image-7.avif"
+        "/images/Chairs/image-3.jfif",
+        "/images/Chairs/image-4.jpg",
+        "/images/Chairs/image-5.jpg",
+        "/images/Chairs/image-6.jfif",
+        "/images/Chairs/image-7.webp"
       ]
     },
     {
@@ -61,11 +61,11 @@
       "work_duration": "8 days",
       "paint_code": "#420C09",
       "images": [
-        "/images/chair/image-4.avif",
-        "/images/chair/image-5.avif",
-        "/images/chair/image-6.avif",
-        "/images/chair/image-7.avif",
-        "/images/chair/image-8.avif"
+        "/images/Chairs/image-4.jpg",
+        "/images/Chairs/image-5.jpg",
+        "/images/Chairs/image-6.jfif",
+        "/images/Chairs/image-7.webp",
+        "/images/Chairs/image-8.avif"
       ]
     },
     {
@@ -78,11 +78,11 @@
       "work_duration": "7 days",
       "paint_code": "#B8860B",
       "images": [
-        "/images/chair/image-5.avif",
-        "/images/chair/image-6.avif",
-        "/images/chair/image-7.avif",
-        "/images/chair/image-8.avif",
-        "/images/chair/image-9.avif"
+        "/images/Chairs/image-5.jpg",
+        "/images/Chairs/image-6.jfif",
+        "/images/Chairs/image-7.webp",
+        "/images/Chairs/image-8.avif",
+        "/images/Chairs/image-9.jpg"
       ]
     }
   ],
@@ -97,11 +97,11 @@
       "work_duration": "10 days",
       "paint_code": "#8B4513",
       "images": [
-        "/images/table/image-1.jfif",
-        "/images/table/image-2.jfif",
-        "/images/table/image-3.jfif",
-        "/images/table/images-4.jfif",
-        "/images/table/images-5.jfif"
+        "/images/tables/image-1.jfif",
+        "/images/tables/image-2.jfif",
+        "/images/tables/image-3.jfif",
+        "/images/tables/image-4.jfif",
+        "/images/tables/image-5.jfif"
       ]
     },
     {
@@ -114,11 +114,11 @@
       "work_duration": "5 days",
       "paint_code": "#D2B48C",
       "images": [
-        "/images/table/image-2.jfif",
-        "/images/table/image-3.jfif",
-        "/images/table/images-4.jfif",
-        "/images/table/images-5.jfif",
-        "/images/table/images-6.jfif"
+        "/images/tables/image-2.jfif",
+        "/images/tables/image-3.jfif",
+        "/images/tables/image-4.jfif",
+        "/images/tables/image-5.jfif",
+        "/images/tables/image-6.jfif"
       ]
     },
     {
@@ -131,11 +131,11 @@
       "work_duration": "7 days",
       "paint_code": "#696969",
       "images": [
-        "/images/table/image-3.jfif",
-        "/images/table/images-4.jfif",
-        "/images/table/images-5.jfif",
-        "/images/table/images-6.jfif",
-        "/images/table/images-7.jfif"
+        "/images/tables/image-3.jfif",
+        "/images/tables/image-4.jfif",
+        "/images/tables/image-5.jfif",
+        "/images/tables/image-6.jfif",
+        "/images/tables/image-7.jfif"
       ]
     },
     {
@@ -148,11 +148,11 @@
       "work_duration": "12 days",
       "paint_code": "#5C4033",
       "images": [
-        "/images/table/images-4.jfif",
-        "/images/table/images-5.jfif",
-        "/images/table/images-6.jfif",
-        "/images/table/images-7.jfif",
-        "/images/table/images-8.jfif"
+        "/images/tables/image-4.jfif",
+        "/images/tables/image-5.jfif",
+        "/images/tables/image-6.jfif",
+        "/images/tables/image-7.jfif",
+        "/images/tables/image-8.jfif"
       ]
     },
     {
@@ -165,11 +165,11 @@
       "work_duration": "6 days",
       "paint_code": "#B8860B",
       "images": [
-        "/images/table/images-5.jfif",
-        "/images/table/images-6.jfif",
-        "/images/table/images-7.jfif",
-        "/images/table/images-8.jfif",
-        "/images/table/images-9.jfif"
+        "/images/tables/image-5.jfif",
+        "/images/tables/image-6.jfif",
+        "/images/tables/image-7.jfif",
+        "/images/tables/image-8.jfif",
+        "/images/tables/images-9.jfif"
       ]
     }
   ],
@@ -184,11 +184,11 @@
       "work_duration": "15 days",
       "paint_code": "#F5DEB3",
       "images": [
-        "/images/chair/image-1.jpg",
-        "/images/chair/image-2.webp",
-        "/images/chair/image-3.avif",
-        "/images/chair/image-4.avif",
-        "/images/chair/image-5.avif"
+        "/images/Sofas/image-1.jfif",
+        "/images/Sofas/image-2.jfif",
+        "/images/Sofas/image-3.jfif",
+        "/images/Sofas/image-4.jfif",
+        "/images/Sofas/image-5.jfif"
       ]
     },
     {
@@ -201,11 +201,11 @@
       "work_duration": "20 days",
       "paint_code": "#8B4513",
       "images": [
-        "/images/chair/image-2.webp",
-        "/images/chair/image-3.avif",
-        "/images/chair/image-4.avif",
-        "/images/chair/image-5.avif",
-        "/images/chair/image-6.avif"
+        "/images/Sofas/image-2.jfif",
+        "/images/Sofas/image-3.jfif",
+        "/images/Sofas/image-4.jfif",
+        "/images/Sofas/image-5.jfif",
+        "/images/Sofas/image-1.jfif"
       ]
     },
     {
@@ -218,11 +218,11 @@
       "work_duration": "18 days",
       "paint_code": "#420C09",
       "images": [
-        "/images/chair/image-3.avif",
-        "/images/chair/image-4.avif",
-        "/images/chair/image-5.avif",
-        "/images/chair/image-6.avif",
-        "/images/chair/image-7.avif"
+        "/images/Sofas/image-3.jfif",
+        "/images/Sofas/image-4.jfif",
+        "/images/Sofas/image-5.jfif",
+        "/images/Sofas/image-1.jfif",
+        "/images/Sofas/image-2.jfif"
       ]
     },
     {
@@ -235,11 +235,11 @@
       "work_duration": "10 days",
       "paint_code": "#F0E68C",
       "images": [
-        "/images/chair/image-4.avif",
-        "/images/chair/image-5.avif",
-        "/images/chair/image-6.avif",
-        "/images/chair/image-7.avif",
-        "/images/chair/image-8.avif"
+        "/images/Sofas/image-4.jfif",
+        "/images/Sofas/image-5.jfif",
+        "/images/Sofas/image-1.jfif",
+        "/images/Sofas/image-2.jfif",
+        "/images/Sofas/image-3.jfif"
       ]
     },
     {
@@ -252,11 +252,11 @@
       "work_duration": "12 days",
       "paint_code": "#FFF8DC",
       "images": [
-        "/images/chair/image-5.avif",
-        "/images/chair/image-6.avif",
-        "/images/chair/image-7.avif",
-        "/images/chair/image-8.avif",
-        "/images/chair/image-9.avif"
+        "/images/Sofas/image-5.jfif",
+        "/images/Sofas/image-1.jfif",
+        "/images/Sofas/image-2.jfif",
+        "/images/Sofas/image-3.jfif",
+        "/images/Sofas/image-4.jfif"
       ]
     }
   ],
@@ -271,11 +271,11 @@
       "work_duration": "14 days",
       "paint_code": "#8B4513",
       "images": [
-        "/images/bed/image-1.jpg",
-        "/images/bed/image-2.jpg",
-        "/images/bed/image-3.jpg",
-        "/images/bed/image-4.jpg",
-        "/images/bed/image-5.jfif"
+        "/images/Beds/image-1.jpg",
+        "/images/Beds/image-2.jpg",
+        "/images/Beds/image-3.webp",
+        "/images/Beds/image-4.jfif",
+        "/images/Beds/image-5.jfif"
       ]
     },
     {
@@ -288,11 +288,11 @@
       "work_duration": "12 days",
       "paint_code": "#DEB887",
       "images": [
-        "/images/bed/image-2.jpg",
-        "/images/bed/image-3.jpg",
-        "/images/bed/image-4.jpg",
-        "/images/bed/image-5.jfif",
-        "/images/bed/images-6.jfif"
+        "/images/Beds/image-2.jpg",
+        "/images/Beds/image-3.webp",
+        "/images/Beds/image-4.jfif",
+        "/images/Beds/image-5.jfif",
+        "/images/Beds/image-6.jfif"
       ]
     },
     {
@@ -305,11 +305,11 @@
       "work_duration": "20 days",
       "paint_code": "#420C09",
       "images": [
-        "/images/bed/image-3.jpg",
-        "/images/bed/image-4.jpg",
-        "/images/bed/image-5.jfif",
-        "/images/bed/images-6.jfif",
-        "/images/bed/images-7.jfif"
+        "/images/Beds/image-3.webp",
+        "/images/Beds/image-4.jfif",
+        "/images/Beds/image-5.jfif",
+        "/images/Beds/image-6.jfif",
+        "/images/Beds/image-7.jfif"
       ]
     },
     {
@@ -322,11 +322,11 @@
       "work_duration": "16 days",
       "paint_code": "#5C4033",
       "images": [
-        "/images/bed/image-4.jpg",
-        "/images/bed/image-5.jfif",
-        "/images/bed/images-6.jfif",
-        "/images/bed/images-7.jfif",
-        "/images/bed/images-8.jfif"
+        "/images/Beds/image-4.jfif",
+        "/images/Beds/image-5.jfif",
+        "/images/Beds/image-6.jfif",
+        "/images/Beds/image-7.jfif",
+        "/images/Beds/image-8.jfif"
       ]
     },
     {
@@ -339,11 +339,11 @@
       "work_duration": "10 days",
       "paint_code": "#E3DAC9",
       "images": [
-        "/images/bed/image-5.jfif",
-        "/images/bed/images-6.jfif",
-        "/images/bed/images-7.jfif",
-        "/images/bed/images-8.jfif",
-        "/images/bed/images-9.jfif"
+        "/images/Beds/image-5.jfif",
+        "/images/Beds/image-6.jfif",
+        "/images/Beds/image-7.jfif",
+        "/images/Beds/image-8.jfif",
+        "/images/Beds/image-10.avif"
       ]
     }
   ],
@@ -358,11 +358,11 @@
       "work_duration": "11 days",
       "paint_code": "#8B4513",
       "images": [
-        "/images/cupboard/image-1.jpg",
-        "/images/cupboard/image-2.jpg",
-        "/images/cupboard/image-3.jpg",
-        "/images/cupboard/image-4.jpg",
-        "/images/cupboard/image-5.jpg"
+        "/images/Cabinets/image-1.jpg",
+        "/images/Cabinets/image-2.webp",
+        "/images/Cabinets/image-3.avif",
+        "/images/Cabinets/image-4.avif",
+        "/images/Cabinets/image-5.jpg"
       ]
     },
     {
@@ -375,11 +375,11 @@
       "work_duration": "9 days",
       "paint_code": "#A0826D",
       "images": [
-        "/images/cupboard/image-2.jpg",
-        "/images/cupboard/image-3.jpg",
-        "/images/cupboard/image-4.jpg",
-        "/images/cupboard/image-5.jpg",
-        "/images/cupboard/image-6.jpg"
+        "/images/Cabinets/image-2.webp",
+        "/images/Cabinets/image-3.avif",
+        "/images/Cabinets/image-4.avif",
+        "/images/Cabinets/image-5.jpg",
+        "/images/Cabinets/image-6.jpg"
       ]
     },
     {
@@ -392,11 +392,11 @@
       "work_duration": "13 days",
       "paint_code": "#B8860B",
       "images": [
-        "/images/cupboard/image-3.jpg",
-        "/images/cupboard/image-4.jpg",
-        "/images/cupboard/image-5.jpg",
-        "/images/cupboard/image-6.jpg",
-        "/images/cupboard/image-7.jpg"
+        "/images/Cabinets/image-3.avif",
+        "/images/Cabinets/image-4.avif",
+        "/images/Cabinets/image-5.jpg",
+        "/images/Cabinets/image-6.jpg",
+        "/images/Cabinets/image-7.webp"
       ]
     },
     {
@@ -409,11 +409,11 @@
       "work_duration": "8 days",
       "paint_code": "#DEB887",
       "images": [
-        "/images/cupboard/image-4.jpg",
-        "/images/cupboard/image-5.jpg",
-        "/images/cupboard/image-6.jpg",
-        "/images/cupboard/image-7.jpg",
-        "/images/cupboard/image-8.jpg"
+        "/images/Cabinets/image-4.avif",
+        "/images/Cabinets/image-5.jpg",
+        "/images/Cabinets/image-6.jpg",
+        "/images/Cabinets/image-7.webp",
+        "/images/Cabinets/image-8.jpg"
       ]
     },
     {
@@ -426,11 +426,11 @@
       "work_duration": "10 days",
       "paint_code": "#9C4A3A",
       "images": [
-        "/images/cupboard/image-5.jpg",
-        "/images/cupboard/image-6.jpg",
-        "/images/cupboard/image-7.jpg",
-        "/images/cupboard/image-8.jpg",
-        "/images/cupboard/image-9.jpg"
+        "/images/Cabinets/image-5.jpg",
+        "/images/Cabinets/image-6.jpg",
+        "/images/Cabinets/image-7.webp",
+        "/images/Cabinets/image-8.jpg",
+        "/images/Cabinets/image-9.jpg"
       ]
     }
   ],
@@ -445,11 +445,11 @@
       "work_duration": "12 days",
       "paint_code": "#420C09",
       "images": [
-        "/images/table/image-1.jfif",
-        "/images/table/image-2.jfif",
-        "/images/table/image-3.jfif",
-        "/images/table/images-4.jfif",
-        "/images/table/images-5.jfif"
+        "/images/Desks/image-1.jfif",
+        "/images/Desks/image-2.jfif",
+        "/images/Desks/image-3.jfif",
+        "/images/Desks/image-4.webp",
+        "/images/Desks/image-5.jfif"
       ]
     },
     {
@@ -462,11 +462,11 @@
       "work_duration": "7 days",
       "paint_code": "#E3DAC9",
       "images": [
-        "/images/table/image-2.jfif",
-        "/images/table/image-3.jfif",
-        "/images/table/images-4.jfif",
-        "/images/table/images-5.jfif",
-        "/images/table/images-6.jfif"
+        "/images/Desks/image-2.jfif",
+        "/images/Desks/image-3.jfif",
+        "/images/Desks/image-4.webp",
+        "/images/Desks/image-5.jfif",
+        "/images/Desks/image-6.jfif"
       ]
     },
     {
@@ -479,11 +479,11 @@
       "work_duration": "14 days",
       "paint_code": "#8B4513",
       "images": [
-        "/images/table/image-3.jfif",
-        "/images/table/images-4.jfif",
-        "/images/table/images-5.jfif",
-        "/images/table/images-6.jfif",
-        "/images/table/images-7.jfif"
+        "/images/Desks/image-3.jfif",
+        "/images/Desks/image-4.webp",
+        "/images/Desks/image-5.jfif",
+        "/images/Desks/image-6.jfif",
+        "/images/Desks/image-1.jfif"
       ]
     },
     {
@@ -496,11 +496,11 @@
       "work_duration": "5 days",
       "paint_code": "#5C4033",
       "images": [
-        "/images/table/images-4.jfif",
-        "/images/table/images-5.jfif",
-        "/images/table/images-6.jfif",
-        "/images/table/images-7.jfif",
-        "/images/table/images-8.jfif"
+        "/images/Desks/image-4.webp",
+        "/images/Desks/image-5.jfif",
+        "/images/Desks/image-6.jfif",
+        "/images/Desks/image-1.jfif",
+        "/images/Desks/image-2.jfif"
       ]
     },
     {
@@ -513,11 +513,11 @@
       "work_duration": "10 days",
       "paint_code": "#9C4A3A",
       "images": [
-        "/images/table/images-5.jfif",
-        "/images/table/images-6.jfif",
-        "/images/table/images-7.jfif",
-        "/images/table/images-8.jfif",
-        "/images/table/images-9.jfif"
+        "/images/Desks/image-5.jfif",
+        "/images/Desks/image-6.jfif",
+        "/images/Desks/image-1.jfif",
+        "/images/Desks/image-2.jfif",
+        "/images/Desks/image-3.jfif"
       ]
     }
   ],
@@ -532,11 +532,11 @@
       "work_duration": "3 days",
       "paint_code": "#8B4513",
       "images": [
-        "/images/cupboard/image-1.jpg",
-        "/images/cupboard/image-2.jpg",
-        "/images/cupboard/image-3.jpg",
-        "/images/cupboard/image-4.jpg",
-        "/images/cupboard/image-5.jpg"
+        "/images/Cabinets/image-1.jpg",
+        "/images/Cabinets/image-2.webp",
+        "/images/Cabinets/image-3.avif",
+        "/images/Cabinets/image-4.avif",
+        "/images/Cabinets/image-5.jpg"
       ]
     },
     {
@@ -549,11 +549,11 @@
       "work_duration": "6 days",
       "paint_code": "#E3DAC9",
       "images": [
-        "/images/cupboard/image-2.jpg",
-        "/images/cupboard/image-3.jpg",
-        "/images/cupboard/image-4.jpg",
-        "/images/cupboard/image-5.jpg",
-        "/images/cupboard/image-6.jpg"
+        "/images/Cabinets/image-2.webp",
+        "/images/Cabinets/image-3.avif",
+        "/images/Cabinets/image-4.avif",
+        "/images/Cabinets/image-5.jpg",
+        "/images/Cabinets/image-6.jpg"
       ]
     },
     {
@@ -566,11 +566,11 @@
       "work_duration": "7 days",
       "paint_code": "#A0826D",
       "images": [
-        "/images/cupboard/image-3.jpg",
-        "/images/cupboard/image-4.jpg",
-        "/images/cupboard/image-5.jpg",
-        "/images/cupboard/image-6.jpg",
-        "/images/cupboard/image-7.jpg"
+        "/images/Cabinets/image-3.avif",
+        "/images/Cabinets/image-4.avif",
+        "/images/Cabinets/image-5.jpg",
+        "/images/Cabinets/image-6.jpg",
+        "/images/Cabinets/image-7.webp"
       ]
     },
     {
@@ -583,11 +583,11 @@
       "work_duration": "5 days",
       "paint_code": "#DEB887",
       "images": [
-        "/images/cupboard/image-4.jpg",
-        "/images/cupboard/image-5.jpg",
-        "/images/cupboard/image-6.jpg",
-        "/images/cupboard/image-7.jpg",
-        "/images/cupboard/image-8.jpg"
+        "/images/Cabinets/image-4.avif",
+        "/images/Cabinets/image-5.jpg",
+        "/images/Cabinets/image-6.jpg",
+        "/images/Cabinets/image-7.webp",
+        "/images/Cabinets/image-8.jpg"
       ]
     },
     {
@@ -600,11 +600,11 @@
       "work_duration": "8 days",
       "paint_code": "#FFF8DC",
       "images": [
-        "/images/cupboard/image-5.jpg",
-        "/images/cupboard/image-6.jpg",
-        "/images/cupboard/image-7.jpg",
-        "/images/cupboard/image-8.jpg",
-        "/images/cupboard/image-9.jpg"
+        "/images/Cabinets/image-5.jpg",
+        "/images/Cabinets/image-6.jpg",
+        "/images/Cabinets/image-7.webp",
+        "/images/Cabinets/image-8.jpg",
+        "/images/Cabinets/image-9.jpg"
       ]
     }
   ]

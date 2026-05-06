@@ -35,6 +35,22 @@ const userSchema = new mongoose.Schema({
     zipCode: String,
     country: String
   },
+  // GPS location for carpenters
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number], // [longitude, latitude]
+      required: false
+    },
+    latitude: Number,
+    longitude: Number,
+    accuracy: Number, // accuracy in meters
+    timestamp: Date
+  },
   profileImage: {
     type: String,
     default: ''
@@ -51,25 +67,23 @@ const userSchema = new mongoose.Schema({
   isApproved: {
     type: Boolean,
     default: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
-});
+}, { timestamps: true });
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre('save', async function() {
+  if (!this.isModified('password')) return;
   
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
+
+// Geospatial index for location-based queries
+userSchema.index({ 'location.coordinates': '2dsphere' });
 
 // Compare password method
 userSchema.methods.comparePassword = async function(candidatePassword) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { resourcesAPI, furnitureAPI } from '../services/api';
+import { resourcesAPI, furnitureAPI, API_BASE_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const MyResources = () => {
@@ -19,6 +19,8 @@ const MyResources = () => {
   const [saving, setSaving] = useState(false);
   const [imagePreview, setImagePreview] = useState([]);
   const [editImagePreview, setEditImagePreview] = useState([]);
+  const [selectedFurnitureFiles, setSelectedFurnitureFiles] = useState([]);
+  const [selectedEditFurnitureFiles, setSelectedEditFurnitureFiles] = useState([]);
 
   // Handle image preview for add furniture
   const handleImageChange = (e) => {
@@ -27,10 +29,12 @@ const MyResources = () => {
       toast.warning('Maximum 5 images allowed');
       e.target.value = '';
       setImagePreview([]);
+      setSelectedFurnitureFiles([]);
       return;
     }
     const previews = files.map(file => URL.createObjectURL(file));
     setImagePreview(previews);
+    setSelectedFurnitureFiles(files);
   };
 
   // Handle image preview for edit furniture
@@ -38,6 +42,34 @@ const MyResources = () => {
     const files = Array.from(e.target.files);
     if (files.length > 5) {
       toast.warning('Maximum 5 images allowed');
+      e.target.value = '';
+      setEditImagePreview([]);
+      setSelectedEditFurnitureFiles([]);
+      return;
+    }
+    const previews = files.map(file => URL.createObjectURL(file));
+    setEditImagePreview(previews);
+    setSelectedEditFurnitureFiles(files);
+  };
+
+  // Handle image preview for add resource
+  const handleAddResourceImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 3) {
+      toast.warning('Maximum 3 images allowed');
+      e.target.value = '';
+      setImagePreview([]);
+      return;
+    }
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImagePreview(previews);
+  };
+
+  // Handle image preview for edit resource
+  const handleEditResourceImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 3) {
+      toast.warning('Maximum 3 images allowed');
       e.target.value = '';
       setEditImagePreview([]);
       return;
@@ -50,12 +82,14 @@ const MyResources = () => {
   const closeAddFurnitureModal = () => {
     setShowAddFurnitureModal(false);
     setImagePreview([]);
+    setSelectedFurnitureFiles([]);
   };
 
   const closeEditFurnitureModal = () => {
     setShowEditFurnitureModal(false);
     setSelectedFurniture(null);
     setEditImagePreview([]);
+    setSelectedEditFurnitureFiles([]);
   };
 
   // Material categories matching backend enum
@@ -73,8 +107,19 @@ const MyResources = () => {
   // Unit options matching backend enum
   const unitOptions = ['piece', 'kg', 'meter', 'sqft', 'liter', 'box'];
 
-  // Furniture categories matching backend enum
-  const furnitureCategories = ['chair', 'table', 'sofa', 'bed', 'cabinet', 'desk', 'shelf', 'other'];
+  // Furniture categories requested for resource mapping
+  const resourceFurnitureCategories = [
+    { value: 'bed', label: 'Bed' },
+    { value: 'chair', label: 'Chair' },
+    { value: 'desk', label: 'Desk' },
+    { value: 'table', label: 'Table' },
+    { value: 'sofa', label: 'Sofas' },
+    { value: 'cabinet', label: 'Cabinets' },
+    { value: 'other', label: 'Others' }
+  ];
+
+  // Furniture categories for furniture form dropdown
+  const furnitureCategories = ['bed', 'chair', 'desk', 'table', 'sofa', 'cabinet', 'other'];
 
   const userRole = user?.role || 'carpenter';
 
@@ -102,30 +147,66 @@ const MyResources = () => {
 
   const handleAddResource = async (e) => {
     e.preventDefault();
+    
+    // Check resource limit
+    if (resources.length >= 100) {
+      toast.error('You have reached the maximum resource limit (100). Please delete some resources before adding new ones.');
+      return;
+    }
+    
     setSaving(true);
     
     try {
-      const formData = new FormData(e.target);
-      
-      // Create resource data
+      const formElement = e.target;
       const resourceData = new FormData();
-      resourceData.append('name', formData.get('name'));
-      resourceData.append('type', formData.get('category'));
-      resourceData.append('description', formData.get('name')); // Using name as description
-      resourceData.append('quantity', formData.get('quantity'));
-      resourceData.append('unit', formData.get('unit'));
-      resourceData.append('pricePerUnit', formData.get('pricePerUnit'));
-      resourceData.append('supplierName', formData.get('supplier') || '');
+      
+      const name = formElement.elements.name.value?.trim();
+      const category = formElement.elements.category.value?.trim();
+      const furnitureCategory = formElement.elements.furnitureCategory?.value?.trim() || 'other';
+      const quantity = formElement.elements.quantity.value?.trim();
+      const unit = formElement.elements.unit.value?.trim();
+      const pricePerUnit = formElement.elements.pricePerUnit.value?.trim();
+      const description = formElement.elements.description?.value?.trim() || name;
+      const supplierName = formElement.elements.supplier?.value?.trim() || '';
+
+      // Validate required fields
+      if (!name || !category || !quantity || !unit || !pricePerUnit) {
+        toast.error('Please fill in all required fields');
+        setSaving(false);
+        return;
+      }
+
+      resourceData.append('name', name);
+      resourceData.append('type', category);
+      resourceData.append('furnitureCategory', furnitureCategory);
+      resourceData.append('description', description);
+      resourceData.append('quantity', quantity);
+      resourceData.append('unit', unit);
+      resourceData.append('pricePerUnit', pricePerUnit);
+      resourceData.append('supplierName', supplierName);
+
+      // Add images if provided
+      const imagesInput = formElement.elements.images;
+      if (imagesInput?.files?.length > 0) {
+        for (let i = 0; i < Math.min(imagesInput.files.length, 3); i++) {
+          resourceData.append('images', imagesInput.files[i]);
+        }
+      }
 
       const response = await resourcesAPI.create(resourceData);
       
       setResources([response.data.resource, ...resources]);
       setShowAddResourceModal(false);
+      setImagePreview([]);
       toast.success('Resource added successfully!');
-      e.target.reset();
+      formElement.reset();
     } catch (error) {
       console.error('Error adding resource:', error);
-      toast.error(error.response?.data?.message || 'Failed to add resource');
+      console.error('Resource add error payload:', error.response?.data);
+      const details = error.response?.data?.details;
+      const detailsText = Array.isArray(details) ? ` (${details.join(', ')})` : '';
+      const backendError = error.response?.data?.error ? `: ${error.response.data.error}` : '';
+      toast.error((error.response?.data?.message || 'Failed to add resource') + backendError + detailsText);
     } finally {
       setSaving(false);
     }
@@ -136,16 +217,41 @@ const MyResources = () => {
     setSaving(true);
     
     try {
-      const formData = new FormData(e.target);
-      
+      const formElement = e.target;
       const resourceData = new FormData();
-      resourceData.append('name', formData.get('name'));
-      resourceData.append('type', formData.get('category'));
-      resourceData.append('description', formData.get('name'));
-      resourceData.append('quantity', formData.get('quantity'));
-      resourceData.append('unit', formData.get('unit'));
-      resourceData.append('pricePerUnit', formData.get('pricePerUnit'));
-      resourceData.append('supplierName', formData.get('supplier') || '');
+      
+      const name = formElement.elements.name.value?.trim();
+      const category = formElement.elements.category.value?.trim();
+      const furnitureCategory = formElement.elements.furnitureCategory?.value?.trim() || 'other';
+      const quantity = formElement.elements.quantity.value?.trim();
+      const unit = formElement.elements.unit.value?.trim();
+      const pricePerUnit = formElement.elements.pricePerUnit.value?.trim();
+      const description = formElement.elements.description?.value?.trim() || name;
+      const supplierName = formElement.elements.supplier?.value?.trim() || '';
+
+      // Validate required fields
+      if (!name || !category || quantity === '' || !unit || pricePerUnit === '') {
+        toast.error('Please fill in all required fields');
+        setSaving(false);
+        return;
+      }
+
+      resourceData.append('name', name);
+      resourceData.append('type', category);
+      resourceData.append('furnitureCategory', furnitureCategory);
+      resourceData.append('description', description);
+      resourceData.append('quantity', quantity);
+      resourceData.append('unit', unit);
+      resourceData.append('pricePerUnit', pricePerUnit);
+      resourceData.append('supplierName', supplierName);
+
+      // Add new images if provided
+      const imagesInput = formElement.elements.images;
+      if (imagesInput?.files?.length > 0) {
+        for (let i = 0; i < Math.min(imagesInput.files.length, 3); i++) {
+          resourceData.append('images', imagesInput.files[i]);
+        }
+      }
 
       const response = await resourcesAPI.update(selectedResource._id, resourceData);
       
@@ -154,6 +260,7 @@ const MyResources = () => {
       ));
       setShowEditResourceModal(false);
       setSelectedResource(null);
+      setEditImagePreview([]);
       toast.success('Resource updated successfully!');
     } catch (error) {
       console.error('Error updating resource:', error);
@@ -205,6 +312,7 @@ const MyResources = () => {
       
       setFurnitureItems([response.data.furniture, ...furnitureItems]);
       closeAddFurnitureModal();
+      setSelectedFurnitureFiles([]);
       toast.success('Furniture item added successfully!');
       e.target.reset();
     } catch (error) {
@@ -282,17 +390,30 @@ const MyResources = () => {
     return 'Custom Order';
   };
 
+  const getFurnitureCategoryLabel = (category) => {
+    if (category === 'sofa') return 'Sofas';
+    if (category === 'cabinet') return 'Cabinets';
+    if (category === 'other') return 'Others';
+    return category.charAt(0).toUpperCase() + category.slice(1);
+  };
+
   // Helper to format image URL
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith('http')) return imagePath;
-    // Normalize backslashes to forward slashes (Windows paths)
+
     let normalizedPath = imagePath.replace(/\\/g, '/');
-    // Ensure the path starts with /
+
+    const uploadsSegmentIndex = normalizedPath.indexOf('uploads/');
+    if (uploadsSegmentIndex !== -1) {
+      normalizedPath = normalizedPath.slice(uploadsSegmentIndex);
+    }
+
     if (!normalizedPath.startsWith('/')) {
       normalizedPath = '/' + normalizedPath;
     }
-    return `http://localhost:8000${normalizedPath}`;
+
+    return `${API_BASE_URL}${normalizedPath}`;
   };
 
   if (loading) {
@@ -340,15 +461,66 @@ const MyResources = () => {
                 </h2>
                 <p className="text-blue-100 mt-1">Total: {resources.length} items in stock</p>
               </div>
-              {canEdit && (
-                <button
-                  onClick={() => setShowAddResourceModal(true)}
-                  className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl"
-                >
-                  + Add Resource
-                </button>
-              )}
+              <div className="flex gap-3 items-center">
+                {canEdit && (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                      <p className="text-xs text-blue-100">Resources Used</p>
+                      <p className="text-xl font-bold text-white">{resources.length}/100</p>
+                    </div>
+                    {resources.length >= 100 && (
+                      <div className="bg-red-500/20 text-red-200 px-3 py-1 rounded-lg text-xs font-semibold">
+                        ⚠️ Limit Reached
+                      </div>
+                    )}
+                    {resources.length >= 85 && resources.length < 100 && (
+                      <div className="bg-yellow-500/20 text-yellow-200 px-3 py-1 rounded-lg text-xs font-semibold">
+                        ⚠️ {100 - resources.length} remaining
+                      </div>
+                    )}
+                  </div>
+                )}
+                {canEdit && (
+                  <button
+                    onClick={() => {
+                      if (resources.length >= 100) {
+                        toast.error('Maximum resource limit (100) reached. Delete some resources first.');
+                      } else {
+                        setShowAddResourceModal(true);
+                      }
+                    }}
+                    disabled={resources.length >= 100}
+                    className={`px-6 py-3 rounded-xl font-semibold transition-all shadow-lg ${
+                      resources.length >= 100
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-white text-blue-600 hover:bg-blue-50 hover:shadow-xl'
+                    }`}
+                  >
+                    + Add Resource
+                  </button>
+                )}
+              </div>
             </div>
+            {/* Resource Usage Progress Bar */}
+            {canEdit && (
+              <div className="px-6 pb-6 pt-4 border-t border-blue-400">
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-sm font-semibold text-blue-900">Resource Capacity</p>
+                  <p className="text-sm font-bold text-blue-900">{resources.length}/100</p>
+                </div>
+                <div className="w-full bg-blue-200 rounded-full h-3 overflow-hidden">
+                  <div 
+                    className={`h-full rounded-full transition-all duration-300 ${
+                      resources.length >= 100 ? 'bg-red-500' :
+                      resources.length >= 85 ? 'bg-yellow-500' :
+                      resources.length >= 50 ? 'bg-orange-500' :
+                      'bg-green-500'
+                    }`}
+                    style={{ width: `${Math.min((resources.length / 100) * 100, 100)}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="p-6">
@@ -356,6 +528,31 @@ const MyResources = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {resources.map(resource => (
                   <div key={resource._id} className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 group">
+                    {/* Resource Image */}
+                    {resource.images && resource.images.length > 0 ? (
+                      <div className="h-40 bg-gray-100 rounded-lg overflow-hidden mb-4 relative">
+                        <img
+                          src={getImageUrl(resource.images[0])}
+                          alt={resource.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '';
+                            e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center"><span class="text-5xl opacity-70">🪵</span></div>';
+                          }}
+                        />
+                        {resource.images.length > 1 && (
+                          <span className="absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded text-xs">
+                            +{resource.images.length - 1} more
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="h-40 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg flex items-center justify-center mb-4">
+                        <span className="text-5xl opacity-70">🪵</span>
+                      </div>
+                    )}
+
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
@@ -599,9 +796,15 @@ const MyResources = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Resource Name *</label>
                   <input type="text" name="name" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Oak Wood" />
+                  <label className="block text-sm font-semibold text-gray-700 mt-3 mb-2">Furniture Category *</label>
+                  <select name="furnitureCategory" required defaultValue="other" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    {resourceFurnitureCategories.map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Material Type *</label>
                   <select name="category" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     {materialCategories.map(cat => (
                       <option key={cat.value} value={cat.value}>{cat.label}</option>
@@ -628,6 +831,38 @@ const MyResources = () => {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Supplier</label>
                   <input type="text" name="supplier" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Wood Masters Inc." />
                 </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                <textarea name="description" rows="3" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Add detailed information about this resource..."></textarea>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">📷 Upload Images (optional - up to 3)</label>
+                <input 
+                  type="file" 
+                  name="images" 
+                  multiple 
+                  accept="image/*" 
+                  onChange={handleAddResourceImageChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                />
+                <p className="text-xs text-gray-500 mt-1">Supported formats: JPG, PNG, GIF, WebP. Max 3 images, 5MB each.</p>
+                {imagePreview.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {imagePreview.map((src, idx) => (
+                        <img 
+                          key={idx}
+                          src={src} 
+                          alt={`Preview ${idx + 1}`} 
+                          className="w-20 h-20 object-cover rounded-lg border-2 border-blue-200 shadow-sm" 
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -663,9 +898,15 @@ const MyResources = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Resource Name *</label>
                   <input type="text" name="name" required defaultValue={selectedResource.name} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <label className="block text-sm font-semibold text-gray-700 mt-3 mb-2">Furniture Category *</label>
+                  <select name="furnitureCategory" required defaultValue={selectedResource.furnitureCategory || 'other'} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    {resourceFurnitureCategories.map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Material Type *</label>
                   <select name="category" required defaultValue={selectedResource.type} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     {materialCategories.map(cat => (
                       <option key={cat.value} value={cat.value}>{cat.label}</option>
@@ -692,6 +933,57 @@ const MyResources = () => {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Supplier</label>
                   <input type="text" name="supplier" defaultValue={selectedResource.supplierName} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                <textarea name="description" rows="3" defaultValue={selectedResource.description} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Add detailed information about this resource..."></textarea>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">📷 Upload New Images (optional - up to 3)</label>
+                <input 
+                  type="file" 
+                  name="images" 
+                  multiple 
+                  accept="image/*" 
+                  onChange={handleEditResourceImageChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                />
+                <p className="text-xs text-gray-500 mt-1">Supported formats: JPG, PNG, GIF, WebP. Max 3 images, 5MB each.</p>
+                {editImagePreview.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-medium text-gray-700 mb-2">New Preview:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {editImagePreview.map((src, idx) => (
+                        <img 
+                          key={idx}
+                          src={src} 
+                          alt={`Preview ${idx + 1}`} 
+                          className="w-20 h-20 object-cover rounded-lg border-2 border-blue-200 shadow-sm" 
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {selectedResource?.images?.length > 0 && editImagePreview.length === 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Current Images:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedResource.images.map((img, idx) => (
+                        <img 
+                          key={idx}
+                          src={getImageUrl(img)}
+                          alt={`Current ${idx + 1}`} 
+                          className="w-20 h-20 object-cover rounded-lg border-2 border-gray-200 shadow-sm opacity-70" 
+                          onError={(e) => {
+                            e.target.src = '';
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -727,12 +1019,10 @@ const MyResources = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Furniture Name *</label>
                   <input type="text" name="name" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., Classic Oak Chair" />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mt-3 mb-2">Category *</label>
                   <select name="category" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     {furnitureCategories.map(cat => (
-                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                      <option key={cat} value={cat}>{getFurnitureCategoryLabel(cat)}</option>
                     ))}
                   </select>
                 </div>
@@ -770,6 +1060,16 @@ const MyResources = () => {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" 
                   />
                   <p className="text-xs text-gray-500 mt-1">Supported formats: JPG, PNG, GIF. Max 5 images.</p>
+                  {selectedFurnitureFiles.length > 0 && (
+                    <div className="mt-2 text-xs text-gray-600">
+                      <p className="font-medium text-gray-700 mb-1">Selected files:</p>
+                      <ul className="space-y-1">
+                        {selectedFurnitureFiles.map((file, idx) => (
+                          <li key={`${file.name}-${idx}`}>{file.name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   {/* Image Preview */}
                   {imagePreview.length > 0 && (
                     <div className="mt-3">
@@ -826,12 +1126,15 @@ const MyResources = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Furniture Name *</label>
                   <input type="text" name="name" required defaultValue={selectedFurniture.name} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mt-3 mb-2">Category *</label>
                   <select name="category" required defaultValue={selectedFurniture.category} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    {selectedFurniture.category && !furnitureCategories.includes(selectedFurniture.category) && (
+                      <option value={selectedFurniture.category}>
+                        {selectedFurniture.category.charAt(0).toUpperCase() + selectedFurniture.category.slice(1)}
+                      </option>
+                    )}
                     {furnitureCategories.map(cat => (
-                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                      <option key={cat} value={cat}>{getFurnitureCategoryLabel(cat)}</option>
                     ))}
                   </select>
                 </div>
@@ -890,6 +1193,16 @@ const MyResources = () => {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" 
                   />
                   <p className="text-xs text-gray-500 mt-1">Leave empty to keep current images. Supported formats: JPG, PNG, GIF.</p>
+                  {selectedEditFurnitureFiles.length > 0 && (
+                    <div className="mt-2 text-xs text-gray-600">
+                      <p className="font-medium text-gray-700 mb-1">Selected files:</p>
+                      <ul className="space-y-1">
+                        {selectedEditFurnitureFiles.map((file, idx) => (
+                          <li key={`${file.name}-${idx}`}>{file.name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   {/* New Image Preview */}
                   {editImagePreview.length > 0 && (
                     <div className="mt-3">

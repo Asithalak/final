@@ -4,6 +4,8 @@ const Furniture = require('../models/Furniture');
 const { authenticate, isAdmin, isCarpenter } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
+const toUploadPaths = (files = []) => files.map(file => `uploads/${file.filename}`.replace(/\\/g, '/'));
+
 // @route   GET /api/furniture
 // @desc    Get all approved furniture
 // @access  Public
@@ -112,8 +114,8 @@ router.post('/', authenticate, isCarpenter, upload.array('images', 5), async (re
   try {
     const { name, description, category, price, materials, dimensions, stockQuantity, brand, timeRequired } = req.body;
 
-    // Normalize image paths to use forward slashes for web URLs
-    const images = req.files ? req.files.map(file => file.path.replace(/\\/g, '/')) : [];
+    // Store relative upload paths for stable URLs
+    const images = toUploadPaths(req.files);
 
     // Parse materials - can be JSON array or comma-separated string
     let parsedMaterials = [];
@@ -205,9 +207,9 @@ router.put('/:id', authenticate, isCarpenter, upload.array('images', 5), async (
       }
     }
 
-    // Update images if new ones are uploaded (normalize paths)
+    // Update images if new ones are uploaded
     if (req.files && req.files.length > 0) {
-      furniture.images = req.files.map(file => file.path.replace(/\\/g, '/'));
+      furniture.images = toUploadPaths(req.files);
     }
 
     await furniture.save();

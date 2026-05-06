@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const PrivateRoute = ({ children, roles }) => {
+const PrivateRoute = ({ children, roles, customersOnly }) => {
   const { isAuthenticated, user, loading } = useAuth();
 
   if (loading) {
@@ -18,6 +18,10 @@ const PrivateRoute = ({ children, roles }) => {
   }
 
   if (roles && !roles.includes(user?.role)) {
+    return <Navigate to="/" />;
+  }
+
+  if (customersOnly && user?.role !== 'customer') {
     return <Navigate to="/" />;
   }
 
